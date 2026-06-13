@@ -1,0 +1,17 @@
+# Não publicar no Worker (mantém só o site atual + assets)
+.git
+.github
+.claude
+.wrangler
+node_modules
+server
+assets/Videos
+*.md
+*.toml
+.gitignore
+.assetsignore
+.DS_Store
+index_v*.html
+index_legacy*.html
+index_*_attempt_*.html
+blustar-ds-board.svg

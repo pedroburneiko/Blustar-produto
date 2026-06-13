@@ -1,0 +1,15 @@
+{
+  "name": "blustar-gen-studio-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Proxy seguro: analisa layouts com o Claude (visão) e devolve um Design System. A API key fica só aqui (env), nunca no front.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.70.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}

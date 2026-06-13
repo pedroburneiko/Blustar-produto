@@ -1,0 +1,241 @@
+/* =========================================================================
+   BLUSTAR DESIGN SYSTEM — FUNDAÇÃO COMPARTILHADA (fonte única)
+   -------------------------------------------------------------------------
+   Este arquivo é a ÚNICA fonte da verdade do DS. Tanto a ferramenta
+   (index.html) quanto o Gen Studio AI dão <link> nele. Não copie estes
+   tokens para outro lugar — edite-os aqui.
+
+   Para usar em qualquer página, no <head>:
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
+     <link rel="stylesheet" href="ds-tokens.css">
+
+   Obs.: os caminhos de fonte abaixo são relativos a este CSS (pasta fonts/).
+   ========================================================================= */
+
+/* =========================================================================
+   FONTS — Versos (BluStar brand)
+   ========================================================================= */
+/* Text family — weights 400/500 → Regular, 600 → SemiBold, 700 → Bold */
+@font-face {
+  font-family: 'Versos';
+  src: url('fonts/VersosTest-Regular.ttf') format('truetype');
+  font-weight: 400 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Versos';
+  src: url('fonts/VersosTest-SemiBold.ttf') format('truetype');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Versos';
+  src: url('fonts/VersosTest-Bold.ttf') format('truetype');
+  font-weight: 700 900; font-style: normal; font-display: swap;
+}
+
+/* =========================================================================
+   MATERIAL SYMBOLS — token-driven icon glyphs
+   Color follows currentColor; size follows font-size. FILL axis toggles
+   outline↔filled. Hosts set --bs-icon-size to control glyph size.
+   ========================================================================= */
+.material-symbols-outlined,
+.bs-icon {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: var(--bs-icon-size, 24px);
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  user-select: none;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.bs-icon[data-fill="1"],
+.material-symbols-outlined.is-filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+/* =========================================================================
+   DESIGN TOKENS — BluStar
+   ========================================================================= */
+:root {
+  /* Brand */
+  --bs-navy:       #061833;
+  --bs-navy-deep:  #04001E;
+  --bs-cyan:       #3FCCE3;   /* Azul Turquesa oficial — cor primária */
+  --bs-cyan-strong:   #0FC4D5;   /* hover do primário */
+  --bs-cyan-stronger: #0DB3C2;   /* active do primário */
+  --bs-cyan-200:   #A6D9DE;
+  --bs-cyan-100:   #BFFAFF;
+  --bs-cyan-50:    #DFFCFF;
+  --bs-blue:       #3259FF;
+  --bs-white:      #FFFFFF;
+  --bs-ink:        #0a1018;   /* texto/elemento escuro sobre fundos cyan/claros */
+
+  /* ---- Paleta nomeada da marca (alinhada ao @blustar/ui) ---- */
+  --bs-azul-nuvem: #DFFCFF;  --bs-azul-aberto: #BFFAFF;  --bs-azul-horizonte: #A6D9DE;
+  --bs-azul-turquesa: #3FCCE3;  --bs-azul-ceu: #3259FF;  --bs-azul-profundo: #061833;
+  --bs-azul-noturno: #04001E;  --bs-asfalto: #000000;  --bs-branco: #FFFFFF;
+
+  --bs-gray-15: #F7F7F7;  --bs-gray-30: #E5E5E5;  --bs-gray-45: #C7C7C7;
+  --bs-gray-60: #8F8F8F;  --bs-gray-90: #707070;  --bs-gray-120: #363636;
+  --bs-gray-150: #191919;  --bs-gray-180: #000000;
+
+  --bs-green-01: #70FF82;  --bs-green-02: #16331A;
+  --bs-orange-01: #FFB282;  --bs-orange-02: #8D3100;  --bs-orange-03: #FF5D00;
+  --bs-yellow-01: #FFE88B;  --bs-yellow-02: #725400;
+  --bs-red-01: #FF9187;  --bs-red-02: #560907;
+
+  /* Dark canvas */
+  --bg:            #040910;
+  --surface:       rgba(126,126,126,0.10);
+  --surface-2:     rgba(126,126,126,0.18);
+  --surface-3:     rgba(126,126,126,0.26);
+  /* Unified hover wash — neutral, subtle, a touch lighter than --surface.
+     Every neutral :hover background uses this so hovers feel consistent. */
+  --hover:         rgba(255,255,255,0.08);
+
+  /* Borders */
+  --border:        rgba(255,255,255,0.10);
+  --border-strong: rgba(255,255,255,0.18);
+
+  /* Text */
+  --text:          #FFFFFF;
+  --text-2:        rgba(255,255,255,0.72);
+  --text-3:        rgba(255,255,255,0.48);
+
+  /* Status */
+  --status-active: #70FF82;
+  --status-alert:  #FF7300;
+
+  /* Semantic */
+  --popover:       #0d1421;
+  --accent-select: #a259ff;
+  --danger:        #ff6b6b;
+
+  /* Overlays */
+  --overlay-light: rgba(0,0,0,0.25);
+  --overlay-md:    rgba(0,0,0,0.45);
+  --overlay-dark:  rgba(0,0,0,0.55);
+
+  /* Placeholder (template skeletons) */
+  --placeholder:        rgba(0,0,0,0.18);
+  --placeholder-strong: rgba(0,0,0,0.55);
+
+  /* Focus */
+  --focus-ring: 1.5px solid var(--bs-blue);
+
+  /* Radii (soft-square) */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 24px;
+  --r-full: 9999px;
+
+  /* Layout */
+  --topnav-h:  56px;
+  --sidebar-w: 260px;
+  --sidebar-collapsed-w: 64px;
+
+  /* Type */
+  --font:         'Versos', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  --font-display: 'Versos', sans-serif;
+
+  /* Type tokens (editable from inspector) */
+  --type-h0-family: var(--font-display);
+  --type-h0-weight: 500;
+  --type-h0-size: 220px;
+  --type-h0-line: 0.92;
+  --type-h0-tracking: -0.03em;
+  --type-super-family: var(--font-display);
+  --type-super-weight: 500;
+  --type-super-size: 96px;
+  --type-super-line: 1;
+  --type-super-tracking: -0.02em;
+  --type-xl-family: var(--font);
+  --type-xl-weight: 500;
+  --type-xl-size: 40px;
+  --type-xl-line: 1.05;
+  --type-xl-tracking: -0.02em;
+  --type-l-family: var(--font);
+  --type-l-weight: 500;
+  --type-l-size: 32px;
+  --type-l-line: 1.15;
+  --type-l-tracking: -0.01em;
+  --type-mb-family: var(--font);
+  --type-mb-weight: 500;
+  --type-mb-size: 24px;
+  --type-mb-line: 1.2;
+  --type-mb-tracking: -0.01em;
+  --type-m-family: var(--font);
+  --type-m-weight: 500;
+  --type-m-size: 16px;
+  --type-m-line: 1.5;
+  --type-m-tracking: 0;
+  --type-sb-family: var(--font);
+  --type-sb-weight: 700;
+  --type-sb-size: 13px;
+  --type-sb-line: 1.4;
+  --type-sb-tracking: 0;
+  --type-s-family: var(--font);
+  --type-s-weight: 500;
+  --type-s-size: 12px;
+  --type-s-line: 1.4;
+  --type-s-tracking: 0.04em;
+  --type-xs-family: var(--font);
+  --type-xs-weight: 500;
+  --type-xs-size: 10px;
+  --type-xs-line: 1.55;
+  --type-xs-tracking: 0.04em;
+
+  /* UI type (chrome, labels, badges) */
+  --type-ui-family: var(--font);
+  --type-ui-weight: 500;
+  --type-ui-size: var(--type-sb-size, 14px);
+  --type-ui-line: 1.4;
+  --type-ui-tracking: -0.01em;
+  --type-ui-sm-family: var(--font);
+  --type-ui-sm-weight: 500;
+  --type-ui-sm-size: var(--type-s-size, 12px);
+  --type-ui-sm-line: 1.4;
+  --type-ui-sm-tracking: 0;
+  --type-ui-xs-family: var(--font);
+  --type-ui-xs-weight: 500;
+  --type-ui-xs-size: var(--type-xs-size, 10px);
+  --type-ui-xs-line: 1.4;
+  --type-ui-xs-tracking: 0.04em;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+
+  /* Z-index scale */
+  --z-base:     1;
+  --z-sticky:   50;
+  --z-nav:      100;
+  --z-overlay:  200;
+  --z-dropdown: 400;
+  --z-modal:    500;
+  --z-toast:    600;
+
+  /* Cyan tints (hover/active over cyan) */
+  --tint-cyan-sm: rgba(15,196,213,0.08);
+  --tint-cyan-md: rgba(15,196,213,0.18);
+  --tint-cyan-lg: rgba(15,196,213,0.30);
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}

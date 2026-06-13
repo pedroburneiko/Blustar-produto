@@ -1,0 +1,24 @@
+# Backups / versões antigas (não vão pro deploy)
+index_v*.html
+index_legacy_*.html
+
+# Vídeos locais não usados — servidos pelo Cloudinary CDN
+assets/Videos/
+
+# OS / tooling
+.DS_Store
+node_modules/
+.claude/
+
+# Backup archive
+Archive.zip
+
+# Backend deps
+server/node_modules/
+
+# Wrangler (gerado no deploy)
+.wrangler/
+
+# Chave do Gemini (NUNCA commitar)
+server/.env
+.env

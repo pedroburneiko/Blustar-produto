@@ -1,0 +1,502 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1697" font-family="Segoe UI,Helvetica,Arial,sans-serif">
+<rect width="2000" height="1697" fill="#0B1220"/>
+<text x="40" y="56" fill="#FFFFFF" font-size="30" font-weight="700">PRAIA Brand System — BluStar workspace</text>
+<text x="40" y="86" fill="#9FB3C8" font-size="15">Mapa exaustivo de telas, painéis, modais e estados — derivado do DOM da aplicação (blustar.pedroburneiko.workers.dev)</text>
+<rect x="40" y="106" width="14" height="14" rx="3" fill="#0FC4D5"/>
+<text x="60" y="118" fill="#CBD5E1" font-size="13">App chrome / nav</text>
+<rect x="187.6" y="106" width="14" height="14" rx="3" fill="#3B82F6"/>
+<text x="207.6" y="118" fill="#CBD5E1" font-size="13">Seção principal</text>
+<rect x="327.6" y="106" width="14" height="14" rx="3" fill="#8B5CF6"/>
+<text x="347.6" y="118" fill="#CBD5E1" font-size="13">Painel de bloco (editor)</text>
+<rect x="536.0" y="106" width="14" height="14" rx="3" fill="#F59E0B"/>
+<text x="556.0" y="118" fill="#CBD5E1" font-size="13">Modal de token</text>
+<rect x="668.4" y="106" width="14" height="14" rx="3" fill="#10B981"/>
+<text x="688.4" y="118" fill="#CBD5E1" font-size="13">Menu</text>
+<rect x="724.8" y="106" width="14" height="14" rx="3" fill="#EF4444"/>
+<text x="744.8" y="118" fill="#CBD5E1" font-size="13">Estado/Breakpoint</text>
+<rect x="40" y="150" width="360" height="248" rx="10" fill="#111B2E" stroke="#0FC4D5" stroke-width="1.5"/>
+<rect x="40" y="150" width="360" height="6" rx="3" fill="#0FC4D5"/>
+<text x="56" y="184" fill="#FFFFFF" font-size="16" font-weight="700">Top Bar (Editor)</text>
+<text x="56" y="202" fill="#0FC4D5" font-size="11.5" font-weight="600" letter-spacing="0.5">BARRA SUPERIOR</text>
+<circle cx="59" cy="232" r="2.3" fill="#0FC4D5"/>
+<text x="70" y="236" fill="#D6DEE8" font-size="13">Logo PRAIA Brand System</text>
+<circle cx="59" cy="251" r="2.3" fill="#0FC4D5"/>
+<text x="70" y="255" fill="#D6DEE8" font-size="13">Seletor de modo: Desktop</text>
+<circle cx="59" cy="270" r="2.3" fill="#0FC4D5"/>
+<text x="70" y="274" fill="#D6DEE8" font-size="13">Breakpoint</text>
+<circle cx="59" cy="289" r="2.3" fill="#0FC4D5"/>
+<text x="70" y="293" fill="#D6DEE8" font-size="13">‘Select breakpoint to edit’ (atalho R)</text>
+<circle cx="59" cy="308" r="2.3" fill="#0FC4D5"/>
+<text x="70" y="312" fill="#D6DEE8" font-size="13">Grid settings</text>
+<circle cx="59" cy="327" r="2.3" fill="#0FC4D5"/>
+<text x="70" y="331" fill="#D6DEE8" font-size="13">Publicar</text>
+<circle cx="59" cy="346" r="2.3" fill="#0FC4D5"/>
+<text x="70" y="350" fill="#D6DEE8" font-size="13">Cancelar</text>
+<circle cx="59" cy="365" r="2.3" fill="#0FC4D5"/>
+<text x="70" y="369" fill="#D6DEE8" font-size="13">Adicionar</text>
+<rect x="430" y="150" width="360" height="172" rx="10" fill="#111B2E" stroke="#3B82F6" stroke-width="1.5"/>
+<rect x="430" y="150" width="360" height="6" rx="3" fill="#3B82F6"/>
+<text x="446" y="184" fill="#FFFFFF" font-size="16" font-weight="700">Navegação principal</text>
+<text x="446" y="202" fill="#3B82F6" font-size="11.5" font-weight="600" letter-spacing="0.5">ABAS</text>
+<circle cx="449" cy="232" r="2.3" fill="#3B82F6"/>
+<text x="460" y="236" fill="#D6DEE8" font-size="13">Home</text>
+<circle cx="449" cy="251" r="2.3" fill="#3B82F6"/>
+<text x="460" y="255" fill="#D6DEE8" font-size="13">Guide</text>
+<circle cx="449" cy="270" r="2.3" fill="#3B82F6"/>
+<text x="460" y="274" fill="#D6DEE8" font-size="13">Design System</text>
+<circle cx="449" cy="289" r="2.3" fill="#3B82F6"/>
+<text x="460" y="293" fill="#D6DEE8" font-size="13">Configurações</text>
+<rect x="820" y="150" width="360" height="134" rx="10" fill="#111B2E" stroke="#0FC4D5" stroke-width="1.5"/>
+<rect x="820" y="150" width="360" height="6" rx="3" fill="#0FC4D5"/>
+<text x="836" y="184" fill="#FFFFFF" font-size="16" font-weight="700">Conta</text>
+<text x="836" y="202" fill="#0FC4D5" font-size="11.5" font-weight="600" letter-spacing="0.5">CANTO</text>
+<circle cx="839" cy="232" r="2.3" fill="#0FC4D5"/>
+<text x="850" y="236" fill="#D6DEE8" font-size="13">PB — Pedro B.</text>
+<circle cx="839" cy="251" r="2.3" fill="#0FC4D5"/>
+<text x="850" y="255" fill="#D6DEE8" font-size="13">logout</text>
+<rect x="1210" y="150" width="360" height="229" rx="10" fill="#111B2E" stroke="#EF4444" stroke-width="1.5"/>
+<rect x="1210" y="150" width="360" height="6" rx="3" fill="#EF4444"/>
+<text x="1226" y="184" fill="#FFFFFF" font-size="16" font-weight="700">Breakpoints (estado)</text>
+<text x="1226" y="202" fill="#EF4444" font-size="11.5" font-weight="600" letter-spacing="0.5">SELETOR</text>
+<circle cx="1229" cy="232" r="2.3" fill="#EF4444"/>
+<text x="1240" y="236" fill="#D6DEE8" font-size="13">Desktop Default</text>
+<circle cx="1229" cy="251" r="2.3" fill="#EF4444"/>
+<text x="1240" y="255" fill="#D6DEE8" font-size="13">Tablet</text>
+<circle cx="1229" cy="270" r="2.3" fill="#EF4444"/>
+<text x="1240" y="274" fill="#D6DEE8" font-size="13">Mobile</text>
+<circle cx="1229" cy="289" r="2.3" fill="#EF4444"/>
+<text x="1240" y="293" fill="#D6DEE8" font-size="13">Grid settings</text>
+<circle cx="1229" cy="308" r="2.3" fill="#EF4444"/>
+<text x="1240" y="312" fill="#D6DEE8" font-size="13">Publicar</text>
+<circle cx="1229" cy="327" r="2.3" fill="#EF4444"/>
+<text x="1240" y="331" fill="#D6DEE8" font-size="13">Cancelar</text>
+<circle cx="1229" cy="346" r="2.3" fill="#EF4444"/>
+<text x="1240" y="350" fill="#D6DEE8" font-size="13">Adicionar</text>
+<rect x="1600" y="150" width="360" height="172" rx="10" fill="#111B2E" stroke="#10B981" stroke-width="1.5"/>
+<rect x="1600" y="150" width="360" height="6" rx="3" fill="#10B981"/>
+<text x="1616" y="184" fill="#FFFFFF" font-size="16" font-weight="700">Painel Pages (sidebar)</text>
+<text x="1616" y="202" fill="#10B981" font-size="11.5" font-weight="600" letter-spacing="0.5">LISTA</text>
+<circle cx="1619" cy="232" r="2.3" fill="#10B981"/>
+<text x="1630" y="236" fill="#D6DEE8" font-size="13">título: Pages</text>
+<circle cx="1619" cy="251" r="2.3" fill="#10B981"/>
+<text x="1630" y="255" fill="#D6DEE8" font-size="13">botão add</text>
+<circle cx="1619" cy="270" r="2.3" fill="#10B981"/>
+<text x="1630" y="274" fill="#D6DEE8" font-size="13">✓ home — Home (página atual)</text>
+<circle cx="1619" cy="289" r="2.3" fill="#10B981"/>
+<text x="1630" y="293" fill="#D6DEE8" font-size="13">Introduction</text>
+<rect x="820" y="314" width="360" height="248" rx="10" fill="#111B2E" stroke="#10B981" stroke-width="1.5"/>
+<rect x="820" y="314" width="360" height="6" rx="3" fill="#10B981"/>
+<text x="836" y="348" fill="#FFFFFF" font-size="16" font-weight="700">Menu de contexto da Layer</text>
+<text x="836" y="366" fill="#10B981" font-size="11.5" font-weight="600" letter-spacing="0.5">CLIQUE DIREITO</text>
+<circle cx="839" cy="396" r="2.3" fill="#10B981"/>
+<text x="850" y="400" fill="#D6DEE8" font-size="13">Set as home</text>
+<circle cx="839" cy="415" r="2.3" fill="#10B981"/>
+<text x="850" y="419" fill="#D6DEE8" font-size="13">Rename layer</text>
+<circle cx="839" cy="434" r="2.3" fill="#10B981"/>
+<text x="850" y="438" fill="#D6DEE8" font-size="13">Add sub-page</text>
+<circle cx="839" cy="453" r="2.3" fill="#10B981"/>
+<text x="850" y="457" fill="#D6DEE8" font-size="13">Duplicate  (cmd+D)</text>
+<circle cx="839" cy="472" r="2.3" fill="#10B981"/>
+<text x="850" y="476" fill="#D6DEE8" font-size="13">Copy to…</text>
+<circle cx="839" cy="491" r="2.3" fill="#10B981"/>
+<text x="850" y="495" fill="#D6DEE8" font-size="13">Hide (visibility)</text>
+<circle cx="839" cy="510" r="2.3" fill="#10B981"/>
+<text x="850" y="514" fill="#D6DEE8" font-size="13">Delete  (del)</text>
+<circle cx="839" cy="529" r="2.3" fill="#10B981"/>
+<text x="850" y="533" fill="#D6DEE8" font-size="13">expand_more</text>
+<rect x="430" y="352" width="360" height="191" rx="10" fill="#111B2E" stroke="#3B82F6" stroke-width="1.5"/>
+<rect x="430" y="352" width="360" height="6" rx="3" fill="#3B82F6"/>
+<text x="446" y="386" fill="#FFFFFF" font-size="16" font-weight="700">Canvas / Conteúdo (Guide)</text>
+<text x="446" y="404" fill="#3B82F6" font-size="11.5" font-weight="600" letter-spacing="0.5">PREVIEW</text>
+<circle cx="449" cy="434" r="2.3" fill="#3B82F6"/>
+<text x="460" y="438" fill="#D6DEE8" font-size="13">02 · Guide</text>
+<circle cx="449" cy="453" r="2.3" fill="#3B82F6"/>
+<text x="460" y="457" fill="#D6DEE8" font-size="13">H: Brand Guide</text>
+<circle cx="449" cy="472" r="2.3" fill="#3B82F6"/>
+<text x="460" y="476" fill="#D6DEE8" font-size="13">Parágrafo de ontologia</text>
+<circle cx="449" cy="491" r="2.3" fill="#3B82F6"/>
+<text x="460" y="495" fill="#D6DEE8" font-size="13">## Introduction</text>
+<circle cx="449" cy="510" r="2.3" fill="#3B82F6"/>
+<text x="460" y="514" fill="#D6DEE8" font-size="13">Texto de boas-vindas BluStar</text>
+<rect x="1600" y="352" width="360" height="346" rx="10" fill="#111B2E" stroke="#3B82F6" stroke-width="1.5"/>
+<rect x="1600" y="352" width="360" height="6" rx="3" fill="#3B82F6"/>
+<text x="1616" y="386" fill="#FFFFFF" font-size="16" font-weight="700">Design System ▸ Type</text>
+<text x="1616" y="404" fill="#3B82F6" font-size="11.5" font-weight="600" letter-spacing="0.5">TOKENS</text>
+<circle cx="1619" cy="434" r="2.3" fill="#3B82F6"/>
+<text x="1630" y="438" fill="#D6DEE8" font-size="13">H0</text>
+<circle cx="1619" cy="453" r="2.3" fill="#3B82F6"/>
+<text x="1630" y="457" fill="#D6DEE8" font-size="13">H1</text>
+<circle cx="1619" cy="472" r="2.3" fill="#3B82F6"/>
+<text x="1630" y="476" fill="#D6DEE8" font-size="13">H2</text>
+<circle cx="1619" cy="491" r="2.3" fill="#3B82F6"/>
+<text x="1630" y="495" fill="#D6DEE8" font-size="13">H3</text>
+<circle cx="1619" cy="510" r="2.3" fill="#3B82F6"/>
+<text x="1630" y="514" fill="#D6DEE8" font-size="13">H4</text>
+<circle cx="1619" cy="529" r="2.3" fill="#3B82F6"/>
+<text x="1630" y="533" fill="#D6DEE8" font-size="13">Body</text>
+<circle cx="1619" cy="548" r="2.3" fill="#3B82F6"/>
+<text x="1630" y="552" fill="#D6DEE8" font-size="13">Caption Bold</text>
+<circle cx="1619" cy="567" r="2.3" fill="#3B82F6"/>
+<text x="1630" y="571" fill="#D6DEE8" font-size="13">Caption</text>
+<circle cx="1619" cy="586" r="2.3" fill="#3B82F6"/>
+<text x="1630" y="590" fill="#D6DEE8" font-size="13">Body Small</text>
+<text x="1616" y="610" fill="#7DD3FC" font-size="12" font-weight="700">por item</text>
+<circle cx="1619" cy="627" r="2.3" fill="#3B82F6"/>
+<text x="1630" y="631" fill="#D6DEE8" font-size="13">Aa preview</text>
+<circle cx="1619" cy="646" r="2.3" fill="#3B82F6"/>
+<text x="1630" y="650" fill="#D6DEE8" font-size="13">edit</text>
+<circle cx="1619" cy="665" r="2.3" fill="#3B82F6"/>
+<text x="1630" y="669" fill="#D6DEE8" font-size="13">more_horiz</text>
+<rect x="1210" y="409" width="360" height="248" rx="10" fill="#111B2E" stroke="#3B82F6" stroke-width="1.5"/>
+<rect x="1210" y="409" width="360" height="6" rx="3" fill="#3B82F6"/>
+<text x="1226" y="443" fill="#FFFFFF" font-size="16" font-weight="700">Design System ▸ Color</text>
+<text x="1226" y="461" fill="#3B82F6" font-size="11.5" font-weight="600" letter-spacing="0.5">TOKENS</text>
+<circle cx="1229" cy="491" r="2.3" fill="#3B82F6"/>
+<text x="1240" y="495" fill="#D6DEE8" font-size="13">BluStar Navy</text>
+<circle cx="1229" cy="510" r="2.3" fill="#3B82F6"/>
+<text x="1240" y="514" fill="#D6DEE8" font-size="13">BluStar Cyan</text>
+<circle cx="1229" cy="529" r="2.3" fill="#3B82F6"/>
+<text x="1240" y="533" fill="#D6DEE8" font-size="13">Navy Deep</text>
+<circle cx="1229" cy="548" r="2.3" fill="#3B82F6"/>
+<text x="1240" y="552" fill="#D6DEE8" font-size="13">Royal Blue</text>
+<circle cx="1229" cy="567" r="2.3" fill="#3B82F6"/>
+<text x="1240" y="571" fill="#D6DEE8" font-size="13">Cyan 200</text>
+<circle cx="1229" cy="586" r="2.3" fill="#3B82F6"/>
+<text x="1240" y="590" fill="#D6DEE8" font-size="13">Cyan 100</text>
+<circle cx="1229" cy="605" r="2.3" fill="#3B82F6"/>
+<text x="1240" y="609" fill="#D6DEE8" font-size="13">Cyan 50</text>
+<circle cx="1229" cy="624" r="2.3" fill="#3B82F6"/>
+<text x="1240" y="628" fill="#D6DEE8" font-size="13">White</text>
+<rect x="40" y="428" width="360" height="134" rx="10" fill="#111B2E" stroke="#3B82F6" stroke-width="1.5"/>
+<rect x="40" y="428" width="360" height="6" rx="3" fill="#3B82F6"/>
+<text x="56" y="462" fill="#FFFFFF" font-size="16" font-weight="700">Design System ▸ Group</text>
+<text x="56" y="480" fill="#3B82F6" font-size="11.5" font-weight="600" letter-spacing="0.5">GRUPOS</text>
+<circle cx="59" cy="510" r="2.3" fill="#3B82F6"/>
+<text x="70" y="514" fill="#D6DEE8" font-size="13">crop_free — Header / Page</text>
+<circle cx="59" cy="529" r="2.3" fill="#3B82F6"/>
+<text x="70" y="533" fill="#D6DEE8" font-size="13">crop_free — Pagination</text>
+<rect x="430" y="573" width="360" height="422" rx="10" fill="#111B2E" stroke="#3B82F6" stroke-width="1.5"/>
+<rect x="430" y="573" width="360" height="6" rx="3" fill="#3B82F6"/>
+<text x="446" y="607" fill="#FFFFFF" font-size="16" font-weight="700">Design System ▸ Layout</text>
+<text x="446" y="625" fill="#3B82F6" font-size="11.5" font-weight="600" letter-spacing="0.5">LAYOUTS</text>
+<circle cx="449" cy="655" r="2.3" fill="#3B82F6"/>
+<text x="460" y="659" fill="#D6DEE8" font-size="13">Contents / Strategy</text>
+<circle cx="449" cy="674" r="2.3" fill="#3B82F6"/>
+<text x="460" y="678" fill="#D6DEE8" font-size="13">Contents / Logo</text>
+<circle cx="449" cy="693" r="2.3" fill="#3B82F6"/>
+<text x="460" y="697" fill="#D6DEE8" font-size="13">Contents / Typography</text>
+<circle cx="449" cy="712" r="2.3" fill="#3B82F6"/>
+<text x="460" y="716" fill="#D6DEE8" font-size="13">Contents / Color</text>
+<circle cx="449" cy="731" r="2.3" fill="#3B82F6"/>
+<text x="460" y="735" fill="#D6DEE8" font-size="13">Contents / Photography</text>
+<circle cx="449" cy="750" r="2.3" fill="#3B82F6"/>
+<text x="460" y="754" fill="#D6DEE8" font-size="13">Contents / System</text>
+<circle cx="449" cy="769" r="2.3" fill="#3B82F6"/>
+<text x="460" y="773" fill="#D6DEE8" font-size="13">Contents / Applications</text>
+<circle cx="449" cy="788" r="2.3" fill="#3B82F6"/>
+<text x="460" y="792" fill="#D6DEE8" font-size="13">Contents / Language</text>
+<circle cx="449" cy="807" r="2.3" fill="#3B82F6"/>
+<text x="460" y="811" fill="#D6DEE8" font-size="13">Header / 1 Column + Button</text>
+<circle cx="449" cy="826" r="2.3" fill="#3B82F6"/>
+<text x="460" y="830" fill="#D6DEE8" font-size="13">Header / Title only</text>
+<circle cx="449" cy="845" r="2.3" fill="#3B82F6"/>
+<text x="460" y="849" fill="#D6DEE8" font-size="13">Introduction</text>
+<circle cx="449" cy="864" r="2.3" fill="#3B82F6"/>
+<text x="460" y="868" fill="#D6DEE8" font-size="13">Header / Default</text>
+<circle cx="449" cy="883" r="2.3" fill="#3B82F6"/>
+<text x="460" y="887" fill="#D6DEE8" font-size="13">Footer</text>
+<text x="446" y="907" fill="#7DD3FC" font-size="12" font-weight="700">ações</text>
+<circle cx="449" cy="924" r="2.3" fill="#3B82F6"/>
+<text x="460" y="928" fill="#D6DEE8" font-size="13">Show all (expand_more)</text>
+<circle cx="449" cy="943" r="2.3" fill="#3B82F6"/>
+<text x="460" y="947" fill="#D6DEE8" font-size="13">upload Upload</text>
+<circle cx="449" cy="962" r="2.3" fill="#3B82F6"/>
+<text x="460" y="966" fill="#D6DEE8" font-size="13">delete Remove files</text>
+<rect x="40" y="592" width="360" height="229" rx="10" fill="#111B2E" stroke="#8B5CF6" stroke-width="1.5"/>
+<rect x="40" y="592" width="360" height="6" rx="3" fill="#8B5CF6"/>
+<text x="56" y="626" fill="#FFFFFF" font-size="16" font-weight="700">Painel: Layout (escolher)</text>
+<text x="56" y="644" fill="#8B5CF6" font-size="11.5" font-weight="600" letter-spacing="0.5">BLOCO</text>
+<circle cx="59" cy="674" r="2.3" fill="#8B5CF6"/>
+<text x="70" y="678" fill="#D6DEE8" font-size="13">close</text>
+<circle cx="59" cy="693" r="2.3" fill="#8B5CF6"/>
+<text x="70" y="697" fill="#D6DEE8" font-size="13">Component</text>
+<circle cx="59" cy="712" r="2.3" fill="#8B5CF6"/>
+<text x="70" y="716" fill="#D6DEE8" font-size="13">Create</text>
+<circle cx="59" cy="731" r="2.3" fill="#8B5CF6"/>
+<text x="70" y="735" fill="#D6DEE8" font-size="13">Choose</text>
+<circle cx="59" cy="750" r="2.3" fill="#8B5CF6"/>
+<text x="70" y="754" fill="#D6DEE8" font-size="13">Fill</text>
+<circle cx="59" cy="769" r="2.3" fill="#8B5CF6"/>
+<text x="70" y="773" fill="#D6DEE8" font-size="13">Add media</text>
+<circle cx="59" cy="788" r="2.3" fill="#8B5CF6"/>
+<text x="70" y="792" fill="#D6DEE8" font-size="13">Background color (block)</text>
+<rect x="820" y="592" width="360" height="1035" rx="10" fill="#111B2E" stroke="#8B5CF6" stroke-width="1.5"/>
+<rect x="820" y="592" width="360" height="6" rx="3" fill="#8B5CF6"/>
+<text x="836" y="626" fill="#FFFFFF" font-size="16" font-weight="700">Painel: Layout (editar componente)</text>
+<text x="836" y="644" fill="#8B5CF6" font-size="11.5" font-weight="600" letter-spacing="0.5">BLOCO</text>
+<text x="836" y="679" fill="#7DD3FC" font-size="12" font-weight="700">topo</text>
+<circle cx="839" cy="696" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="700" fill="#D6DEE8" font-size="13">undo</text>
+<circle cx="839" cy="715" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="719" fill="#D6DEE8" font-size="13">Salvar</text>
+<circle cx="839" cy="734" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="738" fill="#D6DEE8" font-size="13">close</text>
+<text x="836" y="758" fill="#7DD3FC" font-size="12" font-weight="700">Component</text>
+<circle cx="839" cy="775" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="779" fill="#D6DEE8" font-size="13">Contents / Component</text>
+<circle cx="839" cy="794" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="798" fill="#D6DEE8" font-size="13">Editar</text>
+<circle cx="839" cy="813" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="817" fill="#D6DEE8" font-size="13">Edit</text>
+<circle cx="839" cy="832" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="836" fill="#D6DEE8" font-size="13">Detach</text>
+<text x="836" y="856" fill="#7DD3FC" font-size="12" font-weight="700">Cor</text>
+<circle cx="839" cy="873" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="877" fill="#D6DEE8" font-size="13">Texto Padrão (expand_more)</text>
+<text x="836" y="897" fill="#7DD3FC" font-size="12" font-weight="700">Grid</text>
+<circle cx="839" cy="914" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="918" fill="#D6DEE8" font-size="13">Columns</text>
+<circle cx="839" cy="933" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="937" fill="#D6DEE8" font-size="13">Gap</text>
+<text x="836" y="957" fill="#7DD3FC" font-size="12" font-weight="700">Botão</text>
+<circle cx="839" cy="974" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="978" fill="#D6DEE8" font-size="13">Variante — (expand_more)</text>
+<circle cx="839" cy="993" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="997" fill="#D6DEE8" font-size="13">Type</text>
+<circle cx="839" cy="1012" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1016" fill="#D6DEE8" font-size="13">Estilo — (expand_more)</text>
+<text x="836" y="1036" fill="#7DD3FC" font-size="12" font-weight="700">Alinhamento</text>
+<circle cx="839" cy="1053" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1057" fill="#D6DEE8" font-size="13">align_left</text>
+<circle cx="839" cy="1072" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1076" fill="#D6DEE8" font-size="13">align_center</text>
+<circle cx="839" cy="1091" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1095" fill="#D6DEE8" font-size="13">align_right</text>
+<circle cx="839" cy="1110" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1114" fill="#D6DEE8" font-size="13">align_justify</text>
+<text x="836" y="1134" fill="#7DD3FC" font-size="12" font-weight="700">Position</text>
+<circle cx="839" cy="1151" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1155" fill="#D6DEE8" font-size="13">horiz_left</text>
+<circle cx="839" cy="1170" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1174" fill="#D6DEE8" font-size="13">horiz_center</text>
+<circle cx="839" cy="1189" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1193" fill="#D6DEE8" font-size="13">horiz_right</text>
+<circle cx="839" cy="1208" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1212" fill="#D6DEE8" font-size="13">vert_top</text>
+<circle cx="839" cy="1227" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1231" fill="#D6DEE8" font-size="13">vert_center</text>
+<circle cx="839" cy="1246" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1250" fill="#D6DEE8" font-size="13">vert_bottom</text>
+<text x="836" y="1270" fill="#7DD3FC" font-size="12" font-weight="700">Imagem</text>
+<circle cx="839" cy="1287" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1291" fill="#D6DEE8" font-size="13">Arquivo Moto.png (upload)</text>
+<circle cx="839" cy="1306" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1310" fill="#D6DEE8" font-size="13">Ajuste: Fill / Fit / Crop / Center</text>
+<circle cx="839" cy="1325" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1329" fill="#D6DEE8" font-size="13">Corner radius</text>
+<circle cx="839" cy="1344" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1348" fill="#D6DEE8" font-size="13">Radius</text>
+<circle cx="839" cy="1363" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1367" fill="#D6DEE8" font-size="13">Anchor</text>
+<circle cx="839" cy="1382" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1386" fill="#D6DEE8" font-size="13">Posição</text>
+<text x="836" y="1406" fill="#7DD3FC" font-size="12" font-weight="700">rodapé</text>
+<circle cx="839" cy="1423" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1427" fill="#D6DEE8" font-size="13">Cancelar</text>
+<circle cx="839" cy="1442" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1446" fill="#D6DEE8" font-size="13">Salvar</text>
+<circle cx="839" cy="1461" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1465" fill="#D6DEE8" font-size="13">Deletar template</text>
+<circle cx="839" cy="1480" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1484" fill="#D6DEE8" font-size="13">Lock content</text>
+<circle cx="839" cy="1499" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1503" fill="#D6DEE8" font-size="13">Background: Dark / Light</text>
+<circle cx="839" cy="1518" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1522" fill="#D6DEE8" font-size="13">Grid (light_mode)</text>
+<circle cx="839" cy="1537" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1541" fill="#D6DEE8" font-size="13">Columns</text>
+<circle cx="839" cy="1556" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1560" fill="#D6DEE8" font-size="13">Fill</text>
+<circle cx="839" cy="1575" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1579" fill="#D6DEE8" font-size="13">Add media</text>
+<circle cx="839" cy="1594" r="2.3" fill="#8B5CF6"/>
+<text x="850" y="1598" fill="#D6DEE8" font-size="13">Background color</text>
+<rect x="1210" y="687" width="360" height="172" rx="10" fill="#111B2E" stroke="#8B5CF6" stroke-width="1.5"/>
+<rect x="1210" y="687" width="360" height="6" rx="3" fill="#8B5CF6"/>
+<text x="1226" y="721" fill="#FFFFFF" font-size="16" font-weight="700">Painel: Text</text>
+<text x="1226" y="739" fill="#8B5CF6" font-size="11.5" font-weight="600" letter-spacing="0.5">BLOCO</text>
+<circle cx="1229" cy="769" r="2.3" fill="#8B5CF6"/>
+<text x="1240" y="773" fill="#D6DEE8" font-size="13">close</text>
+<circle cx="1229" cy="788" r="2.3" fill="#8B5CF6"/>
+<text x="1240" y="792" fill="#D6DEE8" font-size="13">Text</text>
+<circle cx="1229" cy="807" r="2.3" fill="#8B5CF6"/>
+<text x="1240" y="811" fill="#D6DEE8" font-size="13">Style: Aa Body (expand_more)</text>
+<circle cx="1229" cy="826" r="2.3" fill="#8B5CF6"/>
+<text x="1240" y="830" fill="#D6DEE8" font-size="13">Color: Text color</text>
+<rect x="1600" y="728" width="360" height="134" rx="10" fill="#111B2E" stroke="#8B5CF6" stroke-width="1.5"/>
+<rect x="1600" y="728" width="360" height="6" rx="3" fill="#8B5CF6"/>
+<text x="1616" y="762" fill="#FFFFFF" font-size="16" font-weight="700">Painel: Spacing</text>
+<text x="1616" y="780" fill="#8B5CF6" font-size="11.5" font-weight="600" letter-spacing="0.5">BLOCO</text>
+<circle cx="1619" cy="810" r="2.3" fill="#8B5CF6"/>
+<text x="1630" y="814" fill="#D6DEE8" font-size="13">close</text>
+<circle cx="1619" cy="829" r="2.3" fill="#8B5CF6"/>
+<text x="1630" y="833" fill="#D6DEE8" font-size="13">Size</text>
+<rect x="40" y="851" width="360" height="210" rx="10" fill="#111B2E" stroke="#8B5CF6" stroke-width="1.5"/>
+<rect x="40" y="851" width="360" height="6" rx="3" fill="#8B5CF6"/>
+<text x="56" y="885" fill="#FFFFFF" font-size="16" font-weight="700">Painel: Video</text>
+<text x="56" y="903" fill="#8B5CF6" font-size="11.5" font-weight="600" letter-spacing="0.5">BLOCO</text>
+<circle cx="59" cy="933" r="2.3" fill="#8B5CF6"/>
+<text x="70" y="937" fill="#D6DEE8" font-size="13">close</text>
+<circle cx="59" cy="952" r="2.3" fill="#8B5CF6"/>
+<text x="70" y="956" fill="#D6DEE8" font-size="13">check</text>
+<circle cx="59" cy="971" r="2.3" fill="#8B5CF6"/>
+<text x="70" y="975" fill="#D6DEE8" font-size="13">Autoplay (redo)</text>
+<circle cx="59" cy="990" r="2.3" fill="#8B5CF6"/>
+<text x="70" y="994" fill="#D6DEE8" font-size="13">volume_up</text>
+<circle cx="59" cy="1009" r="2.3" fill="#8B5CF6"/>
+<text x="70" y="1013" fill="#D6DEE8" font-size="13">URL / caminho</text>
+<circle cx="59" cy="1028" r="2.3" fill="#8B5CF6"/>
+<text x="70" y="1032" fill="#D6DEE8" font-size="13">Vídeos no servidor</text>
+<rect x="1210" y="889" width="360" height="153" rx="10" fill="#111B2E" stroke="#8B5CF6" stroke-width="1.5"/>
+<rect x="1210" y="889" width="360" height="6" rx="3" fill="#8B5CF6"/>
+<text x="1226" y="923" fill="#FFFFFF" font-size="16" font-weight="700">Painel: Foto</text>
+<text x="1226" y="941" fill="#8B5CF6" font-size="11.5" font-weight="600" letter-spacing="0.5">BLOCO</text>
+<circle cx="1229" cy="971" r="2.3" fill="#8B5CF6"/>
+<text x="1240" y="975" fill="#D6DEE8" font-size="13">close</text>
+<circle cx="1229" cy="990" r="2.3" fill="#8B5CF6"/>
+<text x="1240" y="994" fill="#D6DEE8" font-size="13">URL / caminho</text>
+<circle cx="1229" cy="1009" r="2.3" fill="#8B5CF6"/>
+<text x="1240" y="1013" fill="#D6DEE8" font-size="13">Fotos no servidor</text>
+<rect x="1600" y="892" width="360" height="210" rx="10" fill="#111B2E" stroke="#8B5CF6" stroke-width="1.5"/>
+<rect x="1600" y="892" width="360" height="6" rx="3" fill="#8B5CF6"/>
+<text x="1616" y="926" fill="#FFFFFF" font-size="16" font-weight="700">Painel: Color (preenchimento)</text>
+<text x="1616" y="944" fill="#8B5CF6" font-size="11.5" font-weight="600" letter-spacing="0.5">BLOCO</text>
+<circle cx="1619" cy="974" r="2.3" fill="#8B5CF6"/>
+<text x="1630" y="978" fill="#D6DEE8" font-size="13">close</text>
+<circle cx="1619" cy="993" r="2.3" fill="#8B5CF6"/>
+<text x="1630" y="997" fill="#D6DEE8" font-size="13">Fill</text>
+<circle cx="1619" cy="1012" r="2.3" fill="#8B5CF6"/>
+<text x="1630" y="1016" fill="#D6DEE8" font-size="13">Color</text>
+<circle cx="1619" cy="1031" r="2.3" fill="#8B5CF6"/>
+<text x="1630" y="1035" fill="#D6DEE8" font-size="13">Copy HEX  #0FC4D5</text>
+<circle cx="1619" cy="1050" r="2.3" fill="#8B5CF6"/>
+<text x="1630" y="1054" fill="#D6DEE8" font-size="13">− 1 px +</text>
+<circle cx="1619" cy="1069" r="2.3" fill="#8B5CF6"/>
+<text x="1630" y="1073" fill="#D6DEE8" font-size="13">− 1 / 1 +</text>
+<rect x="430" y="1025" width="360" height="153" rx="10" fill="#111B2E" stroke="#8B5CF6" stroke-width="1.5"/>
+<rect x="430" y="1025" width="360" height="6" rx="3" fill="#8B5CF6"/>
+<text x="446" y="1059" fill="#FFFFFF" font-size="16" font-weight="700">Painel: Paleta de cores</text>
+<text x="446" y="1077" fill="#8B5CF6" font-size="11.5" font-weight="600" letter-spacing="0.5">BLOCO</text>
+<circle cx="449" cy="1107" r="2.3" fill="#8B5CF6"/>
+<text x="460" y="1111" fill="#D6DEE8" font-size="13">close</text>
+<circle cx="449" cy="1126" r="2.3" fill="#8B5CF6"/>
+<text x="460" y="1130" fill="#D6DEE8" font-size="13">Paleta (remove / add)</text>
+<circle cx="449" cy="1145" r="2.3" fill="#8B5CF6"/>
+<text x="460" y="1149" fill="#D6DEE8" font-size="13">Tema (add)</text>
+<rect x="1210" y="1072" width="360" height="286" rx="10" fill="#111B2E" stroke="#F59E0B" stroke-width="1.5"/>
+<rect x="1210" y="1072" width="360" height="6" rx="3" fill="#F59E0B"/>
+<text x="1226" y="1106" fill="#FFFFFF" font-size="16" font-weight="700">Modal: Type (token)</text>
+<text x="1226" y="1124" fill="#F59E0B" font-size="11.5" font-weight="600" letter-spacing="0.5">EDITOR</text>
+<circle cx="1229" cy="1154" r="2.3" fill="#F59E0B"/>
+<text x="1240" y="1158" fill="#D6DEE8" font-size="13">close</text>
+<circle cx="1229" cy="1173" r="2.3" fill="#F59E0B"/>
+<text x="1240" y="1177" fill="#D6DEE8" font-size="13">Style — Aa</text>
+<circle cx="1229" cy="1192" r="2.3" fill="#F59E0B"/>
+<text x="1240" y="1196" fill="#D6DEE8" font-size="13">Text</text>
+<circle cx="1229" cy="1211" r="2.3" fill="#F59E0B"/>
+<text x="1240" y="1215" fill="#D6DEE8" font-size="13">Family: Versos (expand_more)</text>
+<circle cx="1229" cy="1230" r="2.3" fill="#F59E0B"/>
+<text x="1240" y="1234" fill="#D6DEE8" font-size="13">Weight: Medium (expand_more)</text>
+<circle cx="1229" cy="1249" r="2.3" fill="#F59E0B"/>
+<text x="1240" y="1253" fill="#D6DEE8" font-size="13">TT (expand)</text>
+<circle cx="1229" cy="1268" r="2.3" fill="#F59E0B"/>
+<text x="1240" y="1272" fill="#D6DEE8" font-size="13">A % (expand)</text>
+<circle cx="1229" cy="1287" r="2.3" fill="#F59E0B"/>
+<text x="1240" y="1291" fill="#D6DEE8" font-size="13">|A| % (expand)</text>
+<circle cx="1229" cy="1306" r="2.3" fill="#F59E0B"/>
+<text x="1240" y="1310" fill="#D6DEE8" font-size="13">Cancel</text>
+<circle cx="1229" cy="1325" r="2.3" fill="#F59E0B"/>
+<text x="1240" y="1329" fill="#D6DEE8" font-size="13">Save</text>
+<rect x="40" y="1091" width="360" height="210" rx="10" fill="#111B2E" stroke="#F59E0B" stroke-width="1.5"/>
+<rect x="40" y="1091" width="360" height="6" rx="3" fill="#F59E0B"/>
+<text x="56" y="1125" fill="#FFFFFF" font-size="16" font-weight="700">Modal: Color (token)</text>
+<text x="56" y="1143" fill="#F59E0B" font-size="11.5" font-weight="600" letter-spacing="0.5">EDITOR</text>
+<circle cx="59" cy="1173" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1177" fill="#D6DEE8" font-size="13">close</text>
+<circle cx="59" cy="1192" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1196" fill="#D6DEE8" font-size="13">Preview</text>
+<circle cx="59" cy="1211" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1215" fill="#D6DEE8" font-size="13">Name</text>
+<circle cx="59" cy="1230" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1234" fill="#D6DEE8" font-size="13">Hex</text>
+<circle cx="59" cy="1249" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1253" fill="#D6DEE8" font-size="13">Cancel</text>
+<circle cx="59" cy="1268" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1272" fill="#D6DEE8" font-size="13">Save</text>
+<rect x="1600" y="1132" width="360" height="286" rx="10" fill="#111B2E" stroke="#F59E0B" stroke-width="1.5"/>
+<rect x="1600" y="1132" width="360" height="6" rx="3" fill="#F59E0B"/>
+<text x="1616" y="1166" fill="#FFFFFF" font-size="16" font-weight="700">Modal: Botão (token)</text>
+<text x="1616" y="1184" fill="#F59E0B" font-size="11.5" font-weight="600" letter-spacing="0.5">EDITOR</text>
+<circle cx="1619" cy="1214" r="2.3" fill="#F59E0B"/>
+<text x="1630" y="1218" fill="#D6DEE8" font-size="13">close</text>
+<circle cx="1619" cy="1233" r="2.3" fill="#F59E0B"/>
+<text x="1630" y="1237" fill="#D6DEE8" font-size="13">Preview</text>
+<circle cx="1619" cy="1252" r="2.3" fill="#F59E0B"/>
+<text x="1630" y="1256" fill="#D6DEE8" font-size="13">Fill — sem cor — (expand_more)</text>
+<circle cx="1619" cy="1271" r="2.3" fill="#F59E0B"/>
+<text x="1630" y="1275" fill="#D6DEE8" font-size="13">Texto — sem cor — (expand_more)</text>
+<circle cx="1619" cy="1290" r="2.3" fill="#F59E0B"/>
+<text x="1630" y="1294" fill="#D6DEE8" font-size="13">Stroke</text>
+<circle cx="1619" cy="1309" r="2.3" fill="#F59E0B"/>
+<text x="1630" y="1313" fill="#D6DEE8" font-size="13">Inside (expand_more)</text>
+<circle cx="1619" cy="1328" r="2.3" fill="#F59E0B"/>
+<text x="1630" y="1332" fill="#D6DEE8" font-size="13">Type: Caption Bold (expand_more)</text>
+<circle cx="1619" cy="1347" r="2.3" fill="#F59E0B"/>
+<text x="1630" y="1351" fill="#D6DEE8" font-size="13">Layout H R lock</text>
+<circle cx="1619" cy="1366" r="2.3" fill="#F59E0B"/>
+<text x="1630" y="1370" fill="#D6DEE8" font-size="13">Cancelar</text>
+<circle cx="1619" cy="1385" r="2.3" fill="#F59E0B"/>
+<text x="1630" y="1389" fill="#D6DEE8" font-size="13">Salvar</text>
+<rect x="430" y="1208" width="360" height="210" rx="10" fill="#111B2E" stroke="#F59E0B" stroke-width="1.5"/>
+<rect x="430" y="1208" width="360" height="6" rx="3" fill="#F59E0B"/>
+<text x="446" y="1242" fill="#FFFFFF" font-size="16" font-weight="700">Modal: Cliente (logo)</text>
+<text x="446" y="1260" fill="#F59E0B" font-size="11.5" font-weight="600" letter-spacing="0.5">EDITOR</text>
+<circle cx="449" cy="1290" r="2.3" fill="#F59E0B"/>
+<text x="460" y="1294" fill="#D6DEE8" font-size="13">close</text>
+<circle cx="449" cy="1309" r="2.3" fill="#F59E0B"/>
+<text x="460" y="1313" fill="#D6DEE8" font-size="13">Preview</text>
+<circle cx="449" cy="1328" r="2.3" fill="#F59E0B"/>
+<text x="460" y="1332" fill="#D6DEE8" font-size="13">Tamanho (px)</text>
+<circle cx="449" cy="1347" r="2.3" fill="#F59E0B"/>
+<text x="460" y="1351" fill="#D6DEE8" font-size="13">SVG</text>
+<circle cx="449" cy="1366" r="2.3" fill="#F59E0B"/>
+<text x="460" y="1370" fill="#D6DEE8" font-size="13">Cancelar</text>
+<circle cx="449" cy="1385" r="2.3" fill="#F59E0B"/>
+<text x="460" y="1389" fill="#D6DEE8" font-size="13">Salvar</text>
+<rect x="40" y="1331" width="360" height="248" rx="10" fill="#111B2E" stroke="#F59E0B" stroke-width="1.5"/>
+<rect x="40" y="1331" width="360" height="6" rx="3" fill="#F59E0B"/>
+<text x="56" y="1365" fill="#FFFFFF" font-size="16" font-weight="700">Modal: Ícone</text>
+<text x="56" y="1383" fill="#F59E0B" font-size="11.5" font-weight="600" letter-spacing="0.5">EDITOR</text>
+<circle cx="59" cy="1413" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1417" fill="#D6DEE8" font-size="13">close</text>
+<circle cx="59" cy="1432" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1436" fill="#D6DEE8" font-size="13">Preview</text>
+<circle cx="59" cy="1451" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1455" fill="#D6DEE8" font-size="13">help</text>
+<circle cx="59" cy="1470" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1474" fill="#D6DEE8" font-size="13">Ícone Material</text>
+<circle cx="59" cy="1489" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1493" fill="#D6DEE8" font-size="13">Procurar na biblioteca Google →</text>
+<circle cx="59" cy="1508" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1512" fill="#D6DEE8" font-size="13">Estilo: Preenchido (filled)</text>
+<circle cx="59" cy="1527" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1531" fill="#D6DEE8" font-size="13">Cancelar</text>
+<circle cx="59" cy="1546" r="2.3" fill="#F59E0B"/>
+<text x="70" y="1550" fill="#D6DEE8" font-size="13">Salvar</text>
+<rect x="1210" y="1388" width="360" height="115" rx="10" fill="#111B2E" stroke="#F59E0B" stroke-width="1.5"/>
+<rect x="1210" y="1388" width="360" height="6" rx="3" fill="#F59E0B"/>
+<text x="1226" y="1422" fill="#FFFFFF" font-size="16" font-weight="700">Modal: Histórico de versões</text>
+<text x="1226" y="1440" fill="#F59E0B" font-size="11.5" font-weight="600" letter-spacing="0.5">VERSÕES</text>
+<circle cx="1229" cy="1470" r="2.3" fill="#F59E0B"/>
+<text x="1240" y="1474" fill="#D6DEE8" font-size="13">close</text>
+</svg>

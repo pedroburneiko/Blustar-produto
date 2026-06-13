@@ -49,7 +49,9 @@ Versionamento, changelog e monitoramento.
 - `packages/tokens` — fonte única de tokens (já pronto).
 - `packages/ui` — design system React (já pronto).
 - `apps/workspace` — app do produto (alvo da migração).
-- `reference/` — **protótipo vanilla (SPEC), somente consulta.** Ver Parte 2.
+- `reference/` — **protótipo vanilla (SPEC), somente consulta. NUNCA importar em produção.**
+  - `reference/index.html` — **SPEC canônico** (versão mais recente e completa).
+  - `reference/_archive/` — versões antigas (`index_v*`, `index_legacy_*`), só histórico.
 
 > Detalhes do M0 (modelo de dados, Zustand, undo/redo) são definidos no plano do M0,
 > aprovado antes da implementação.

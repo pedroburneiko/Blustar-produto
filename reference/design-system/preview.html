@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blustar DS — Tokens (preview)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
+<link rel="stylesheet" href="../ds-tokens.css">
+<style>
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:900px; margin:0 auto; padding:48px 32px 96px; }
+  h1{ font-size:var(--type-xl-size); font-weight:600; letter-spacing:-0.02em; margin:0 0 8px; }
+  h2{ font-size:var(--type-l-size); font-weight:600; letter-spacing:-0.01em; margin:48px 0 16px; padding-top:24px; border-top:1px solid var(--border); }
+  h3{ font-size:var(--type-mb-size); font-weight:600; margin:28px 0 12px; color:var(--bs-cyan); }
+  p{ color:var(--text-2); line-height:1.6; }
+  blockquote{ border-left:3px solid var(--bs-cyan); margin:16px 0; padding:10px 0 10px 16px; color:var(--text-3); background:var(--surface); border-radius:0 var(--r-sm) var(--r-sm) 0; }
+  code{ background:var(--surface-2); padding:2px 6px; border-radius:var(--r-sm); font-family:ui-monospace,Menlo,monospace; font-size:13px; color:var(--bs-cyan-100); }
+  pre{ background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:16px; overflow:auto; }
+  pre code{ background:none; padding:0; color:var(--text-2); }
+  table{ width:100%; border-collapse:collapse; margin:16px 0; font-size:14px; }
+  th{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--border-strong); color:var(--text-3); font-weight:600; font-size:12px; letter-spacing:0.04em; text-transform:uppercase; }
+  td{ padding:10px 12px; border-bottom:1px solid var(--border); color:var(--text-2); vertical-align:middle; }
+  td code{ color:var(--text); }
+  .badge{ display:inline-flex; gap:8px; align-items:center; padding:6px 12px; border-radius:var(--r-full); background:var(--surface-2); font-size:12px; color:var(--text-2); margin-bottom:24px; }
+  .sw{ display:inline-block; width:22px; height:22px; border-radius:6px; border:1px solid var(--border-strong); margin-right:10px; vertical-align:middle; }
+  .hexcell{ display:flex; align-items:center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="badge"><span class="bs-icon" style="--bs-icon-size:16px;color:var(--bs-cyan)">deployed_code</span> Blustar Design System · preview local</div>
+
+  <h1>Blustar — Design Tokens</h1>
+  <blockquote>Fonte única da verdade: <code>ds-tokens.css</code>. Este documento é a referência legível (humanos + IA) desses tokens. <b>Nunca</b> redeclare valores fora do <code>ds-tokens.css</code> — edite lá e atualize aqui.</blockquote>
+
+  <h2>Cores</h2>
+
+  <h3>Brand</h3>
+  <table><thead><tr><th>Token</th><th>Valor</th><th>Uso</th></tr></thead><tbody>
+    <tr><td><code>--bs-navy</code></td><td><div class="hexcell"><span class="sw" style="background:#061833"></span>#061833</div></td><td>Cor base de marca; fundos navy de templates</td></tr>
+    <tr><td><code>--bs-navy-deep</code></td><td><div class="hexcell"><span class="sw" style="background:#04001E"></span>#04001E</div></td><td>Navy mais profundo</td></tr>
+    <tr><td><code>--bs-cyan</code></td><td><div class="hexcell"><span class="sw" style="background:#0FC4D5"></span>#0FC4D5</div></td><td>Cyan principal (destaque/marca)</td></tr>
+    <tr><td><code>--bs-cyan-200</code></td><td><div class="hexcell"><span class="sw" style="background:#A6D9DE"></span>#A6D9DE</div></td><td>Cyan dessaturado</td></tr>
+    <tr><td><code>--bs-cyan-100</code></td><td><div class="hexcell"><span class="sw" style="background:#BFFAFF"></span>#BFFAFF</div></td><td>Cyan claro</td></tr>
+    <tr><td><code>--bs-cyan-50</code></td><td><div class="hexcell"><span class="sw" style="background:#DFFCFF"></span>#DFFCFF</div></td><td>Cyan muito claro</td></tr>
+    <tr><td><code>--bs-blue</code></td><td><div class="hexcell"><span class="sw" style="background:#3259FF"></span>#3259FF</div></td><td>Azul de ação/foco</td></tr>
+    <tr><td><code>--bs-white</code></td><td><div class="hexcell"><span class="sw" style="background:#FFFFFF"></span>#FFFFFF</div></td><td>Branco</td></tr>
+    <tr><td><code>--bs-ink</code></td><td><div class="hexcell"><span class="sw" style="background:#0a1018"></span>#0a1018</div></td><td>Texto/elemento escuro sobre fundos claros</td></tr>
+  </tbody></table>
+
+  <h3>Canvas escuro (UI)</h3>
+  <table><thead><tr><th>Token</th><th>Valor</th><th>Uso</th></tr></thead><tbody>
+    <tr><td><code>--bg</code></td><td><div class="hexcell"><span class="sw" style="background:#040910"></span>#040910</div></td><td>Fundo da aplicação</td></tr>
+    <tr><td><code>--surface</code></td><td><div class="hexcell"><span class="sw" style="background:rgba(126,126,126,0.10)"></span>rgba(126,126,126,.10)</div></td><td>Superfície nível 1</td></tr>
+    <tr><td><code>--surface-2</code></td><td><div class="hexcell"><span class="sw" style="background:rgba(126,126,126,0.18)"></span>rgba(126,126,126,.18)</div></td><td>Superfície nível 2</td></tr>
+    <tr><td><code>--surface-3</code></td><td><div class="hexcell"><span class="sw" style="background:rgba(126,126,126,0.26)"></span>rgba(126,126,126,.26)</div></td><td>Superfície nível 3</td></tr>
+    <tr><td><code>--hover</code></td><td><div class="hexcell"><span class="sw" style="background:rgba(255,255,255,0.08)"></span>rgba(255,255,255,.08)</div></td><td>Wash de hover unificado</td></tr>
+  </tbody></table>
+
+  <h3>Status & semânticas</h3>
+  <table><thead><tr><th>Token</th><th>Valor</th><th>Uso</th></tr></thead><tbody>
+    <tr><td><code>--status-active</code></td><td><div class="hexcell"><span class="sw" style="background:#70FF82"></span>#70FF82</div></td><td>Ativo/sucesso</td></tr>
+    <tr><td><code>--status-alert</code></td><td><div class="hexcell"><span class="sw" style="background:#FF7300"></span>#FF7300</div></td><td>Alerta</td></tr>
+    <tr><td><code>--accent-select</code></td><td><div class="hexcell"><span class="sw" style="background:#a259ff"></span>#a259ff</div></td><td>Seleção/realce</td></tr>
+    <tr><td><code>--danger</code></td><td><div class="hexcell"><span class="sw" style="background:#ff6b6b"></span>#ff6b6b</div></td><td>Erro/destrutivo</td></tr>
+    <tr><td><code>--popover</code></td><td><div class="hexcell"><span class="sw" style="background:#0d1421"></span>#0d1421</div></td><td>Fundo de popover</td></tr>
+  </tbody></table>
+
+  <h2>Tipografia</h2>
+  <p>Família <code>Versos</code> (marca BluStar) — pesos 400/500 → Regular, 600 → SemiBold, 700+ → Bold.</p>
+  <table><thead><tr><th>Nível</th><th>Size</th><th>Weight</th><th>Line</th><th>Tracking</th><th>Amostra</th></tr></thead><tbody>
+    <tr><td><code>h0</code></td><td>220px</td><td>500</td><td>0.92</td><td>-0.03em</td><td style="font-size:40px;font-weight:500;letter-spacing:-0.03em">Aa</td></tr>
+    <tr><td><code>super</code></td><td>96px</td><td>500</td><td>1</td><td>-0.02em</td><td style="font-size:34px;font-weight:500;letter-spacing:-0.02em">Aa</td></tr>
+    <tr><td><code>xl</code></td><td>40px</td><td>500</td><td>1.05</td><td>-0.02em</td><td style="font-size:28px;font-weight:500;letter-spacing:-0.02em">Aa</td></tr>
+    <tr><td><code>l</code></td><td>32px</td><td>500</td><td>1.15</td><td>-0.01em</td><td style="font-size:24px;font-weight:500">Aa</td></tr>
+    <tr><td><code>mb</code></td><td>24px</td><td>500</td><td>1.2</td><td>-0.01em</td><td style="font-size:20px;font-weight:500">Aa</td></tr>
+    <tr><td><code>m</code></td><td>16px</td><td>500</td><td>1.5</td><td>0</td><td style="font-size:16px;font-weight:500">Aa</td></tr>
+    <tr><td><code>sb</code></td><td>13px</td><td>700</td><td>1.4</td><td>0</td><td style="font-size:13px;font-weight:700">Aa</td></tr>
+    <tr><td><code>s</code></td><td>12px</td><td>500</td><td>1.4</td><td>0.04em</td><td style="font-size:12px;font-weight:500;letter-spacing:0.04em">Aa</td></tr>
+    <tr><td><code>xs</code></td><td>10px</td><td>500</td><td>1.55</td><td>0.04em</td><td style="font-size:10px;font-weight:500;letter-spacing:0.04em">Aa</td></tr>
+  </tbody></table>
+
+  <h2>Ícones — Material Symbols</h2>
+  <p>Glyphs token-driven via <code>.bs-icon</code>. Cor segue <code>currentColor</code>, tamanho via <code>--bs-icon-size</code>. Eixo <code>FILL</code> alterna outline ↔ filled.</p>
+  <p style="display:flex;gap:24px;align-items:center;color:var(--bs-cyan)">
+    <span class="bs-icon" style="--bs-icon-size:32px">home</span>
+    <span class="bs-icon" data-fill="1" style="--bs-icon-size:32px">home</span>
+    <span class="bs-icon" style="--bs-icon-size:32px">deployed_code</span>
+    <span class="bs-icon" style="--bs-icon-size:32px">palette</span>
+    <span class="bs-icon" style="--bs-icon-size:32px">bolt</span>
+  </p>
+
+  <h2>Espaçamento · Raios</h2>
+  <table><thead><tr><th>Spacing</th><th>Valor</th><th>Raio</th><th>Valor</th></tr></thead><tbody>
+    <tr><td><code>--space-1</code></td><td>4px</td><td><code>--r-sm</code></td><td>8px</td></tr>
+    <tr><td><code>--space-2</code></td><td>8px</td><td><code>--r-md</code></td><td>14px</td></tr>
+    <tr><td><code>--space-3</code></td><td>12px</td><td><code>--r-lg</code></td><td>24px</td></tr>
+    <tr><td><code>--space-4</code></td><td>16px</td><td><code>--r-full</code></td><td>9999px</td></tr>
+    <tr><td><code>--space-5</code></td><td>20px</td><td></td><td></td></tr>
+    <tr><td><code>--space-6</code></td><td>24px</td><td></td><td></td></tr>
+    <tr><td><code>--space-7</code></td><td>32px</td><td></td><td></td></tr>
+  </tbody></table>
+
+  <h2>Z-index · Foco · Motion</h2>
+  <table><thead><tr><th>Token</th><th>Valor</th></tr></thead><tbody>
+    <tr><td><code>--z-sticky / nav / overlay</code></td><td>50 / 100 / 200</td></tr>
+    <tr><td><code>--z-dropdown / modal / toast</code></td><td>400 / 500 / 600</td></tr>
+    <tr><td><code>--focus-ring</code></td><td>1.5px solid var(--bs-blue)</td></tr>
+    <tr><td><code>--ease</code></td><td>cubic-bezier(0.22, 1, 0.36, 1)</td></tr>
+  </tbody></table>
+</div>
+</body>
+</html>

@@ -13,9 +13,18 @@ Design System estão em [`packages/ui/CLAUDE.md`](./packages/ui/CLAUDE.md).
 packages/tokens   @blustar/tokens     fonte única de tokens
 packages/ui       @blustar/ui         design system (consome tokens)
 apps/workspace    @blustar/workspace  app do produto (consome ui)
+reference/        protótipo vanilla   SPEC da migração — SOMENTE CONSULTA
 ```
 
 Fluxo: `tokens → ui → workspace`. Pacotes se referenciam por `workspace:*`, nunca por cópia.
+
+## Migração do produto — `reference/` (regra dura)
+
+- A migração do produto segue [`MIGRATION_PLAN.md`](./MIGRATION_PLAN.md): o protótipo é o
+  **SPEC**, reconstrução **feature por feature** em React, **nunca big-bang**.
+- **`reference/` é SOMENTE CONSULTA.** **NUNCA importe/copie nada de `reference/` em código
+  de produção** (`apps/`, `packages/`). O SPEC canônico é `reference/index.html`; versões
+  antigas ficam em `reference/_archive/`.
 
 ## Tokens — fonte única (regra dura)
 

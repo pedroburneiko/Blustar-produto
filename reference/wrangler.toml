@@ -1,0 +1,8 @@
+name = "blustar"
+compatibility_date = "2026-06-09"
+
+# Serve os HTMLs/estáticos do repo como Workers Static Assets.
+# html_handling padrão ("auto-trailing-slash") mapeia /gen-studio -> gen-studio.html
+# e / -> index.html (URLs limpas, igual ao site atual).
+[assets]
+directory = "./"
