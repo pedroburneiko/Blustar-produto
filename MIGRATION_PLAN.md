@@ -32,6 +32,9 @@ Drag, resize, guias e snap diretamente no canvas.
 
 ### M5 — Undo/redo robusto
 Histórico completo e confiável cobrindo todas as mutações (canvas + inspectors).
+- Pendência herdada do M0: separar mutações **estruturais** (registro imediato, como o
+  `recordHistoryNow` do SPEC) de **texto** (debounced), e dar flush no registro pendente
+  antes de undo/redo — evita colisão de um undo disparado logo após uma mutação.
 
 ### M6 — Features avançadas (paridade)
 Máscaras, templates, multi-página, atalhos de teclado e painéis de cor — até atingir
