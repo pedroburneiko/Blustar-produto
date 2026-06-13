@@ -1,0 +1,22 @@
+# Dependências
+node_modules/
+.pnpm-store/
+
+# Builds
+dist/
+storybook-static/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Caches / temporários de ferramentas
+.vite/
+*.tsbuildinfo
+vite.config.ts.timestamp-*.mjs
+
+# SO / editor
+.DS_Store
+.idea/
+.vscode/

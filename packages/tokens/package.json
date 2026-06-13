@@ -1,0 +1,31 @@
+{
+  "name": "@blustar/tokens",
+  "version": "0.1.0",
+  "description": "Blustar — fonte única de tokens da marca (CSS de variáveis --bs-*, fonte Versos e API JS).",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "src/tokens.css",
+    "src/fonts.css"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./tokens.css": "./src/tokens.css",
+    "./fonts.css": "./src/fonts.css"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

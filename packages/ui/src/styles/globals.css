@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================================
+   @blustar/ui — camada de estilos base.
+   -------------------------------------------------------------------------
+   A FONTE ÚNICA DE TOKENS vive em @blustar/tokens (tokens.css + fonts.css),
+   importados antes deste arquivo em src/index.ts. Aqui só ficam as diretivas
+   do Tailwind. NÃO declare tokens (--bs-*) nem hex aqui — consuma var(--bs-*).
+   ========================================================================= */

@@ -1,0 +1,127 @@
+
+/* =========================================================================
+   FONTE ÚNICA DE TOKENS DO @blustar/ui
+   -------------------------------------------------------------------------
+   Alinhada ao ds-tokens.css da marca (sistema dark-canvas). NÃO hardcode hex
+   nos componentes — sempre consuma var(--bs-*) daqui. Tailwind e estilos
+   inline leem destes tokens. Marca = turquesa (#0FC4D5); azul = só focus.
+   ========================================================================= */
+:root {
+  /* =======================================================================
+     PRIMITIVOS — nomes da marca. Esta é a FONTE. Semânticos abaixo apontam
+     para cá; componentes NUNCA usam primitivo direto, só semântico.
+     ======================================================================= */
+
+  /* ---- Secundária / azuis (azul-*) ---- */
+  --bs-azul-nuvem:     #DFFCFF;
+  --bs-azul-aberto:    #BFFAFF;
+  --bs-azul-horizonte: #A6D9DE;
+  --bs-azul-turquesa:  #3FCCE3; /* PRIMÁRIA */
+  --bs-azul-ceu:       #3259FF; /* focus ring — nunca ação */
+  --bs-azul-profundo:  #061833;
+  --bs-azul-noturno:   #04001E;
+  --bs-asfalto:        #000000;
+  --bs-branco:         #FFFFFF;
+
+  /* Rampa funcional do primário (tons mais escuros do turquesa p/ hover/active) */
+  --bs-turquesa-hover:  #0FC4D5;
+  --bs-turquesa-active: #0DB3C2;
+
+  /* ---- Neutros (gray-*) — escala de cinza OFICIAL ---- */
+  --bs-gray-15:  #F7F7F7;
+  --bs-gray-30:  #E5E5E5;
+  --bs-gray-45:  #C7C7C7;
+  --bs-gray-60:  #8F8F8F;
+  --bs-gray-90:  #707070;
+  --bs-gray-120: #363636;
+  --bs-gray-150: #191919;
+  --bs-gray-180: #000000;
+  --bs-white:    #FFFFFF;
+
+  /* ---- Status / terciária ---- */
+  --bs-green-01:  #70FF82;
+  --bs-green-02:  #16331A;
+  --bs-orange-01: #FFB282;
+  --bs-orange-02: #8D3100;
+  --bs-orange-03: #FF5D00;
+  --bs-yellow-01: #FFE88B; /* primitivo disponível — sem papel de status por ora */
+  --bs-yellow-02: #725400;
+  --bs-red-01:    #FF9187;
+  --bs-red-02:    #560907;
+
+  /* Canvas/surface escuros — nomes funcionais (NÃO entram no namespace gray-*) */
+  --bs-canvas-noturno: #04001E; /* Azul Noturno oficial — atual --bs-bg */
+  --bs-canvas-040910:  #040910; /* "Gray 01" antigo — candidato a --bs-bg (DECISÃO PENDENTE) */
+  --bs-surface-raw:    #161B21; /* "Gray 02" antigo */
+  /* "Gray 03" antigo #ADADAD não está na escala neutra oficial — ver NOTES */
+  --bs-legacy-gray-03: #ADADAD;
+
+  /* =======================================================================
+     SEMÂNTICOS (aliases → primitivos)
+     ======================================================================= */
+
+  /* ---- Marca / ação ---- */
+  --bs-brand:        var(--bs-azul-turquesa);
+  --bs-brand-hover:  var(--bs-turquesa-hover);
+  --bs-brand-active: var(--bs-turquesa-active);
+  --bs-on-brand:     var(--bs-azul-noturno); /* ink escuro sobre turquesa clara (contraste) */
+  --bs-focus-ring:   var(--bs-azul-ceu);
+
+  /* ---- Superfícies (dark canvas) ----
+     Canvas = preto #000000 (asfalto / gray-180). #04001E e #040910 seguem
+     disponíveis como primitivos, mas não são mais o canvas. */
+  --bs-bg:            var(--bs-asfalto);
+  --bs-surface:       var(--bs-surface-raw); /* fundo de campos/cards/popover */
+  --bs-surface-hover: #1C232C;
+  --bs-surface-2:     #242C36; /* item ativo / borda sutil de campo */
+
+  /* ---- Bordas ---- */
+  --bs-border:       var(--bs-surface-2);
+  --bs-border-field: #305B9B; /* borda de CopyField sobre navy */
+
+  /* ---- Texto (escala neutra) ---- */
+  --bs-text:          var(--bs-white);
+  --bs-text-muted:    var(--bs-gray-30);
+  --bs-text-subtle:   var(--bs-gray-90);
+  --bs-text-disabled: var(--bs-gray-60);
+
+  /* ---- Status / feedback ---- */
+  --bs-success:        var(--bs-green-01);
+  --bs-success-bg:     var(--bs-green-02);
+  --bs-success-border: var(--bs-green-01);
+  /* warning (laranja) */
+  --bs-alert:          var(--bs-orange-03);
+  --bs-alert-bg:       var(--bs-orange-02);
+  --bs-alert-border:   var(--bs-orange-03);
+  /* error (danger) */
+  --bs-danger:         var(--bs-red-01);
+  --bs-danger-bg:      var(--bs-red-02);
+  --bs-danger-border:  var(--bs-red-01);
+
+  /* ---- Diagnóstico ---- */
+  --bs-grid-overlay: #00BFFF;
+
+  /* ---- Raio (soft-square) ---- */
+  --bs-radius-sm:   8px;
+  --bs-radius-md:   12px;
+  --bs-radius-lg:   16px;
+  --bs-radius-full: 9999px;
+
+  /* ---- Tipografia ---- */
+  --bs-font: "Versos", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* ---- Espaçamento (base 4px) ---- */
+  --bs-space-1: 4px;
+  --bs-space-2: 8px;
+  --bs-space-3: 12px;
+  --bs-space-4: 16px;
+  --bs-space-5: 20px;
+  --bs-space-6: 24px;
+  --bs-space-7: 32px;
+
+  /* ---- Motion ---- */
+  --bs-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  font-family: var(--bs-font);
+  color: var(--bs-text);
+}
