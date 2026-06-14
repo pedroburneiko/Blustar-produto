@@ -38,10 +38,14 @@ export interface Selection {
   layerIds: Id[];
 }
 
+export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+
 export interface UiState {
   activeBoardId: Id | null;
   /** Gesto de manipulação direta em andamento (efêmero, fora do undo). */
   interaction: Interaction | null;
+  /** Estado do autosave (para a topbar). */
+  saveStatus: SaveStatus;
 }
 
 export interface EditorState {
@@ -96,6 +100,8 @@ export interface EditorState {
   updateInteraction: (patch: Partial<Pick<Interaction, 'preview' | 'guides'>>) => void;
   /** Encerra o gesto (limpa o estado efêmero). */
   endInteraction: () => void;
+  /** Atualiza o status do autosave. */
+  setSaveStatus: (status: SaveStatus) => void;
 }
 
 function initialState(doc?: BrandDocument): Pick<EditorState, 'document' | 'selection' | 'ui'> {
@@ -103,7 +109,7 @@ function initialState(doc?: BrandDocument): Pick<EditorState, 'document' | 'sele
   return {
     document,
     selection: { pageId: null, layerIds: [] },
-    ui: { activeBoardId: document.boards[0] ?? null, interaction: null },
+    ui: { activeBoardId: document.boards[0] ?? null, interaction: null, saveStatus: 'idle' },
   };
 }
 
@@ -447,6 +453,11 @@ export const useEditorStore = create<EditorState>()(
       endInteraction: () =>
         set((state) => {
           state.ui.interaction = null;
+        }),
+
+      setSaveStatus: (status) =>
+        set((state) => {
+          state.ui.saveStatus = status;
         }),
     })),
     {

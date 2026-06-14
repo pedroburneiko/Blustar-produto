@@ -6,6 +6,11 @@ node_modules/
 dist/
 storybook-static/
 
+# Segredos / ambiente — NUNCA commitar (.env.example é versionado, sem valores)
+.env
+.env.local
+.env.*.local
+
 # Logs
 *.log
 npm-debug.log*
