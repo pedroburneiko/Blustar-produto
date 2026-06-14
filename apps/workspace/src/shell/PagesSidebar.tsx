@@ -108,6 +108,7 @@ export function PagesSidebar() {
   return (
     <Panel
       title="Pages"
+      aria-label="Páginas"
       actions={<IconButton size="sm" label="Nova página" icon={<Add size={16} />} onClick={addPage} />}
     >
       {pages.length === 0 && (
@@ -129,7 +130,17 @@ export function PagesSidebar() {
               <div
                 className="pg-row"
                 data-page-id={p.id}
+                role="button"
+                tabIndex={0}
+                aria-current={active ? "page" : undefined}
+                aria-label={`Página ${p.name}`}
                 onClick={() => useEditorStore.getState().setActivePage(p.id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    useEditorStore.getState().setActivePage(p.id);
+                  }
+                }}
                 onContextMenu={(e) => {
                   e.preventDefault();
                   openMenu(p.id, e.clientX, e.clientY);

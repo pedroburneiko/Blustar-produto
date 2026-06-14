@@ -27,6 +27,7 @@ export function Rail() {
 
   return (
     <aside
+      aria-label="Navegação de boards"
       style={{
         display: "flex",
         flexDirection: "column",

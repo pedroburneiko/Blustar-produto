@@ -14,7 +14,7 @@ export function Inspector() {
 
   if (selectedId) {
     return (
-      <Panel>
+      <Panel aria-label="Inspector">
         <LayerInspector layerId={selectedId} />
       </Panel>
     );
@@ -26,7 +26,7 @@ export function Inspector() {
 function EmptyInspector() {
   const [tab, setTab] = useState("styles");
   return (
-    <Panel>
+    <Panel aria-label="Inspector">
       <div style={{ padding: "var(--bs-space-3) var(--bs-space-3) 0" }}>
         <Tabs
           items={[

@@ -22,11 +22,13 @@ export function Topbar() {
       left={
         <span style={{ display: "flex", alignItems: "baseline", gap: 10, minWidth: 0 }}>
           <strong style={{ color: "var(--bs-text)", fontSize: 14 }}>{name}</strong>
-          {saveStatus !== "idle" && (
-            <span style={{ fontSize: 12, color: saveStatus === "error" ? "var(--bs-danger)" : "var(--bs-text-subtle)" }}>
-              {SAVE_LABEL[saveStatus]}
-            </span>
-          )}
+          <span
+            role="status"
+            aria-live="polite"
+            style={{ fontSize: 12, color: saveStatus === "error" ? "var(--bs-danger)" : "var(--bs-text-subtle)" }}
+          >
+            {saveStatus !== "idle" ? SAVE_LABEL[saveStatus] : ""}
+          </span>
         </span>
       }
       right={

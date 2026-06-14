@@ -20,6 +20,8 @@ export function CanvasArea() {
 
   return (
     <div
+      role="main"
+      aria-label="Canvas"
       onClick={() => useEditorStore.getState().clearSelection()}
       style={{
         minHeight: 0,

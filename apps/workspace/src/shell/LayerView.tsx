@@ -222,8 +222,18 @@ export function LayerView({ layerId }: LayerViewProps) {
     <div
       data-layer-id={layer.id}
       data-selected={selected || undefined}
+      role="button"
+      tabIndex={0}
+      aria-label={`${layer.type}: ${layer.name}`}
+      aria-pressed={selected}
       style={wrapperStyle}
       onClick={select}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          useEditorStore.getState().selectLayers([layer.id]);
+        }
+      }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onPointerDown={layer.rect ? onPointerDown : undefined}
