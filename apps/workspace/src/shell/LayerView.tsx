@@ -2,6 +2,7 @@ import { useRef, useState, type CSSProperties, type MouseEvent, type PointerEven
 import { Button } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
 import type { Layer, LayerBox, LayerRect, LayerStyle } from "@blustar/core";
+import { ResizeHandles } from "./ResizeHandles";
 
 const DRAG_THRESHOLD = 3; // px para distinguir clique de arraste
 
@@ -228,6 +229,7 @@ export function LayerView({ layerId }: LayerViewProps) {
       onPointerUp={layer.rect ? onPointerUp : undefined}
     >
       <LayerContent layer={layer} />
+      {selected && layer.rect && <ResizeHandles layerId={layer.id} />}
     </div>
   );
 }
