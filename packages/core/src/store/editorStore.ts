@@ -10,7 +10,7 @@
  * (ver ./history). Use os helpers `undo()`/`redo()`/`clearHistory()`.
  */
 
-import { create } from 'zustand';
+import { create, useStore } from 'zustand';
 import { temporal } from 'zundo';
 import { immer } from 'zustand/middleware/immer';
 
@@ -290,6 +290,16 @@ export function canUndo(): boolean {
 
 export function canRedo(): boolean {
   return editorTemporal.getState().futureStates.length > 0;
+}
+
+/** Hook reativo: há passos para desfazer? (re-renderiza ao mudar o histórico). */
+export function useCanUndo(): boolean {
+  return useStore(editorTemporal, (s) => s.pastStates.length > 0);
+}
+
+/** Hook reativo: há passos para refazer? */
+export function useCanRedo(): boolean {
+  return useStore(editorTemporal, (s) => s.futureStates.length > 0);
 }
 
 /** Reinicia a store para um documento novo/dado (limpa histórico e seleção). */

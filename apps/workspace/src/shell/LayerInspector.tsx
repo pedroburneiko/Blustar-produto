@@ -68,6 +68,8 @@ export function LayerInspector({ layerId }: { layerId: string }) {
   // Ações (mutam o documento → entram no undo, ao contrário da seleção).
   const s = useEditorStore.getState();
   const setLayer = (patch: Parameters<typeof s.updateLayer>[1]) => useEditorStore.getState().updateLayer(layerId, patch);
+  // Texto livre = coalescido (1 entrada por burst de digitação).
+  const setText = (patch: Parameters<typeof s.updateLayerText>[1]) => useEditorStore.getState().updateLayerText(layerId, patch);
   const setStyle = (patch: Parameters<typeof s.updateLayerStyle>[1]) => useEditorStore.getState().updateLayerStyle(layerId, patch);
   const setBox = (patch: Parameters<typeof s.updateLayerBox>[1]) => useEditorStore.getState().updateLayerBox(layerId, patch);
   const setFont = (patch: Parameters<typeof s.updateLayerFont>[1]) => useEditorStore.getState().updateLayerFont(layerId, patch);
@@ -79,7 +81,7 @@ export function LayerInspector({ layerId }: { layerId: string }) {
         <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--bs-text-subtle)" }}>
           {TYPE_LABEL[layer.type] ?? layer.type}
         </span>
-        <TextField value={layer.name} onChange={(e) => setLayer({ name: e.target.value })} aria-label="Nome da camada" />
+        <TextField value={layer.name} onChange={(e) => setText({ name: e.target.value })} aria-label="Nome da camada" />
       </div>
 
       {/* Geral */}
@@ -93,7 +95,7 @@ export function LayerInspector({ layerId }: { layerId: string }) {
         <>
           <Section title="Texto">
             <Field label="Conteúdo">
-              <TextField multiline value={layer.text} onChange={(e) => setLayer({ text: e.target.value })} aria-label="Conteúdo" />
+              <TextField multiline value={layer.text} onChange={(e) => setText({ text: e.target.value })} aria-label="Conteúdo" />
             </Field>
           </Section>
           <Section title="Tipografia">
@@ -115,7 +117,7 @@ export function LayerInspector({ layerId }: { layerId: string }) {
       {layer.type === "button" && (
         <Section title="Botão">
           <Field label="Label">
-            <TextField value={layer.label} onChange={(e) => setLayer({ label: e.target.value })} aria-label="Label" />
+            <TextField value={layer.label} onChange={(e) => setText({ label: e.target.value })} aria-label="Label" />
           </Field>
           <Field label="Variante">
             <Select options={VARIANT_OPTS} value={layer.variant} onChange={(v) => setLayer({ variant: v })} aria-label="Variante" />
@@ -164,7 +166,7 @@ export function LayerInspector({ layerId }: { layerId: string }) {
       {(layer.type === "image" || layer.type === "video") && (
         <Section title="Mídia">
           <Field label="Fonte (URL)">
-            <TextField value={layer.src} onChange={(e) => setLayer({ src: e.target.value })} placeholder="https://…" aria-label="URL da mídia" />
+            <TextField value={layer.src} onChange={(e) => setText({ src: e.target.value })} placeholder="https://…" aria-label="URL da mídia" />
           </Field>
         </Section>
       )}
