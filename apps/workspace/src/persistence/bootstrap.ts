@@ -1,6 +1,7 @@
 import { useEditorStore, resetEditor, type DocumentStore } from "@blustar/core";
 import { getDocumentStore } from "./supabaseStore";
 import { sampleDocument } from "../sampleDocument";
+import { captureError } from "../monitoring";
 
 /** id da linha no Supabase (primeira passada: um único documento). */
 const DOC_ID = "default";
@@ -29,6 +30,7 @@ export async function bootstrap(): Promise<void> {
     setupAutosave(store);
   } catch (e) {
     console.error("Persistência: falha ao carregar; usando documento local.", e);
+    captureError(e, { scope: "load" });
     resetEditor(sampleDocument());
     useEditorStore.getState().setSaveStatus("error");
   }
@@ -47,6 +49,7 @@ function setupAutosave(store: DocumentStore): void {
         useEditorStore.getState().setSaveStatus("saved");
       } catch (e) {
         console.error("Persistência: falha ao salvar.", e);
+        captureError(e, { scope: "autosave" });
         useEditorStore.getState().setSaveStatus("error");
       }
     }, AUTOSAVE_MS);

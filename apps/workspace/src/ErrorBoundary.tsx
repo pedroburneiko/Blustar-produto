@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { Button } from "@blustar/ui";
+import { captureError } from "./monitoring";
 
 interface Props {
   children: ReactNode;
@@ -20,7 +21,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
-    // TODO(M7 Sentry): reportar erro + info aqui.
+    captureError(error, { componentStack: info.componentStack });
     console.error("Erro de render capturado pelo ErrorBoundary:", error, info);
   }
 

@@ -8,6 +8,10 @@ import { App } from "./App";
 import { Loading } from "./Loading";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { bootstrap } from "./persistence/bootstrap";
+import { initMonitoring } from "./monitoring";
+
+// Monitoramento de erros (Sentry) — inerte sem VITE_SENTRY_DSN.
+initMonitoring();
 
 // Atalho de dev para inspecionar/testar a store no console. Sem efeito em produção.
 if (import.meta.env.DEV) {
