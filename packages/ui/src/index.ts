@@ -11,6 +11,10 @@ export * from "./components/Alert";
 export * from "./components/Icon";
 export * from "./components/Accordion";
 export * from "./components/Grid";
+export * from "./components/IconButton";
+export * from "./components/Tabs";
+export * from "./components/NavItem";
+export * from "./components/Panel";
 
 // API JS dos tokens (colors, palette, spacing, typography, grid) vem da fonte única.
 export * from "@blustar/tokens";

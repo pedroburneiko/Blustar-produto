@@ -1,2 +1,21 @@
-export { ArrowForward, CheckCircle, Chevron, Copy } from "./Icon";
+export {
+  ArrowForward,
+  CheckCircle,
+  Chevron,
+  Copy,
+  ErrorCircle,
+  Warning,
+  // Ícones do shell (traço)
+  Home,
+  Guide,
+  Grid4,
+  Gear,
+  Add,
+  Check,
+  Edit,
+  More,
+  Logout,
+  Undo,
+  Redo,
+} from "./Icon";
 export type { IconProps } from "./Icon";

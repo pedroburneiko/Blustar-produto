@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 export interface IconProps {
   /** Tamanho (largura e altura) em px. Padrão 24. */
@@ -94,4 +94,129 @@ export const Warning = ({ size = 24, color = "currentColor", style, className, t
       fill={color}
     />
   </svg>
+);
+
+// ---------------------------------------------------------------------------
+// Ícones de traço (shell do app). Compartilham um wrapper consistente:
+// viewBox 24, stroke = currentColor, cantos arredondados.
+// ---------------------------------------------------------------------------
+
+function Glyph({
+  size = 24,
+  color = "currentColor",
+  style,
+  className,
+  title,
+  children,
+}: IconProps & { children: ReactNode }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role={title ? "img" : undefined}
+      aria-hidden={title ? undefined : true}
+      aria-label={title}
+      style={style}
+      className={className}
+    >
+      {title && <title>{title}</title>}
+      {children}
+    </svg>
+  );
+}
+
+/** Casa (Home / board). */
+export const Home = (p: IconProps) => (
+  <Glyph {...p}>
+    <path d="M3 11l9-7 9 7" />
+    <path d="M5 9.5V20h5v-6h4v6h5V9.5" />
+  </Glyph>
+);
+
+/** Livro/guia (Guide / board). */
+export const Guide = (p: IconProps) => (
+  <Glyph {...p}>
+    <path d="M4 4h9a3 3 0 013 3v13H7a3 3 0 01-3-3V4z" />
+    <path d="M4 17a3 3 0 013-3h9" />
+  </Glyph>
+);
+
+/** Grade 2x2 (Design System / board). */
+export const Grid4 = (p: IconProps) => (
+  <Glyph {...p}>
+    <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
+    <rect x="13.5" y="3.5" width="7" height="7" rx="1.5" />
+    <rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
+    <rect x="13.5" y="13.5" width="7" height="7" rx="1.5" />
+  </Glyph>
+);
+
+/** Engrenagem (Configurações). */
+export const Gear = (p: IconProps) => (
+  <Glyph {...p}>
+    <circle cx="12" cy="12" r="3" />
+    <path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5 5l2.1 2.1M16.9 16.9L19 19M19 5l-2.1 2.1M7.1 16.9L5 19" />
+  </Glyph>
+);
+
+/** Mais (adicionar). */
+export const Add = (p: IconProps) => (
+  <Glyph {...p}>
+    <path d="M12 5v14M5 12h14" />
+  </Glyph>
+);
+
+/** Marca de seleção. */
+export const Check = (p: IconProps) => (
+  <Glyph {...p}>
+    <path d="M5 12.5l4.5 4.5L19 7.5" />
+  </Glyph>
+);
+
+/** Lápis (editar). */
+export const Edit = (p: IconProps) => (
+  <Glyph {...p}>
+    <path d="M4 20h4L19 9l-4-4L4 16v4z" />
+    <path d="M13.5 6.5l4 4" />
+  </Glyph>
+);
+
+/** Três pontos horizontais (mais ações). */
+export const More = ({ color = "currentColor", ...p }: IconProps) => (
+  <Glyph color={color} {...p}>
+    <circle cx="6" cy="12" r="1.4" fill={color} stroke="none" />
+    <circle cx="12" cy="12" r="1.4" fill={color} stroke="none" />
+    <circle cx="18" cy="12" r="1.4" fill={color} stroke="none" />
+  </Glyph>
+);
+
+/** Sair (logout). */
+export const Logout = (p: IconProps) => (
+  <Glyph {...p}>
+    <path d="M14 4h4a2 2 0 012 2v12a2 2 0 01-2 2h-4" />
+    <path d="M10 16l4-4-4-4" />
+    <path d="M14 12H3" />
+  </Glyph>
+);
+
+/** Desfazer. */
+export const Undo = (p: IconProps) => (
+  <Glyph {...p}>
+    <path d="M9 7L4 12l5 5" />
+    <path d="M4 12h11a5 5 0 015 5v0" />
+  </Glyph>
+);
+
+/** Refazer. */
+export const Redo = (p: IconProps) => (
+  <Glyph {...p}>
+    <path d="M15 7l5 5-5 5" />
+    <path d="M20 12H9a5 5 0 00-5 5v0" />
+  </Glyph>
 );
