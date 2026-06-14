@@ -61,6 +61,8 @@ export interface EditorState {
   duplicatePage: (id: Id) => Page | null;
   /** Remove a página, suas layers e sub-páginas; corrige a seleção. */
   removePage: (id: Id) => void;
+  /** Reordena/aninha uma página em relação a um alvo (1 nível). */
+  movePage: (id: Id, targetId: Id, position: 'before' | 'after' | 'inside') => void;
   addLayer: (layer: Layer) => void;
   updateLayer: (id: Id, patch: Partial<Layer>) => void;
   /** Edição de TEXTO livre (nome/conteúdo/label/src) — coalescida no histórico. */
@@ -211,6 +213,41 @@ export const useEditorStore = create<EditorState>()(
             state.selection.pageId = board.pages[0] ?? null;
             state.selection.layerIds = [];
           }
+        }),
+
+      movePage: (id, targetId, position) =>
+        set((state) => {
+          const doc = state.document;
+          const pages = doc.entities.pages;
+          const dragged = pages[id];
+          const target = pages[targetId];
+          if (!dragged || !target || id === targetId) return;
+          const board = doc.entities.boards[dragged.boardId];
+
+          // o bloco da página arrastada inclui suas sub-páginas (movem juntas)
+          const children = board.pages.filter((p) => pages[p]?.parentId === id);
+          const block = [id, ...children];
+          if (block.includes(targetId)) return; // não soltar dentro de si mesma
+
+          let pos = position;
+          // 'inside' só em página de topo; se a arrastada tem subs, não aninha (1 nível)
+          if (pos === 'inside' && (target.parentId || children.length)) pos = 'after';
+
+          const newParent = pos === 'inside' ? targetId : (target.parentId ?? null);
+          pages[id].parentId = newParent;
+
+          const arr = board.pages.filter((p) => !block.includes(p));
+          const lastChildOf = (pid: Id) => {
+            const subs = arr.filter((p) => pages[p]?.parentId === pid);
+            return subs.length ? subs[subs.length - 1] : pid;
+          };
+          let idx: number;
+          if (pos === 'before') idx = arr.indexOf(targetId);
+          else if (pos === 'inside') idx = arr.indexOf(lastChildOf(targetId)) + 1;
+          else idx = arr.indexOf(target.parentId ? targetId : lastChildOf(targetId)) + 1;
+
+          arr.splice(idx, 0, ...block);
+          board.pages = arr;
         }),
 
       addLayer: (layer) =>
