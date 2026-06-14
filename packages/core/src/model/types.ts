@@ -80,6 +80,34 @@ export interface LayerBase {
   box?: LayerBox;
   /** Aparência de fundo/cor da própria layer. */
   style?: LayerStyle;
+  /**
+   * Geometria absoluta (px no frame do canvas). Presente → a layer é posicionada
+   * livremente (drag/resize do M4); ausente → render em flow (M2).
+   */
+  rect?: LayerRect;
+}
+
+/** Geometria absoluta no frame do canvas (px). */
+export interface LayerRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/** Direção de uma alça de resize (cantos + bordas). */
+export type ResizeDir = 'nw' | 'ne' | 'sw' | 'se' | 'n' | 's' | 'e' | 'w';
+
+/** Estado efêmero de um gesto de manipulação direta (fora do undo). */
+export interface Interaction {
+  kind: 'drag' | 'resize';
+  layerId: Id;
+  /** Alça em uso (apenas para resize). */
+  handle?: ResizeDir;
+  /** Geometria ao vivo durante o gesto (preview). */
+  preview: LayerRect;
+  /** Linhas de alinhamento em que houve snap (para render das guias). */
+  guides?: { x: number[]; y: number[] };
 }
 
 export interface LayerBox {

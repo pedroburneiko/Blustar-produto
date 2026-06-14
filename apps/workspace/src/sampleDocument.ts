@@ -50,9 +50,45 @@ export function sampleDocument(): BrandDocument {
         seedLayers(doc, page);
       }
     }
+
+    // Página dedicada de manipulação direta (M4) no board Home.
+    if (seed.kind === 'home') {
+      const free = createPage(board.id, 'Canvas livre');
+      doc.entities.pages[free.id] = free;
+      board.pages.push(free.id);
+      seedFreeCanvas(doc, free);
+    }
   }
 
   return doc;
+}
+
+/** Semeia uma página com layers ABSOLUTAS (rect x/y/w/h) para o M4. */
+function seedFreeCanvas(doc: BrandDocument, page: Page): void {
+  const pid = page.id;
+  attach(doc, createLayer('shape', pid, {
+    name: 'Bloco turquesa',
+    shape: 'rect',
+    style: { background: 'var(--bs-brand)' },
+    rect: { x: 80, y: 60, w: 220, h: 140 },
+  }));
+  attach(doc, createLayer('text', pid, {
+    name: 'Título',
+    text: 'Arraste-me',
+    font: { size: '2rem', weight: 700 },
+    rect: { x: 360, y: 80, w: 320, h: 60 },
+  }));
+  attach(doc, createLayer('button', pid, {
+    name: 'Botão',
+    variant: 'primary',
+    label: 'Ação',
+    rect: { x: 360, y: 180, w: 160, h: 48 },
+  }));
+  attach(doc, createLayer('image', pid, {
+    name: 'Imagem',
+    src: '',
+    rect: { x: 120, y: 260, w: 280, h: 180 },
+  }));
 }
 
 /** Registra a layer no documento (em page.roots ou nos filhos do pai). */

@@ -12,6 +12,10 @@ export function CanvasArea() {
     activeBoardId ? s.document.entities.boards[activeBoardId] : null,
   );
   const page = useEditorStore((s) => (s.selection.pageId ? s.document.entities.pages[s.selection.pageId] : null));
+  // Página em modo "canvas livre" se alguma layer raiz é absoluta (tem rect).
+  const isFree = useEditorStore((s) =>
+    page ? page.roots.some((id) => s.document.entities.layers[id]?.rect) : false,
+  );
 
   return (
     <div
@@ -44,8 +48,26 @@ export function CanvasArea() {
             </h1>
           </div>
 
-          {/* Camadas da página (somente leitura — M2) */}
-          {page.roots.length > 0 ? (
+          {/* Canvas livre (M4): frame absoluto com a origem das coordenadas */}
+          {isFree ? (
+            <div
+              data-canvas-frame
+              style={{
+                position: "relative",
+                width: "100%",
+                maxWidth: 900,
+                height: 560,
+                margin: "0 auto",
+                border: "1px solid var(--bs-border)",
+                borderRadius: "var(--bs-radius-lg)",
+                overflow: "hidden",
+              }}
+            >
+              {page.roots.map((id) => (
+                <LayerView key={id} layerId={id} />
+              ))}
+            </div>
+          ) : page.roots.length > 0 ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "var(--bs-space-5)" }}>
               {page.roots.map((id) => (
                 <LayerView key={id} layerId={id} />

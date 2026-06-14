@@ -19,8 +19,10 @@ import type {
   BrandDocument,
   FontProps,
   Id,
+  Interaction,
   Layer,
   LayerBox,
+  LayerRect,
   LayerStyle,
   Page,
 } from '../model/types.js';
@@ -39,6 +41,8 @@ export interface Selection {
 
 export interface UiState {
   activeBoardId: Id | null;
+  /** Gesto de manipulação direta em andamento (efêmero, fora do undo). */
+  interaction: Interaction | null;
 }
 
 export interface EditorState {
@@ -58,6 +62,10 @@ export interface EditorState {
   updateLayerBox: (id: Id, patch: Partial<LayerBox>) => void;
   /** Merge raso na fonte de uma layer de texto/botão (cria se ausente). */
   updateLayerFont: (id: Id, patch: Partial<FontProps>) => void;
+  /** Commit de posição (1 entrada de histórico — chamar no fim do gesto). */
+  moveLayer: (id: Id, pos: { x: number; y: number }) => void;
+  /** Commit de geometria (1 entrada de histórico — chamar no fim do gesto). */
+  resizeLayer: (id: Id, rect: LayerRect) => void;
   removeLayer: (id: Id) => void;
   setToken: (name: string, value: string) => void;
   removeToken: (name: string) => void;
@@ -67,6 +75,12 @@ export interface EditorState {
   clearSelection: () => void;
   setActivePage: (pageId: Id | null) => void;
   setActiveBoard: (boardId: Id | null) => void;
+  /** Inicia um gesto de drag/resize (preview efêmero, fora do undo). */
+  beginInteraction: (interaction: Interaction) => void;
+  /** Atualiza o preview (e guias) do gesto em andamento. */
+  updateInteraction: (patch: Partial<Pick<Interaction, 'preview' | 'guides'>>) => void;
+  /** Encerra o gesto (limpa o estado efêmero). */
+  endInteraction: () => void;
 }
 
 function initialState(doc?: BrandDocument): Pick<EditorState, 'document' | 'selection' | 'ui'> {
@@ -74,7 +88,7 @@ function initialState(doc?: BrandDocument): Pick<EditorState, 'document' | 'sele
   return {
     document,
     selection: { pageId: null, layerIds: [] },
-    ui: { activeBoardId: document.boards[0] ?? null },
+    ui: { activeBoardId: document.boards[0] ?? null, interaction: null },
   };
 }
 
@@ -137,6 +151,21 @@ export const useEditorStore = create<EditorState>()(
           layer.font = { ...layer.font, ...patch };
         }),
 
+      moveLayer: (id, pos) =>
+        set((state) => {
+          const layer = state.document.entities.layers[id];
+          if (!layer || !layer.rect) return;
+          layer.rect.x = pos.x;
+          layer.rect.y = pos.y;
+        }),
+
+      resizeLayer: (id, rect) =>
+        set((state) => {
+          const layer = state.document.entities.layers[id];
+          if (!layer) return;
+          layer.rect = { ...rect };
+        }),
+
       removeLayer: (id) =>
         set((state) => {
           const layers = state.document.entities.layers;
@@ -192,6 +221,25 @@ export const useEditorStore = create<EditorState>()(
       setActiveBoard: (boardId) =>
         set((state) => {
           state.ui.activeBoardId = boardId;
+        }),
+
+      // Gesto de manipulação direta — só toca o slice `ui` (efêmero): como o
+      // `document` não muda, o histórico (zundo) não registra nada aqui.
+      beginInteraction: (interaction) =>
+        set((state) => {
+          state.ui.interaction = interaction;
+        }),
+
+      updateInteraction: (patch) =>
+        set((state) => {
+          if (!state.ui.interaction) return;
+          if (patch.preview) state.ui.interaction.preview = patch.preview;
+          if (patch.guides) state.ui.interaction.guides = patch.guides;
+        }),
+
+      endInteraction: () =>
+        set((state) => {
+          state.ui.interaction = null;
         }),
     })),
     {

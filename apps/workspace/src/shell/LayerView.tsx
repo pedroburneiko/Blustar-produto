@@ -151,9 +151,15 @@ export function LayerView({ layerId }: LayerViewProps) {
       ? "1px dashed var(--bs-brand)"
       : "1px solid transparent";
 
-  // O box é aplicado no wrapper externo (exceto para grupo, que usa grid no conteúdo).
+  // Layer absoluta (M4): posiciona via rect. Senão, flow com box (M2).
+  const absolute: CSSProperties = layer.rect
+    ? { position: "absolute", left: layer.rect.x, top: layer.rect.y, width: layer.rect.w, height: layer.rect.h }
+    : layer.type === "group"
+      ? {}
+      : boxToStyle(layer.box, false);
+
   const wrapperStyle: CSSProperties = {
-    ...(layer.type === "group" ? {} : boxToStyle(layer.box, false)),
+    ...absolute,
     outline,
     outlineOffset: 4,
     borderRadius: 2,
