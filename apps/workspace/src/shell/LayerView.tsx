@@ -3,6 +3,7 @@ import { Button } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
 import type { Layer, LayerBox, LayerRect, LayerStyle } from "@blustar/core";
 import { ResizeHandles } from "./ResizeHandles";
+import { TemplateInstanceView } from "./TemplateInstanceView";
 import { computeMoveSnap, siblingRects } from "./snapping";
 
 const DRAG_THRESHOLD = 3; // px para distinguir clique de arraste
@@ -112,7 +113,7 @@ function LayerContent({ layer }: { layer: Layer }) {
       );
 
     case "component":
-      return <Placeholder label={`Componente · ${layer.templateName || layer.name}`} />;
+      return <TemplateInstanceView instance={layer} />;
 
     case "group":
       return (

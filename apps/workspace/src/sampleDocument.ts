@@ -12,6 +12,7 @@ import {
   type BrandDocument,
   type Layer,
   type Page,
+  type TemplateMaster,
 } from '@blustar/core';
 
 interface BoardSeed {
@@ -36,6 +37,7 @@ export function sampleDocument(): BrandDocument {
   const doc = createDocument('Brand System BluStar');
   doc.boards = [];
   doc.entities = { boards: {}, pages: {}, layers: {} };
+  seedMasters(doc);
 
   for (const seed of SEED) {
     const board = createBoard(seed.kind, seed.name);
@@ -63,9 +65,36 @@ export function sampleDocument(): BrandDocument {
   return doc;
 }
 
+/** Semeia masters de template (subárvore de layers; id da layer = slotKey). */
+function seedMasters(doc: BrandDocument): void {
+  const title = createLayer('text', 'master', { name: 'Título', text: 'Título do componente', font: { size: '1.5rem', weight: 700 } });
+  const sub = createLayer('text', 'master', { name: 'Subtítulo', text: 'Subtítulo editável', style: { color: 'var(--bs-text-muted)' } });
+  const btn = createLayer('button', 'master', { name: 'CTA', label: 'Ação', variant: 'primary' });
+  const group = createLayer('group', 'master', { name: 'Hero' });
+  group.children = [title.id, sub.id, btn.id];
+  for (const l of [title, sub, btn]) l.parentId = group.id;
+
+  const hero: TemplateMaster = {
+    name: 'Hero',
+    label: 'Hero',
+    category: 'layout',
+    rootId: group.id,
+    layers: { [group.id]: group, [title.id]: title, [sub.id]: sub, [btn.id]: btn },
+  };
+  doc.templates.masters[hero.name] = hero;
+}
+
 /** Semeia uma página com layers ABSOLUTAS (rect x/y/w/h) para o M4. */
 function seedFreeCanvas(doc: BrandDocument, page: Page): void {
   const pid = page.id;
+  // Instância de componente (M6 D) — renderiza o master Hero, posicionada.
+  attach(doc, createLayer('component', pid, {
+    name: 'Hero',
+    templateName: 'Hero',
+    category: 'layout',
+    rect: { x: 440, y: 60, w: 300, h: 200 },
+    overrides: {},
+  }));
   attach(doc, createLayer('shape', pid, {
     name: 'Bloco turquesa',
     shape: 'rect',
