@@ -3,8 +3,21 @@ import { Button } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
 import type { Layer, LayerBox, LayerRect, LayerStyle } from "@blustar/core";
 import { ResizeHandles } from "./ResizeHandles";
+import { computeMoveSnap } from "./snapping";
 
 const DRAG_THRESHOLD = 3; // px para distinguir clique de arraste
+
+/** rects das outras layers absolutas da mesma página (alvos de snap). */
+function siblingRects(layerId: string) {
+  const s = useEditorStore.getState();
+  const layer = s.document.entities.layers[layerId];
+  const page = layer ? s.document.entities.pages[layer.pageId] : null;
+  if (!page) return [];
+  return page.roots
+    .filter((id) => id !== layerId)
+    .map((id) => s.document.entities.layers[id]?.rect)
+    .filter((r): r is NonNullable<typeof r> => !!r);
+}
 
 /** Converte o box do modelo em estilo CSS. `grid` = container de grupo. */
 function boxToStyle(box: LayerBox | undefined, grid: boolean): CSSProperties {
@@ -175,9 +188,10 @@ export function LayerView({ layerId }: LayerViewProps) {
       useEditorStore.getState().selectLayers([layerId]);
       useEditorStore.getState().beginInteraction({ kind: "drag", layerId, preview: { ...st.rect } });
     }
-    useEditorStore.getState().updateInteraction({
-      preview: { x: Math.round(st.rect.x + dx), y: Math.round(st.rect.y + dy), w: st.rect.w, h: st.rect.h },
-    });
+    const candidate = { x: Math.round(st.rect.x + dx), y: Math.round(st.rect.y + dy), w: st.rect.w, h: st.rect.h };
+    const snap = computeMoveSnap(candidate, siblingRects(layerId));
+    // M4.4: guias visíveis no alinhamento; a posição ainda NÃO faz snap (M4.5).
+    useEditorStore.getState().updateInteraction({ preview: candidate, guides: snap.guides });
   }
   function onPointerUp(e: PointerEvent) {
     const st = dragRef.current;

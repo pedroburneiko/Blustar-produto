@@ -1,5 +1,6 @@
 import { useEditorStore } from "@blustar/core";
 import { LayerView } from "./LayerView";
+import { GuidesOverlay } from "./GuidesOverlay";
 
 /**
  * Área de canvas central — espelha .guide-content/.world-head do SPEC.
@@ -66,6 +67,7 @@ export function CanvasArea() {
               {page.roots.map((id) => (
                 <LayerView key={id} layerId={id} />
               ))}
+              <GuidesOverlay />
             </div>
           ) : page.roots.length > 0 ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "var(--bs-space-5)" }}>
