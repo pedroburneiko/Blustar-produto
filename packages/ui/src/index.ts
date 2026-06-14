@@ -22,6 +22,7 @@ export * from "./components/Toggle";
 export * from "./components/SegmentedControl";
 export * from "./components/SwatchPicker";
 export * from "./components/Toolbar";
+export * from "./components/Menu";
 
 // API JS dos tokens (colors, palette, spacing, typography, grid) vem da fonte única.
 export * from "@blustar/tokens";
