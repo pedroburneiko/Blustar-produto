@@ -5,14 +5,14 @@ import { PagesSidebar } from "./PagesSidebar";
 import { CanvasArea } from "./CanvasArea";
 import { Inspector } from "./Inspector";
 import { Topbar } from "./Topbar";
-import { useUndoRedoShortcuts } from "./useUndoRedoShortcuts";
+import { useEditorShortcuts } from "./useUndoRedoShortcuts";
 
 /**
  * Moldura (shell) do produto. Rail de altura cheia à esquerda; à direita, uma
  * topbar slim (M5) sobre o grid páginas | canvas | inspector.
  */
 export function AppShell() {
-  useUndoRedoShortcuts(); // Cmd+Z / Cmd+Shift+Z
+  useEditorShortcuts(); // undo/redo, duplicar, excluir, nudge, esc
 
   // Garante uma página ativa ao montar (primeira do board ativo).
   useEffect(() => {

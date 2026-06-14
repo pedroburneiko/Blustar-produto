@@ -77,6 +77,10 @@ export interface EditorState {
   moveLayer: (id: Id, pos: { x: number; y: number }) => void;
   /** Commit de geometria (1 entrada de histórico — chamar no fim do gesto). */
   resizeLayer: (id: Id, rect: LayerRect) => void;
+  /** Duplica uma layer (com filhos); offset leve se absoluta. Retorna o novo id. */
+  duplicateLayer: (id: Id) => Id | null;
+  /** Move uma layer absoluta por (dx,dy); coalescido (burst de setas = 1 entrada). */
+  nudgeLayer: (id: Id, dx: number, dy: number) => void;
   removeLayer: (id: Id) => void;
   setToken: (name: string, value: string) => void;
   removeToken: (name: string) => void;
@@ -101,6 +105,26 @@ function initialState(doc?: BrandDocument): Pick<EditorState, 'document' | 'sele
     selection: { pageId: null, layerIds: [] },
     ui: { activeBoardId: document.boards[0] ?? null, interaction: null },
   };
+}
+
+/** Clona uma subárvore de layer (ids novos); retorna o id da nova raiz. */
+function cloneLayerSubtree(doc: BrandDocument, srcId: Id): Id {
+  const ids: Id[] = [];
+  const collect = (id: Id) => {
+    ids.push(id);
+    doc.entities.layers[id]?.children.forEach(collect);
+  };
+  collect(srcId);
+  const map = new Map<Id, Id>(ids.map((id) => [id, createId('layer')]));
+  for (const oldId of ids) {
+    const l = doc.entities.layers[oldId];
+    const clone = JSON.parse(JSON.stringify(l)) as Layer;
+    clone.id = map.get(oldId)!;
+    clone.parentId = l.parentId && map.has(l.parentId) ? map.get(l.parentId)! : l.parentId;
+    clone.children = l.children.map((c) => map.get(c)!).filter(Boolean);
+    doc.entities.layers[clone.id] = clone;
+  }
+  return map.get(srcId)!;
 }
 
 /**
@@ -313,6 +337,41 @@ export const useEditorStore = create<EditorState>()(
           if (!layer) return;
           layer.rect = { ...rect };
         }),
+
+      duplicateLayer: (id) => {
+        const src = get().document.entities.layers[id];
+        if (!src) return null;
+        let newId: Id | null = null;
+        set((state) => {
+          const doc = state.document;
+          newId = cloneLayerSubtree(doc, id);
+          const clone = doc.entities.layers[newId];
+          if (clone.rect) {
+            clone.rect.x += 16;
+            clone.rect.y += 16;
+          }
+          if (src.parentId) {
+            const parent = doc.entities.layers[src.parentId];
+            parent?.children.splice(parent.children.indexOf(id) + 1, 0, newId);
+          } else {
+            const page = doc.entities.pages[src.pageId];
+            page?.roots.splice(page.roots.indexOf(id) + 1, 0, newId);
+          }
+        });
+        return newId;
+      },
+
+      nudgeLayer: (id, dx, dy) => {
+        historyController.setMode('text'); // burst de setas = 1 entrada
+        set((state) => {
+          const layer = state.document.entities.layers[id];
+          if (layer?.rect) {
+            layer.rect.x += dx;
+            layer.rect.y += dy;
+          }
+        });
+        historyController.setMode('immediate');
+      },
 
       removeLayer: (id) =>
         set((state) => {
