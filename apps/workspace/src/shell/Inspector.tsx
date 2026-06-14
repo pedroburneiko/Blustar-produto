@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Panel, Tabs } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
 import { LayerInspector } from "./LayerInspector";
+import { StylesPanel } from "./StylesPanel";
 
 /**
  * Inspector (direita) — espelha .guide-right do SPEC.
@@ -37,9 +38,13 @@ function EmptyInspector() {
           aria-label="Inspector"
         />
       </div>
-      <div style={{ padding: "var(--bs-space-5) var(--bs-space-3)", color: "var(--bs-text-subtle)", fontSize: 13 }}>
-        Selecione uma camada para editar suas propriedades.
-      </div>
+      {tab === "styles" ? (
+        <StylesPanel />
+      ) : (
+        <div style={{ padding: "var(--bs-space-5) var(--bs-space-3)", color: "var(--bs-text-subtle)", fontSize: 13 }}>
+          Selecione uma camada para editar suas propriedades.
+        </div>
+      )}
     </Panel>
   );
 }

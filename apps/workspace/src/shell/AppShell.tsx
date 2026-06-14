@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type CSSProperties } from "react";
 import { useEditorStore } from "@blustar/core";
 import { Rail } from "./Rail";
 import { PagesSidebar } from "./PagesSidebar";
@@ -24,9 +24,14 @@ export function AppShell() {
     if (first) s.setActivePage(first);
   }, []);
 
+  // Overrides de tokens do documento (M6.B): aplicados no root → cascateiam
+  // para todo o app (canvas + chrome), como o rootStyle do SPEC.
+  const tokenVars = useEditorStore((s) => s.document.tokens.vars);
+
   return (
     <div
       style={{
+        ...(tokenVars as CSSProperties),
         display: "grid",
         gridTemplateColumns: "minmax(180px, 200px) minmax(0, 1fr)",
         height: "100vh",
