@@ -5,3 +5,4 @@ export * from './model/types.js';
 export * from './model/factories.js';
 export * from './store/history.js';
 export * from './store/editorStore.js';
+export * from './persistence/store.js';
