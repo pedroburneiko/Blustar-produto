@@ -5,6 +5,8 @@ import ReactDOM from "react-dom/client";
 import "@blustar/ui/styles.css";
 import { undo, redo, useEditorStore } from "@blustar/core";
 import { App } from "./App";
+import { Loading } from "./Loading";
+import { ErrorBoundary } from "./ErrorBoundary";
 import { bootstrap } from "./persistence/bootstrap";
 
 // Atalho de dev para inspecionar/testar a store no console. Sem efeito em produção.
@@ -12,12 +14,15 @@ if (import.meta.env.DEV) {
   Object.assign(window, { __editor: { store: useEditorStore, undo, redo } });
 }
 
-// Carrega o documento (Supabase se configurado; senão, exemplo em memória) antes
-// de montar a UI.
+const root = ReactDOM.createRoot(document.getElementById("root")!);
+// Mostra o loading enquanto o documento carrega (Supabase ou exemplo).
+root.render(<Loading />);
 bootstrap().finally(() => {
-  ReactDOM.createRoot(document.getElementById("root")!).render(
+  root.render(
     <React.StrictMode>
-      <App />
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
     </React.StrictMode>,
   );
 });

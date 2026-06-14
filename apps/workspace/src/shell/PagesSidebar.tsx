@@ -1,5 +1,5 @@
 import { useRef, useState, type PointerEvent } from "react";
-import { Panel, IconButton, Menu, TextField, Add, Check, More, type MenuEntry } from "@blustar/ui";
+import { Panel, IconButton, Menu, TextField, Button, Add, Check, More, type MenuEntry } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
 
 interface MenuState {
@@ -110,6 +110,16 @@ export function PagesSidebar() {
       title="Pages"
       actions={<IconButton size="sm" label="Nova página" icon={<Add size={16} />} onClick={addPage} />}
     >
+      {pages.length === 0 && (
+        <div style={{ padding: "var(--bs-space-5) var(--bs-space-3)", textAlign: "center", color: "var(--bs-text-subtle)", fontSize: 13 }}>
+          Nenhuma página ainda.
+          <div style={{ marginTop: "var(--bs-space-3)" }}>
+            <Button variant="secondary" size="sm" onClick={addPage}>
+              Criar página
+            </Button>
+          </div>
+        </div>
+      )}
       <ul style={{ listStyle: "none", margin: 0, padding: "var(--bs-space-2)" }}>
         {pages.map((p) => {
           const active = p.id === activePageId;
