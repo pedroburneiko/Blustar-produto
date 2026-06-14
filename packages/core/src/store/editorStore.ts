@@ -15,7 +15,15 @@ import { temporal } from 'zundo';
 import { immer } from 'zustand/middleware/immer';
 
 import { createDocument, createPage } from '../model/factories.js';
-import type { BrandDocument, Id, Layer, Page } from '../model/types.js';
+import type {
+  BrandDocument,
+  FontProps,
+  Id,
+  Layer,
+  LayerBox,
+  LayerStyle,
+  Page,
+} from '../model/types.js';
 import {
   HISTORY_COALESCE_MS,
   HISTORY_LIMIT,
@@ -44,6 +52,12 @@ export interface EditorState {
   addPage: (boardId: Id, name?: string, parentId?: Id | null) => Page;
   addLayer: (layer: Layer) => void;
   updateLayer: (id: Id, patch: Partial<Layer>) => void;
+  /** Merge raso em layer.style (cria se ausente). */
+  updateLayerStyle: (id: Id, patch: Partial<LayerStyle>) => void;
+  /** Merge raso em layer.box (cria se ausente). */
+  updateLayerBox: (id: Id, patch: Partial<LayerBox>) => void;
+  /** Merge raso na fonte de uma layer de texto/botão (cria se ausente). */
+  updateLayerFont: (id: Id, patch: Partial<FontProps>) => void;
   removeLayer: (id: Id) => void;
   setToken: (name: string, value: string) => void;
   removeToken: (name: string) => void;
@@ -100,6 +114,27 @@ export const useEditorStore = create<EditorState>()(
           if (!layer) return;
           // patch nunca traz id/type; merge raso é suficiente para as props do modelo.
           Object.assign(layer, patch);
+        }),
+
+      updateLayerStyle: (id, patch) =>
+        set((state) => {
+          const layer = state.document.entities.layers[id];
+          if (!layer) return;
+          layer.style = { ...layer.style, ...patch };
+        }),
+
+      updateLayerBox: (id, patch) =>
+        set((state) => {
+          const layer = state.document.entities.layers[id];
+          if (!layer) return;
+          layer.box = { ...layer.box, ...patch };
+        }),
+
+      updateLayerFont: (id, patch) =>
+        set((state) => {
+          const layer = state.document.entities.layers[id];
+          if (!layer || (layer.type !== 'text' && layer.type !== 'button')) return;
+          layer.font = { ...layer.font, ...patch };
         }),
 
       removeLayer: (id) =>
