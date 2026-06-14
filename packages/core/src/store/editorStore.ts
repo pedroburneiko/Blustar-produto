@@ -27,9 +27,8 @@ import type {
   Page,
 } from '../model/types.js';
 import {
-  HISTORY_COALESCE_MS,
   HISTORY_LIMIT,
-  debounce,
+  historyController,
   historyEquality,
   partializeForHistory,
 } from './history.js';
@@ -56,6 +55,8 @@ export interface EditorState {
   addPage: (boardId: Id, name?: string, parentId?: Id | null) => Page;
   addLayer: (layer: Layer) => void;
   updateLayer: (id: Id, patch: Partial<Layer>) => void;
+  /** Edição de TEXTO livre (nome/conteúdo/label/src) — coalescida no histórico. */
+  updateLayerText: (id: Id, patch: Partial<Layer>) => void;
   /** Merge raso em layer.style (cria se ausente). */
   updateLayerStyle: (id: Id, patch: Partial<LayerStyle>) => void;
   /** Merge raso em layer.box (cria se ausente). */
@@ -129,6 +130,16 @@ export const useEditorStore = create<EditorState>()(
           // patch nunca traz id/type; merge raso é suficiente para as props do modelo.
           Object.assign(layer, patch);
         }),
+
+      updateLayerText: (id, patch) => {
+        // Modo texto: o burst de digitação vira UMA entrada de histórico.
+        historyController.setMode('text');
+        set((state) => {
+          const layer = state.document.entities.layers[id];
+          if (layer) Object.assign(layer, patch);
+        });
+        historyController.setMode('immediate');
+      },
 
       updateLayerStyle: (id, patch) =>
         set((state) => {
@@ -246,12 +257,9 @@ export const useEditorStore = create<EditorState>()(
       limit: HISTORY_LIMIT,
       partialize: partializeForHistory,
       equality: historyEquality,
-      // coalesce mutações rápidas num único passo de histórico (à la 600ms do SPEC)
+      // estrutural = imediato; texto = debounced (ver historyController, M5)
       handleSet: (handleSet) =>
-        debounce(
-          handleSet as (...args: unknown[]) => void,
-          HISTORY_COALESCE_MS,
-        ) as typeof handleSet,
+        historyController.handleSet(handleSet as (...args: unknown[]) => void) as typeof handleSet,
     },
   ),
 );
@@ -259,13 +267,15 @@ export const useEditorStore = create<EditorState>()(
 /** Store temporal (zundo) — acesso ao histórico fora de componentes. */
 export const editorTemporal = useEditorStore.temporal;
 
-/** Desfaz o último passo de documento. */
+/** Desfaz o último passo de documento. Faz flush do registro pendente antes. */
 export function undo(): void {
+  historyController.flush(); // commita burst de texto pendente antes de desfazer
   editorTemporal.getState().undo();
 }
 
-/** Refaz o passo desfeito. */
+/** Refaz o passo desfeito. Faz flush do registro pendente antes. */
 export function redo(): void {
+  historyController.flush();
   editorTemporal.getState().redo();
 }
 

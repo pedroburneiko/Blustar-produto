@@ -23,13 +23,76 @@ export const HISTORY_LIMIT = 50;
 /** Janela de coalescing de mutações rápidas, em ms (SPEC: 600ms). */
 export const HISTORY_COALESCE_MS = 500;
 
+// ---------------------------------------------------------------------------
+// Controlador de histórico (M5): separa captura estrutural (imediata) de
+// contínua/texto (debounced), com flush antes de undo/redo.
+// ---------------------------------------------------------------------------
+
+export type HistoryMode = 'immediate' | 'text';
+
+export interface HistoryController {
+  /** Passar ao zundo como options.handleSet. */
+  handleSet: (handleSet: (...args: unknown[]) => void) => (...args: unknown[]) => void;
+  /** Modo da PRÓXIMA mutação (chamar síncrono, logo antes do set). */
+  setMode: (mode: HistoryMode) => void;
+  /** Empurra imediatamente qualquer registro de texto pendente. */
+  flush: () => void;
+}
+
 /**
- * NOTA (M5): hoje TODO registro é debounced. O SPEC gravava mudanças estruturais
- * de imediato (`recordHistoryNow`) e só debouncing edição de texto. No M5,
- * separar mutações estruturais (imediatas) de texto (debounced) — e fazer
- * undo/redo dar flush no registro pendente — para evitar colisão de um undo
- * disparado <500ms após uma mutação.
+ * Cria um controlador de histórico.
+ * - `immediate` (estrutural): faz flush do pendente e registra na hora →
+ *   1 entrada por ação, sem colisão com undo logo em seguida.
+ * - `text` (contínuo): captura o estado PRÉ-burst (args da 1ª mutação) e faz
+ *   debounce, empurrando UMA entrada no fim → undo reverte o burst inteiro.
  */
+export function createHistoryController(coalesceMs = HISTORY_COALESCE_MS): HistoryController {
+  let mode: HistoryMode = 'immediate';
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  let pendingArgs: unknown[] | null = null;
+  let realHandle: ((...args: unknown[]) => void) | null = null;
+
+  function flush(): void {
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
+    if (pendingArgs && realHandle) {
+      const args = pendingArgs;
+      pendingArgs = null;
+      realHandle(...args);
+    }
+  }
+
+  return {
+    setMode(m) {
+      mode = m;
+    },
+    flush,
+    handleSet(handleSet) {
+      realHandle = handleSet;
+      return (...args) => {
+        if (mode === 'immediate') {
+          flush(); // commita um burst de texto pendente como entrada própria
+          handleSet(...args); // registra esta mudança estrutural agora
+          return;
+        }
+        // texto: guarda o estado pré-burst (1ª chamada) e faz debounce
+        if (!pendingArgs) pendingArgs = args;
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          timer = null;
+          const a = pendingArgs;
+          pendingArgs = null;
+          if (a && realHandle) realHandle(...a);
+        }, coalesceMs);
+      };
+    },
+  };
+}
+
+/** Controlador singleton usado pela store do editor. */
+export const historyController = createHistoryController();
 
 /** Só o documento é historiável. */
 export function partializeForHistory<S extends TrackedState>(state: S): TrackedState {
