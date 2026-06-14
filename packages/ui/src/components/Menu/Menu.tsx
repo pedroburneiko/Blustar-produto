@@ -52,6 +52,7 @@ export function Menu({ open, onClose, position, items, ...rest }: MenuProps) {
       <div
         role="menu"
         aria-label={rest["aria-label"]}
+        onClick={(e) => e.stopPropagation()}
         className="bg-surface border border-line rounded-md py-1 shadow-lg"
         style={{ position: "fixed", left: position.x, top: position.y, zIndex: 1001, minWidth: 180 }}
       >

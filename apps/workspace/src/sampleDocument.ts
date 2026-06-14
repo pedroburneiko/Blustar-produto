@@ -65,23 +65,35 @@ export function sampleDocument(): BrandDocument {
   return doc;
 }
 
+/** Monta um master a partir de um grupo-raiz + filhos. */
+function makeMaster(name: string, label: string, category: string, children: Layer[]): TemplateMaster {
+  const group = createLayer('group', 'master', { name });
+  group.children = children.map((c) => c.id);
+  for (const c of children) c.parentId = group.id;
+  const layers: Record<string, Layer> = { [group.id]: group };
+  for (const c of children) layers[c.id] = c;
+  return { name, label, category, rootId: group.id, layers };
+}
+
 /** Semeia masters de template (subárvore de layers; id da layer = slotKey). */
 function seedMasters(doc: BrandDocument): void {
-  const title = createLayer('text', 'master', { name: 'Título', text: 'Título do componente', font: { size: '1.5rem', weight: 700 } });
-  const sub = createLayer('text', 'master', { name: 'Subtítulo', text: 'Subtítulo editável', style: { color: 'var(--bs-text-muted)' } });
-  const btn = createLayer('button', 'master', { name: 'CTA', label: 'Ação', variant: 'primary' });
-  const group = createLayer('group', 'master', { name: 'Hero' });
-  group.children = [title.id, sub.id, btn.id];
-  for (const l of [title, sub, btn]) l.parentId = group.id;
-
-  const hero: TemplateMaster = {
-    name: 'Hero',
-    label: 'Hero',
-    category: 'layout',
-    rootId: group.id,
-    layers: { [group.id]: group, [title.id]: title, [sub.id]: sub, [btn.id]: btn },
-  };
-  doc.templates.masters[hero.name] = hero;
+  const masters: TemplateMaster[] = [
+    makeMaster('Hero', 'Hero', 'Layout', [
+      createLayer('text', 'master', { name: 'Título', text: 'Título do componente', font: { size: '1.5rem', weight: 700 } }),
+      createLayer('text', 'master', { name: 'Subtítulo', text: 'Subtítulo editável', style: { color: 'var(--bs-text-muted)' } }),
+      createLayer('button', 'master', { name: 'CTA', label: 'Ação', variant: 'primary' }),
+    ]),
+    makeMaster('CTA', 'CTA', 'Conteúdo', [
+      createLayer('text', 'master', { name: 'Chamada', text: 'Pronto para começar?', font: { size: '1.25rem', weight: 700 } }),
+      createLayer('button', 'master', { name: 'Botão', label: 'Comece agora', variant: 'primary' }),
+    ]),
+    makeMaster('Card', 'Card', 'Layout', [
+      createLayer('shape', 'master', { name: 'Mídia', shape: 'rect', style: { background: 'var(--bs-surface-2)' } }),
+      createLayer('text', 'master', { name: 'Título', text: 'Título do card', font: { size: '1.125rem', weight: 700 } }),
+      createLayer('text', 'master', { name: 'Texto', text: 'Descrição do card.', style: { color: 'var(--bs-text-muted)' } }),
+    ]),
+  ];
+  for (const m of masters) doc.templates.masters[m.name] = m;
 }
 
 /** Semeia uma página com layers ABSOLUTAS (rect x/y/w/h) para o M4. */

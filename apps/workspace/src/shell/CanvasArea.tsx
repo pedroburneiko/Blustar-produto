@@ -1,6 +1,7 @@
 import { useEditorStore } from "@blustar/core";
 import { LayerView } from "./LayerView";
 import { GuidesOverlay } from "./GuidesOverlay";
+import { InsertTemplateButton } from "./InsertTemplateButton";
 
 /**
  * Área de canvas central — espelha .guide-content/.world-head do SPEC.
@@ -46,9 +47,12 @@ export function CanvasArea() {
             >
               {board?.name}
             </div>
-            <h1 style={{ margin: 0, fontSize: 40, color: "var(--bs-text)", overflowWrap: "break-word" }}>
-              {page.name}
-            </h1>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "var(--bs-space-4)" }}>
+              <h1 style={{ margin: 0, fontSize: 40, color: "var(--bs-text)", overflowWrap: "break-word" }}>
+                {page.name}
+              </h1>
+              {isFree && <InsertTemplateButton pageId={page.id} />}
+            </div>
           </div>
 
           {/* Canvas livre (M4): frame absoluto com a origem das coordenadas */}
