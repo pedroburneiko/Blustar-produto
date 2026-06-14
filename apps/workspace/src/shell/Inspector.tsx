@@ -1,13 +1,29 @@
 import { useState } from "react";
 import { Panel, Tabs } from "@blustar/ui";
+import { useEditorStore } from "@blustar/core";
+import { LayerInspector } from "./LayerInspector";
 
 /**
  * Inspector (direita) — espelha .guide-right do SPEC.
- * No M1 só a moldura: abas + grupos vazios. A edição de propriedades é M3.
+ * Com uma camada selecionada, vira o editor de propriedades dela (edições vão
+ * para a store e ENTRAM no undo). Sem seleção, mostra o placeholder Styles/Page.
  */
 export function Inspector() {
-  const [tab, setTab] = useState("styles");
+  const selectedId = useEditorStore((s) => s.selection.layerIds[0] ?? null);
 
+  if (selectedId) {
+    return (
+      <Panel>
+        <LayerInspector layerId={selectedId} />
+      </Panel>
+    );
+  }
+
+  return <EmptyInspector />;
+}
+
+function EmptyInspector() {
+  const [tab, setTab] = useState("styles");
   return (
     <Panel>
       <div style={{ padding: "var(--bs-space-3) var(--bs-space-3) 0" }}>
@@ -21,35 +37,8 @@ export function Inspector() {
           aria-label="Inspector"
         />
       </div>
-
-      <div style={{ padding: "var(--bs-space-4) var(--bs-space-3)" }}>
-        {(tab === "styles" ? ["Type", "Color"] : ["Página"]).map((group) => (
-          <div key={group} style={{ marginBottom: "var(--bs-space-5)" }}>
-            <div
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                color: "var(--bs-text-subtle)",
-                marginBottom: "var(--bs-space-2)",
-              }}
-            >
-              {group}
-            </div>
-            <div
-              style={{
-                border: "1px dashed var(--bs-border)",
-                borderRadius: "var(--bs-radius-sm)",
-                padding: "var(--bs-space-3)",
-                color: "var(--bs-text-subtle)",
-                fontSize: 13,
-              }}
-            >
-              Controles em M3.
-            </div>
-          </div>
-        ))}
+      <div style={{ padding: "var(--bs-space-5) var(--bs-space-3)", color: "var(--bs-text-subtle)", fontSize: 13 }}>
+        Selecione uma camada para editar suas propriedades.
       </div>
     </Panel>
   );
