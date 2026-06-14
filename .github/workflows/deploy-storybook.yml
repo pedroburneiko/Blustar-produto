@@ -23,9 +23,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Sem 'version' aqui: a versão vem do campo packageManager (pnpm@9.x) do
+      # package.json raiz. Passar os dois causa "Multiple versions of pnpm specified".
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: 20
