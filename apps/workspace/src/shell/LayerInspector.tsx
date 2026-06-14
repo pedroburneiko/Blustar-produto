@@ -10,6 +10,7 @@ import {
   type SelectOption,
 } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
+import { MasterEditor } from "./MasterEditor";
 
 /** Paleta CURADA (só tokens) para cor de texto / fundo. */
 const COLOR_SWATCHES: Swatch[] = [
@@ -153,6 +154,10 @@ export function LayerInspector({ layerId }: { layerId: string }) {
             <SwatchPicker swatches={COLOR_SWATCHES} value={layer.style?.background ?? ""} onChange={(v) => setStyle({ background: v })} aria-label="Cor de fundo" />
           </Field>
         </Section>
+      )}
+
+      {layer.type === "component" && layer.templateName && (
+        <MasterEditor templateName={layer.templateName} />
       )}
 
       {layer.type === "group" && (

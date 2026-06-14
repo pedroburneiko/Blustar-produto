@@ -229,6 +229,18 @@ describe("templates / componentes (M6 D1)", () => {
     expect(inst.overrides?.[slotKey]).toBeUndefined();
   });
 
+  it("updateMasterText coalesce burst em 1 entrada; undo reverte tudo", () => {
+    insert();
+    const base = past();
+    for (const t of ["N", "No", "Nov", "Novo"]) S().updateMasterText("Header", slotKey, { text: t });
+    expect(past()).toBe(base); // debounce pendente
+    vi.advanceTimersByTime(600);
+    expect(past()).toBe(base + 1);
+    expect((S().document.templates.masters["Header"].layers[slotKey] as { text: string }).text).toBe("Novo");
+    undo();
+    expect((S().document.templates.masters["Header"].layers[slotKey] as { text: string }).text).toBe("Título master");
+  });
+
   it("updateMaster = 1 entrada; edita o master; undo reverte (base da propagação)", () => {
     insert();
     const base = past();

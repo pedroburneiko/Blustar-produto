@@ -97,6 +97,8 @@ export interface EditorState {
   clearSlotOverride: (instanceId: Id, slotKey: Id) => void;
   /** Edita uma layer do master (propaga para as instâncias, exceto slots sobrescritos). */
   updateMaster: (templateName: string, slotKey: Id, patch: Partial<Layer>) => void;
+  /** Edição de TEXTO de um slot do master — coalescida (burst = 1 entrada). */
+  updateMasterText: (templateName: string, slotKey: Id, patch: Partial<Layer>) => void;
   setToken: (name: string, value: string) => void;
   removeToken: (name: string) => void;
 
@@ -461,6 +463,16 @@ export const useEditorStore = create<EditorState>()(
           if (!layer) return;
           Object.assign(layer, patch);
         }),
+
+      updateMasterText: (templateName, slotKey, patch) => {
+        historyController.setMode('text'); // burst de digitação = 1 entrada
+        set((state) => {
+          const master = state.document.templates.masters[templateName];
+          const layer = master?.layers[slotKey];
+          if (layer) Object.assign(layer, patch);
+        });
+        historyController.setMode('immediate');
+      },
 
       setToken: (name, value) =>
         set((state) => {
