@@ -1,7 +1,9 @@
-import { useState, type CSSProperties, type MouseEvent } from "react";
+import { useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
 import { Button } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
-import type { Layer, LayerBox, LayerStyle } from "@blustar/core";
+import type { Layer, LayerBox, LayerRect, LayerStyle } from "@blustar/core";
+
+const DRAG_THRESHOLD = 3; // px para distinguir clique de arraste
 
 /** Converte o box do modelo em estilo CSS. `grid` = container de grupo. */
 function boxToStyle(box: LayerBox | undefined, grid: boolean): CSSProperties {
@@ -136,7 +138,12 @@ export interface LayerViewProps {
 export function LayerView({ layerId }: LayerViewProps) {
   const layer = useEditorStore((s) => s.document.entities.layers[layerId]);
   const selected = useEditorStore((s) => s.selection.layerIds.includes(layerId));
+  // Preview ao vivo do gesto em andamento nesta layer (efêmero, fora do undo).
+  const livePreview = useEditorStore((s) =>
+    s.ui.interaction?.layerId === layerId ? s.ui.interaction.preview : null,
+  );
   const [hover, setHover] = useState(false);
+  const dragRef = useRef<{ px: number; py: number; rect: LayerRect; dragging: boolean } | null>(null);
 
   if (!layer || !layer.visible) return null;
 
@@ -145,15 +152,56 @@ export function LayerView({ layerId }: LayerViewProps) {
     useEditorStore.getState().selectLayers([layerId]);
   }
 
+  // --- Drag (mover) — apenas layers absolutas (rect) ---
+  function onPointerDown(e: PointerEvent) {
+    if (!layer.rect || e.button !== 0) return;
+    e.stopPropagation();
+    dragRef.current = { px: e.clientX, py: e.clientY, rect: { ...layer.rect }, dragging: false };
+    try {
+      (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    } catch {
+      /* pointerId sintético/obsoleto */
+    }
+  }
+  function onPointerMove(e: PointerEvent) {
+    const st = dragRef.current;
+    if (!st) return;
+    const dx = e.clientX - st.px;
+    const dy = e.clientY - st.py;
+    if (!st.dragging) {
+      if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+      st.dragging = true;
+      useEditorStore.getState().selectLayers([layerId]);
+      useEditorStore.getState().beginInteraction({ kind: "drag", layerId, preview: { ...st.rect } });
+    }
+    useEditorStore.getState().updateInteraction({
+      preview: { x: Math.round(st.rect.x + dx), y: Math.round(st.rect.y + dy), w: st.rect.w, h: st.rect.h },
+    });
+  }
+  function onPointerUp(e: PointerEvent) {
+    const st = dragRef.current;
+    dragRef.current = null;
+    try {
+      (e.currentTarget as HTMLElement).releasePointerCapture?.(e.pointerId);
+    } catch {
+      /* id obsoleto */
+    }
+    if (!st?.dragging) return; // foi um clique, não um arraste
+    const it = useEditorStore.getState().ui.interaction;
+    if (it) useEditorStore.getState().moveLayer(layerId, { x: it.preview.x, y: it.preview.y });
+    useEditorStore.getState().endInteraction(); // 1 gesto = 1 entrada de histórico
+  }
+
   const outline = selected
     ? "2px solid var(--bs-focus-ring)"
     : hover
       ? "1px dashed var(--bs-brand)"
       : "1px solid transparent";
 
-  // Layer absoluta (M4): posiciona via rect. Senão, flow com box (M2).
-  const absolute: CSSProperties = layer.rect
-    ? { position: "absolute", left: layer.rect.x, top: layer.rect.y, width: layer.rect.w, height: layer.rect.h }
+  // Layer absoluta (M4): posiciona via rect (ou preview ao vivo). Senão, flow (M2).
+  const rect = livePreview ?? layer.rect;
+  const absolute: CSSProperties = rect
+    ? { position: "absolute", left: rect.x, top: rect.y, width: rect.w, height: rect.h }
     : layer.type === "group"
       ? {}
       : boxToStyle(layer.box, false);
@@ -163,7 +211,8 @@ export function LayerView({ layerId }: LayerViewProps) {
     outline,
     outlineOffset: 4,
     borderRadius: 2,
-    cursor: "pointer",
+    cursor: layer.rect ? "grab" : "pointer",
+    touchAction: layer.rect ? "none" : undefined,
   };
 
   return (
@@ -174,6 +223,9 @@ export function LayerView({ layerId }: LayerViewProps) {
       onClick={select}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      onPointerDown={layer.rect ? onPointerDown : undefined}
+      onPointerMove={layer.rect ? onPointerMove : undefined}
+      onPointerUp={layer.rect ? onPointerUp : undefined}
     >
       <LayerContent layer={layer} />
     </div>
