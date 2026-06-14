@@ -173,3 +173,71 @@ describe("ações de página/layer são undoable", () => {
     expect(S().document.tokens.vars["--bs-brand"]).toBeUndefined();
   });
 });
+
+describe("templates / componentes (M6 D1)", () => {
+  let slotKey: string;
+
+  beforeEach(() => {
+    const doc = createDocument();
+    const title = createLayer("text", "m", { text: "Título master" });
+    slotKey = title.id;
+    doc.templates.masters["Header"] = {
+      name: "Header",
+      label: "Cabeçalho",
+      category: "layout",
+      rootId: title.id,
+      layers: { [title.id]: title },
+    };
+    resetEditor(doc);
+  });
+
+  function insert(): string {
+    return S().insertComponent(pageId(), "Header", { x: 0, y: 0, w: 300, h: 80 })!;
+  }
+
+  it("insertComponent = 1 entrada; instância referencia o master; undo remove", () => {
+    const base = past();
+    const id = insert();
+    expect(past()).toBe(base + 1);
+    const inst = S().document.entities.layers[id];
+    expect(inst.type).toBe("component");
+    expect((inst as { templateName: string }).templateName).toBe("Header");
+    expect(S().document.entities.pages[pageId()].roots).toContain(id);
+    undo();
+    expect(S().document.entities.layers[id]).toBeUndefined();
+  });
+
+  it("setSlotOverride = 1 entrada; guarda override; undo reverte", () => {
+    const id = insert();
+    const base = past();
+    S().setSlotOverride(id, slotKey, { text: "Sobrescrito" });
+    expect(past()).toBe(base + 1);
+    const inst = S().document.entities.layers[id] as { overrides?: Record<string, { text?: string }> };
+    expect(inst.overrides?.[slotKey]?.text).toBe("Sobrescrito");
+    undo();
+    const inst2 = S().document.entities.layers[id] as { overrides?: Record<string, unknown> };
+    expect(inst2.overrides?.[slotKey]).toBeUndefined();
+  });
+
+  it("clearSlotOverride = 1 entrada; remove o override", () => {
+    const id = insert();
+    S().setSlotOverride(id, slotKey, { text: "X" });
+    const base = past();
+    S().clearSlotOverride(id, slotKey);
+    expect(past()).toBe(base + 1);
+    const inst = S().document.entities.layers[id] as { overrides?: Record<string, unknown> };
+    expect(inst.overrides?.[slotKey]).toBeUndefined();
+  });
+
+  it("updateMaster = 1 entrada; edita o master; undo reverte (base da propagação)", () => {
+    insert();
+    const base = past();
+    S().updateMaster("Header", slotKey, { text: "Novo master" });
+    expect(past()).toBe(base + 1);
+    const masterLayer = S().document.templates.masters["Header"].layers[slotKey] as { text: string };
+    expect(masterLayer.text).toBe("Novo master");
+    undo();
+    const reverted = S().document.templates.masters["Header"].layers[slotKey] as { text: string };
+    expect(reverted.text).toBe("Título master");
+  });
+});

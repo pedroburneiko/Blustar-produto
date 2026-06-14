@@ -147,13 +147,31 @@ export interface MaskProps {
   scale?: number;
 }
 
-/** Instância de template/módulo reutilizável (.praia-component no SPEC). */
+/**
+ * Override por slot de uma instância de componente: subconjunto editável das
+ * props de uma layer do master. Slots não sobrescritos herdam do master.
+ */
+export interface LayerOverride {
+  text?: string;
+  label?: string;
+  variant?: string;
+  src?: string;
+  visible?: boolean;
+  style?: Partial<LayerStyle>;
+  font?: Partial<FontProps>;
+}
+
+/**
+ * Instância de um template/componente (.praia-component no SPEC). Renderiza a
+ * subárvore do master (`templateName`) aplicando `overrides` por slot. Editar o
+ * master propaga para todas as instâncias, exceto nos slots sobrescritos.
+ */
 export interface ComponentLayer extends LayerBase {
   type: 'component';
   templateName: string;
   category?: string;
-  /** data-tplEdited no SPEC. */
-  edited?: boolean;
+  /** Overrides por slot (slotKey = id da layer no master). */
+  overrides?: Record<Id, LayerOverride>;
 }
 
 export interface GroupLayer extends LayerBase {
@@ -212,17 +230,22 @@ export interface DesignTokenOverrides {
   vars: Record<string, string>;
 }
 
-/** Registro de templates: masters + overrides (SPEC: __praiaRegistries / __praiaTplOverrides). */
+/** Registro de templates (masters) do documento. */
 export interface TemplateRegistry {
   masters: Record<string, TemplateMaster>;
-  /** HTML customizado por template (__praiaTplOverrides). */
-  htmlOverrides: Record<string, string>;
-  /** Overrides de estilo/fonte por template (__grcGetTplOverrides). */
-  styleOverrides: Record<string, unknown>;
 }
 
+/**
+ * Master de um template: subárvore de layers (o conteúdo padrão). O `id` de cada
+ * layer em `layers` é o **slotKey** usado pelos overrides das instâncias.
+ * Editar o master propaga para todas as instâncias (render compõe master+overrides).
+ */
 export interface TemplateMaster {
   name: string;
-  html: string;
-  category?: string;
+  label: string;
+  category: string;
+  /** Raiz da subárvore do master. */
+  rootId: Id;
+  /** Layers do master, indexadas por id (= slotKey). */
+  layers: Record<Id, Layer>;
 }

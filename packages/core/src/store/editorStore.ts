@@ -14,7 +14,7 @@ import { create, useStore } from 'zustand';
 import { temporal } from 'zundo';
 import { immer } from 'zustand/middleware/immer';
 
-import { createDocument, createId, createPage } from '../model/factories.js';
+import { createDocument, createId, createLayer, createPage } from '../model/factories.js';
 import type {
   BrandDocument,
   FontProps,
@@ -22,6 +22,7 @@ import type {
   Interaction,
   Layer,
   LayerBox,
+  LayerOverride,
   LayerRect,
   LayerStyle,
   Page,
@@ -86,6 +87,16 @@ export interface EditorState {
   /** Move uma layer absoluta por (dx,dy); coalescido (burst de setas = 1 entrada). */
   nudgeLayer: (id: Id, dx: number, dy: number) => void;
   removeLayer: (id: Id) => void;
+
+  // --- templates / componentes (M6 D) ---
+  /** Insere uma instância de componente (referência ao master) numa posição. */
+  insertComponent: (pageId: Id, templateName: string, rect: LayerRect) => Id | null;
+  /** Define/funde o override de um slot da instância. */
+  setSlotOverride: (instanceId: Id, slotKey: Id, patch: LayerOverride) => void;
+  /** Remove o override de um slot (slot volta a herdar do master). */
+  clearSlotOverride: (instanceId: Id, slotKey: Id) => void;
+  /** Edita uma layer do master (propaga para as instâncias, exceto slots sobrescritos). */
+  updateMaster: (templateName: string, slotKey: Id, patch: Partial<Layer>) => void;
   setToken: (name: string, value: string) => void;
   removeToken: (name: string) => void;
 
@@ -403,6 +414,52 @@ export const useEditorStore = create<EditorState>()(
             stack.push(...node.children);
             delete layers[cur];
           }
+        }),
+
+      // ----- templates / componentes (cada ação = 1 entrada de undo) -----
+      insertComponent: (pageId, templateName, rect) => {
+        const master = get().document.templates.masters[templateName];
+        if (!master) return null;
+        const layer = createLayer('component', pageId, {
+          name: master.label,
+          templateName,
+          category: master.category,
+          rect,
+          overrides: {},
+        });
+        set((state) => {
+          state.document.entities.layers[layer.id] = layer;
+          state.document.entities.pages[pageId]?.roots.push(layer.id);
+        });
+        return layer.id;
+      },
+
+      setSlotOverride: (instanceId, slotKey, patch) =>
+        set((state) => {
+          const inst = state.document.entities.layers[instanceId];
+          if (!inst || inst.type !== 'component') return;
+          if (!inst.overrides) inst.overrides = {};
+          const prev = inst.overrides[slotKey] ?? {};
+          inst.overrides[slotKey] = {
+            ...prev,
+            ...patch,
+            style: patch.style ? { ...prev.style, ...patch.style } : prev.style,
+            font: patch.font ? { ...prev.font, ...patch.font } : prev.font,
+          };
+        }),
+
+      clearSlotOverride: (instanceId, slotKey) =>
+        set((state) => {
+          const inst = state.document.entities.layers[instanceId];
+          if (inst?.type === 'component' && inst.overrides) delete inst.overrides[slotKey];
+        }),
+
+      updateMaster: (templateName, slotKey, patch) =>
+        set((state) => {
+          const master = state.document.templates.masters[templateName];
+          const layer = master?.layers[slotKey];
+          if (!layer) return;
+          Object.assign(layer, patch);
         }),
 
       setToken: (name, value) =>

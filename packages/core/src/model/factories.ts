@@ -63,7 +63,7 @@ export function createDocument(name = 'Documento sem título'): BrandDocument {
       layers: {},
     },
     tokens: { vars: {} },
-    templates: { masters: {}, htmlOverrides: {}, styleOverrides: {} },
+    templates: { masters: {} },
   };
 }
 
