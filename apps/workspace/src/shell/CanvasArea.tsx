@@ -3,7 +3,8 @@ import { LayerView } from "./LayerView";
 
 /**
  * Área de canvas central — espelha .guide-content/.world-head do SPEC.
- * No M1 só mostra o cabeçalho da página ativa; NÃO renderiza camadas (M2).
+ * Renderiza as camadas da página ativa (só-leitura, M2). Clicar no vazio limpa
+ * a seleção; clicar numa camada seleciona (ver LayerView).
  */
 export function CanvasArea() {
   const activeBoardId = useEditorStore((s) => s.ui.activeBoardId);
@@ -14,6 +15,7 @@ export function CanvasArea() {
 
   return (
     <div
+      onClick={() => useEditorStore.getState().clearSelection()}
       style={{
         minHeight: 0,
         overflow: "auto",

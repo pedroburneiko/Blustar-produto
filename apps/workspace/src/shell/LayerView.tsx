@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties, type MouseEvent } from "react";
 import { Button } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
 import type { Layer, LayerBox, LayerStyle } from "@blustar/core";
@@ -128,16 +128,47 @@ export interface LayerViewProps {
   layerId: string;
 }
 
-/** Renderiza uma layer do documento (recursivo para grupos). Só-leitura no M2. */
+/**
+ * Renderiza uma layer do documento (recursivo para grupos). Só-leitura no M2:
+ * clique seleciona (estado efêmero, fora do undo); sem arrastar/editar (M4).
+ * Visual fiel ao SPEC — selecionado: outline sólido (focus); hover: tracejado (marca).
+ */
 export function LayerView({ layerId }: LayerViewProps) {
   const layer = useEditorStore((s) => s.document.entities.layers[layerId]);
+  const selected = useEditorStore((s) => s.selection.layerIds.includes(layerId));
+  const [hover, setHover] = useState(false);
+
   if (!layer || !layer.visible) return null;
 
+  function select(e: MouseEvent) {
+    e.stopPropagation(); // clique no filho seleciona o filho, não o grupo/canvas
+    useEditorStore.getState().selectLayers([layerId]);
+  }
+
+  const outline = selected
+    ? "2px solid var(--bs-focus-ring)"
+    : hover
+      ? "1px dashed var(--bs-brand)"
+      : "1px solid transparent";
+
   // O box é aplicado no wrapper externo (exceto para grupo, que usa grid no conteúdo).
-  const wrapperStyle: CSSProperties = layer.type === "group" ? {} : boxToStyle(layer.box, false);
+  const wrapperStyle: CSSProperties = {
+    ...(layer.type === "group" ? {} : boxToStyle(layer.box, false)),
+    outline,
+    outlineOffset: 4,
+    borderRadius: 2,
+    cursor: "pointer",
+  };
 
   return (
-    <div data-layer-id={layer.id} style={wrapperStyle}>
+    <div
+      data-layer-id={layer.id}
+      data-selected={selected || undefined}
+      style={wrapperStyle}
+      onClick={select}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
       <LayerContent layer={layer} />
     </div>
   );
