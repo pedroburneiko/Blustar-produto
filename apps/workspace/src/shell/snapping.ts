@@ -1,4 +1,17 @@
-import type { LayerRect } from "@blustar/core";
+import { useEditorStore } from "@blustar/core";
+import type { LayerRect, ResizeDir } from "@blustar/core";
+
+/** rects das outras layers absolutas da mesma página (alvos de snap). */
+export function siblingRects(layerId: string): LayerRect[] {
+  const s = useEditorStore.getState();
+  const layer = s.document.entities.layers[layerId];
+  const page = layer ? s.document.entities.pages[layer.pageId] : null;
+  if (!page) return [];
+  return page.roots
+    .filter((id) => id !== layerId)
+    .map((id) => s.document.entities.layers[id]?.rect)
+    .filter((r): r is LayerRect => !!r);
+}
 
 /** Limiar de snap em px (SPEC: SMART_SNAP = 6 para centros/margens/layers). */
 export const SNAP_THRESHOLD = 6;
@@ -58,5 +71,45 @@ export function computeMoveSnap(
       h: moving.h,
     },
     guides: { x: bx ? [bx.guide] : [], y: by ? [by.guide] : [] },
+  };
+}
+
+const MIN = 16;
+
+/**
+ * Snap de RESIZE: alinha apenas as bordas ativas (conforme a alça) às bordas/
+ * centros das outras layers, ajustando w/h (e x/y para as alças w/n).
+ */
+export function computeResizeSnap(
+  rect: LayerRect,
+  dir: ResizeDir,
+  others: LayerRect[],
+  threshold = SNAP_THRESHOLD,
+): SnapResult {
+  const tx = others.flatMap(linesX);
+  const ty = others.flatMap(linesY);
+  let { x, y, w, h } = rect;
+  const gx: number[] = [];
+  const gy: number[] = [];
+
+  if (dir.includes("e")) {
+    const b = bestOffset([x + w], tx, threshold);
+    if (b) { w = Math.max(MIN, w + b.offset); gx.push(b.guide); }
+  }
+  if (dir.includes("w")) {
+    const b = bestOffset([x], tx, threshold);
+    if (b) { x += b.offset; w = Math.max(MIN, w - b.offset); gx.push(b.guide); }
+  }
+  if (dir.includes("s")) {
+    const b = bestOffset([y + h], ty, threshold);
+    if (b) { h = Math.max(MIN, h + b.offset); gy.push(b.guide); }
+  }
+  if (dir.includes("n")) {
+    const b = bestOffset([y], ty, threshold);
+    if (b) { y += b.offset; h = Math.max(MIN, h - b.offset); gy.push(b.guide); }
+  }
+  return {
+    rect: { x: Math.round(x), y: Math.round(y), w: Math.round(w), h: Math.round(h) },
+    guides: { x: gx, y: gy },
   };
 }

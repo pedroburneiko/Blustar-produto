@@ -1,6 +1,7 @@
 import { useRef, type CSSProperties, type PointerEvent } from "react";
 import { useEditorStore } from "@blustar/core";
 import type { LayerRect, ResizeDir } from "@blustar/core";
+import { computeResizeSnap, siblingRects } from "./snapping";
 
 const MIN = 16; // tamanho mínimo (px)
 
@@ -73,7 +74,13 @@ export function ResizeHandles({ layerId }: { layerId: string }) {
     const st = ref.current;
     if (!st) return;
     const next = computeRect(st.dir, st.start, e.clientX - st.px, e.clientY - st.py, e.shiftKey);
-    useEditorStore.getState().updateInteraction({ preview: next });
+    // Aspect-lock (Shift) tem prioridade: não snapa para não quebrar a proporção.
+    if (e.shiftKey && st.dir.length === 2) {
+      useEditorStore.getState().updateInteraction({ preview: next, guides: { x: [], y: [] } });
+      return;
+    }
+    const snap = computeResizeSnap(next, st.dir, siblingRects(layerId));
+    useEditorStore.getState().updateInteraction({ preview: snap.rect, guides: snap.guides });
   }
   function onUp(e: PointerEvent) {
     const st = ref.current;
