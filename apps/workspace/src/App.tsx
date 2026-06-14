@@ -1,34 +1,34 @@
-import { Button } from "@blustar/ui";
+import { useEditorStore } from "@blustar/core";
 
 /**
- * Fase 0 — placeholder do produto. Sem features migradas.
- * Serve só para provar a fundação: o app consome @blustar/ui e os tokens
- * (canvas preto, turquesa de marca, fonte Versos) renderizam de ponta a ponta.
+ * M1 (interino) — prova a ligação do @blustar/core: lê o documento da store.
+ * A moldura (rail / pages / canvas / inspector) é montada na etapa 3 do M1.
  */
 export function App() {
+  const document = useEditorStore((s) => s.document);
+  const boards = document.boards.map((id) => document.entities.boards[id]);
+
   return (
     <main
       style={{
         minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "var(--bs-space-6)",
         background: "var(--bs-bg)",
         color: "var(--bs-text)",
         fontFamily: "var(--bs-font)",
-        textAlign: "center",
-        padding: "var(--bs-space-6)",
+        padding: "var(--bs-space-7)",
       }}
     >
-      <h1 style={{ margin: 0, color: "var(--bs-brand)" }}>BluStar Workspace</h1>
-      <p style={{ margin: 0, color: "var(--bs-text-muted)" }}>
-        Fase 0 — fundação do monorepo. Consumindo <code>@blustar/ui</code>.
+      <h1 style={{ color: "var(--bs-brand)", marginTop: 0 }}>{document.name}</h1>
+      <p style={{ color: "var(--bs-text-muted)" }}>
+        Store ligada. {boards.length} boards:
       </p>
-      <Button variant="primary" size="touch">
-        Componente do DS
-      </Button>
+      <ul style={{ color: "var(--bs-text-muted)" }}>
+        {boards.map((b) => (
+          <li key={b.id}>
+            {b.name} — {b.pages.length} páginas
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }
