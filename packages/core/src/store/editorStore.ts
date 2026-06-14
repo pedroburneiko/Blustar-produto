@@ -14,7 +14,7 @@ import { create, useStore } from 'zustand';
 import { temporal } from 'zundo';
 import { immer } from 'zustand/middleware/immer';
 
-import { createDocument, createPage } from '../model/factories.js';
+import { createDocument, createId, createPage } from '../model/factories.js';
 import type {
   BrandDocument,
   FontProps,
@@ -53,6 +53,14 @@ export interface EditorState {
   // --- ações de documento (historiáveis) ---
   setDocument: (doc: BrandDocument) => void;
   addPage: (boardId: Id, name?: string, parentId?: Id | null) => Page;
+  /** Renomeia uma página (coalescido no histórico, como texto). */
+  renamePage: (id: Id, name: string) => void;
+  /** Cria uma sub-página de `parentId` (um nível). */
+  addSubPage: (parentId: Id, name?: string) => Page | null;
+  /** Duplica a página (com suas layers e sub-páginas diretas). */
+  duplicatePage: (id: Id) => Page | null;
+  /** Remove a página, suas layers e sub-páginas; corrige a seleção. */
+  removePage: (id: Id) => void;
   addLayer: (layer: Layer) => void;
   updateLayer: (id: Id, patch: Partial<Layer>) => void;
   /** Edição de TEXTO livre (nome/conteúdo/label/src) — coalescida no histórico. */
@@ -93,9 +101,36 @@ function initialState(doc?: BrandDocument): Pick<EditorState, 'document' | 'sele
   };
 }
 
+/**
+ * Clona uma página e suas layers (ids novos, mantendo a hierarquia de layers).
+ * Insere a nova página em entities.pages e retorna seu id. NÃO mexe em board.pages.
+ */
+function clonePageWithLayers(doc: BrandDocument, srcId: Id, name: string, parentId: Id | null): Id {
+  const src = doc.entities.pages[srcId];
+  const page = createPage(src.boardId, name, parentId);
+  page.locked = src.locked;
+
+  // mapeia ids antigos → novos para as layers desta página
+  const srcLayers = Object.values(doc.entities.layers).filter((l) => l.pageId === srcId);
+  const idMap = new Map<Id, Id>();
+  for (const l of srcLayers) idMap.set(l.id, createId('layer'));
+
+  for (const l of srcLayers) {
+    const clone = JSON.parse(JSON.stringify(l)) as Layer;
+    clone.id = idMap.get(l.id)!;
+    clone.pageId = page.id;
+    clone.parentId = l.parentId ? (idMap.get(l.parentId) ?? null) : null;
+    clone.children = l.children.map((c) => idMap.get(c)).filter((c): c is Id => !!c);
+    doc.entities.layers[clone.id] = clone;
+  }
+  page.roots = src.roots.map((r) => idMap.get(r)).filter((r): r is Id => !!r);
+  doc.entities.pages[page.id] = page;
+  return page.id;
+}
+
 export const useEditorStore = create<EditorState>()(
   temporal(
-    immer((set) => ({
+    immer((set, get) => ({
       ...initialState(),
 
       // ----- documento -----
@@ -112,6 +147,71 @@ export const useEditorStore = create<EditorState>()(
         });
         return page;
       },
+
+      renamePage: (id, name) => {
+        historyController.setMode('text'); // burst de digitação = 1 entrada
+        set((state) => {
+          const page = state.document.entities.pages[id];
+          if (page) page.name = name;
+        });
+        historyController.setMode('immediate');
+      },
+
+      addSubPage: (parentId, name = 'Nova sub-página') => {
+        const parent = get().document.entities.pages[parentId];
+        if (!parent || parent.parentId) return null; // só 1 nível
+        const page = createPage(parent.boardId, name, parentId);
+        set((state) => {
+          const board = state.document.entities.boards[parent.boardId];
+          state.document.entities.pages[page.id] = page;
+          // insere após o parent e suas sub-páginas existentes
+          const siblings = board.pages.filter((pid) => state.document.entities.pages[pid]?.parentId === parentId);
+          const anchor = siblings.length ? siblings[siblings.length - 1] : parentId;
+          board.pages.splice(board.pages.indexOf(anchor) + 1, 0, page.id);
+        });
+        return page;
+      },
+
+      duplicatePage: (id) => {
+        const src = get().document.entities.pages[id];
+        if (!src) return null;
+        let newId: Id | null = null;
+        set((state) => {
+          const doc = state.document;
+          const board = doc.entities.boards[src.boardId];
+          newId = clonePageWithLayers(doc, id, `${src.name} cópia`, src.parentId);
+          // sub-páginas diretas (um nível)
+          const childIds = board.pages.filter((pid) => doc.entities.pages[pid]?.parentId === id);
+          const clonedChildren = childIds.map((cid) =>
+            clonePageWithLayers(doc, cid, doc.entities.pages[cid].name, newId),
+          );
+          // insere a cópia (e filhas) após o bloco original
+          const lastOriginal = childIds.length ? childIds[childIds.length - 1] : id;
+          board.pages.splice(board.pages.indexOf(lastOriginal) + 1, 0, newId!, ...clonedChildren);
+        });
+        return newId ? get().document.entities.pages[newId] : null;
+      },
+
+      removePage: (id) =>
+        set((state) => {
+          const doc = state.document;
+          const page = doc.entities.pages[id];
+          if (!page) return;
+          const board = doc.entities.boards[page.boardId];
+          const toRemove = [id, ...board.pages.filter((pid) => doc.entities.pages[pid]?.parentId === id)];
+          for (const pid of toRemove) {
+            for (const lid of Object.keys(doc.entities.layers)) {
+              if (doc.entities.layers[lid].pageId === pid) delete doc.entities.layers[lid];
+            }
+            delete doc.entities.pages[pid];
+          }
+          board.pages = board.pages.filter((pid) => !toRemove.includes(pid));
+          // corrige a seleção se a página ativa foi removida
+          if (state.selection.pageId && toRemove.includes(state.selection.pageId)) {
+            state.selection.pageId = board.pages[0] ?? null;
+            state.selection.layerIds = [];
+          }
+        }),
 
       addLayer: (layer) =>
         set((state) => {
