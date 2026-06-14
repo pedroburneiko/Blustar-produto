@@ -25,7 +25,10 @@ export function AppShell() {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "200px 240px 1fr 300px",
+        // canvas = minmax(0,1fr) para poder encolher (e o conteúdo quebrar);
+        // laterais com faixa mín/máx para não espremerem em telas estreitas.
+        gridTemplateColumns:
+          "minmax(180px, 200px) minmax(210px, 240px) minmax(0, 1fr) minmax(280px, 320px)",
         height: "100vh",
         background: "var(--bs-bg)",
         color: "var(--bs-text)",

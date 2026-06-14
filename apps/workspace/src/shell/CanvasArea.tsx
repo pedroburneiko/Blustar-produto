@@ -36,7 +36,9 @@ export function CanvasArea() {
             >
               {board?.name}
             </div>
-            <h1 style={{ margin: 0, fontSize: 40, color: "var(--bs-text)" }}>{page.name}</h1>
+            <h1 style={{ margin: 0, fontSize: 40, color: "var(--bs-text)", overflowWrap: "break-word" }}>
+              {page.name}
+            </h1>
             <p style={{ color: "var(--bs-text-muted)", maxWidth: 560 }}>
               Cabeçalho da página. O conteúdo (camadas) é renderizado no M2.
             </p>
