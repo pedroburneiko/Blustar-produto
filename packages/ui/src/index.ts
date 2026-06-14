@@ -15,6 +15,12 @@ export * from "./components/IconButton";
 export * from "./components/Tabs";
 export * from "./components/NavItem";
 export * from "./components/Panel";
+export * from "./components/Field";
+export * from "./components/TextField";
+export * from "./components/NumberField";
+export * from "./components/Toggle";
+export * from "./components/SegmentedControl";
+export * from "./components/SwatchPicker";
 
 // API JS dos tokens (colors, palette, spacing, typography, grid) vem da fonte única.
 export * from "@blustar/tokens";
