@@ -6,9 +6,12 @@
 import {
   createBoard,
   createDocument,
+  createLayer,
   createPage,
   type BoardKind,
   type BrandDocument,
+  type Layer,
+  type Page,
 } from '@blustar/core';
 
 interface BoardSeed {
@@ -43,8 +46,57 @@ export function sampleDocument(): BrandDocument {
       const page = createPage(board.id, pageName);
       doc.entities.pages[page.id] = page;
       board.pages.push(page.id);
+      if (seed.kind === 'home' && board.pages.length === 1) {
+        seedLayers(doc, page);
+      }
     }
   }
 
   return doc;
+}
+
+/** Registra a layer no documento (em page.roots ou nos filhos do pai). */
+function attach(doc: BrandDocument, layer: Layer, parent?: Layer): Layer {
+  doc.entities.layers[layer.id] = layer;
+  if (parent) {
+    layer.parentId = parent.id;
+    parent.children.push(layer.id);
+  } else {
+    doc.entities.pages[layer.pageId].roots.push(layer.id);
+  }
+  return layer;
+}
+
+/** Semeia uma página com um placeholder de cada tipo de layer (M2). */
+function seedLayers(doc: BrandDocument, page: Page): void {
+  const pid = page.id;
+
+  attach(doc, createLayer('component', pid, { name: 'Header', templateName: 'HeaderBlock', category: 'Layout' }));
+
+  attach(doc, createLayer('text', pid, { name: 'Título', text: 'Brand System BluStar', font: { size: '40px', weight: 700 } }));
+
+  attach(doc, createLayer('text', pid, {
+    name: 'Parágrafo',
+    text: 'Esta página é um placeholder do M2 — cada bloco abaixo é uma layer do modelo, renderizada a partir da store. Clique para selecionar.',
+    font: { size: '16px' },
+    style: { color: 'var(--bs-text-muted)' },
+  }));
+
+  attach(doc, createLayer('image', pid, { name: 'Imagem', src: '', box: { width: '360px', height: '200px' } }));
+
+  attach(doc, createLayer('button', pid, { name: 'Botão', variant: 'primary', label: 'Saiba mais' }));
+
+  attach(doc, createLayer('shape', pid, {
+    name: 'Forma',
+    shape: 'rect',
+    style: { background: 'var(--bs-brand)' },
+    box: { width: '120px', height: '120px' },
+  }));
+
+  // Grupo com dois filhos (grid 2 colunas).
+  const group = attach(doc, createLayer('group', pid, { name: 'Grupo', box: { cols: 2, gap: { col: '16px', row: '16px' } } }));
+  attach(doc, createLayer('shape', pid, { name: 'Círculo', shape: 'ellipse', style: { background: 'var(--bs-azul-horizonte)' }, box: { height: '96px' } }), group);
+  attach(doc, createLayer('shape', pid, { name: 'Retângulo', shape: 'rect', style: { background: 'var(--bs-surface-2)' }, box: { height: '96px' } }), group);
+
+  attach(doc, createLayer('video', pid, { name: 'Vídeo', src: '', box: { width: '360px', height: '200px' } }));
 }
