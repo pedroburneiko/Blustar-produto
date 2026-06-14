@@ -1,4 +1,4 @@
-import { useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
+import { memo, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
 import { Button } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
 import type { Layer, LayerBox, LayerRect, LayerStyle } from "@blustar/core";
@@ -137,7 +137,7 @@ export interface LayerViewProps {
  * clique seleciona (estado efêmero, fora do undo); sem arrastar/editar (M4).
  * Visual fiel ao SPEC — selecionado: outline sólido (focus); hover: tracejado (marca).
  */
-export function LayerView({ layerId }: LayerViewProps) {
+function LayerViewImpl({ layerId }: LayerViewProps) {
   const layer = useEditorStore((s) => s.document.entities.layers[layerId]);
   const selected = useEditorStore((s) => s.selection.layerIds.includes(layerId));
   // Preview ao vivo do gesto em andamento nesta layer (efêmero, fora do undo).
@@ -245,3 +245,10 @@ export function LayerView({ layerId }: LayerViewProps) {
     </div>
   );
 }
+
+/**
+ * Memoizado: como o único prop é `layerId` (string), evita re-render quando o
+ * pai (CanvasArea) re-renderiza com o mesmo id. As atualizações por mudança de
+ * dados continuam vindo das assinaturas da store (selectors).
+ */
+export const LayerView = memo(LayerViewImpl);
