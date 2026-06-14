@@ -1,4 +1,4 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   type DocumentStore,
   type BrandDocument,
@@ -34,12 +34,23 @@ async function ensureSession(client: SupabaseClient): Promise<void> {
 
 export function getDocumentStore(): DocumentStore | null {
   if (!URL || !ANON) return null;
-  const client = createClient(URL, ANON);
+
+  // Cliente carregado sob demanda → @supabase/supabase-js sai do bundle inicial
+  // (chunk separado, só baixado quando a persistência é realmente usada).
+  let clientPromise: Promise<SupabaseClient> | null = null;
+  const getClient = (): Promise<SupabaseClient> => {
+    if (!clientPromise) {
+      clientPromise = import("@supabase/supabase-js").then((m) => m.createClient(URL!, ANON!));
+    }
+    return clientPromise;
+  };
+
   // id da linha do usuário atual (descoberto no load ou no primeiro insert)
   let rowId: string | null = null;
 
   return {
     async load(): Promise<BrandDocument | null> {
+      const client = await getClient();
       await ensureSession(client);
       // RLS restringe a owner = auth.uid(); pega o doc mais recente do usuário.
       const { data, error } = await client
@@ -55,6 +66,7 @@ export function getDocumentStore(): DocumentStore | null {
     },
 
     async save(_id: string, doc: BrandDocument): Promise<void> {
+      const client = await getClient();
       await ensureSession(client);
       const payload = {
         name: doc.name,

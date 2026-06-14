@@ -1,6 +1,6 @@
 import { useRef, useState, type PointerEvent } from "react";
 import { Panel, IconButton, Menu, TextField, Button, Add, Check, More, type MenuEntry } from "@blustar/ui";
-import { useEditorStore } from "@blustar/core";
+import { useEditorStore, useShallow } from "@blustar/core";
 
 interface MenuState {
   pageId: string;
@@ -23,10 +23,12 @@ interface DragState {
 export function PagesSidebar() {
   const activeBoardId = useEditorStore((s) => s.ui.activeBoardId);
   // ordem de board.pages; cada item sabe se é sub-página (parentId) para indentar.
-  const pages = useEditorStore((s) => {
-    const board = activeBoardId ? s.document.entities.boards[activeBoardId] : null;
-    return (board?.pages ?? []).map((id) => s.document.entities.pages[id]).filter(Boolean);
-  });
+  const pages = useEditorStore(
+    useShallow((s) => {
+      const board = activeBoardId ? s.document.entities.boards[activeBoardId] : null;
+      return (board?.pages ?? []).map((id) => s.document.entities.pages[id]).filter(Boolean);
+    }),
+  );
   const activePageId = useEditorStore((s) => s.selection.pageId);
 
   const [menu, setMenu] = useState<MenuState | null>(null);

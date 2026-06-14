@@ -1,6 +1,6 @@
 import { NavItem, IconButton, Home, Guide, Grid4, Gear, Logout } from "@blustar/ui";
 import type { ReactNode } from "react";
-import { useEditorStore } from "@blustar/core";
+import { useEditorStore, useShallow } from "@blustar/core";
 import type { BoardKind } from "@blustar/core";
 
 const boardIcon: Record<BoardKind, (p: { size?: number }) => ReactNode> = {
@@ -14,7 +14,7 @@ const boardIcon: Record<BoardKind, (p: { size?: number }) => ReactNode> = {
  * Espelha o #sidebar do SPEC. Lê os boards da store e troca o board ativo.
  */
 export function Rail() {
-  const boards = useEditorStore((s) => s.document.boards.map((id) => s.document.entities.boards[id]));
+  const boards = useEditorStore(useShallow((s) => s.document.boards.map((id) => s.document.entities.boards[id])));
   const activeBoardId = useEditorStore((s) => s.ui.activeBoardId);
 
   function selectBoard(boardId: string) {
