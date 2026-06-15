@@ -65,7 +65,9 @@ export function CanvasArea() {
       }}
     >
       {page ? (
-        <div ref={artboardRef} style={{ maxWidth: 960, margin: "0 auto" }}>
+        // Cap do artboard. Stopgap: 1280 p/ o breakpoint desktop (≥1024) ser
+        // alcançável (antes 960 prendia em ~tablet). Vira propriedade por página.
+        <div ref={artboardRef} style={{ maxWidth: 1280, margin: "0 auto" }}>
           {/* world-head */}
           <div style={{ marginBottom: "var(--bs-space-7)" }}>
             <div
