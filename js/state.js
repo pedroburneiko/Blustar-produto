@@ -284,6 +284,19 @@
   document.getElementById('grh-close')?.addEventListener('click', closeHistoryPanel);
   // --- Historical preview: save live state before previewing past versions ---
   const LIVE_KEY = KEY + ':live';
+
+  // --- Fonte única das CHAVES DE ESTADO (Fase 4) ---
+  // state.js é a dona destas 3 chaves (nenhum outro código as toca). O registro
+  // + helper abaixo expõem um ponto central; as chamadas internas deste arquivo
+  // permanecem inalteradas (extração verbatim verificada). As outras 11 chaves
+  // do app (tpl.overrides, icons, buttons, client, …) podem migrar pra cá depois.
+  window.__praiaStateKeys = Object.freeze({ state: KEY, versions: VKEY, live: LIVE_KEY });
+  window.__praiaStateStore = {
+    get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
+    remove: (k) => { try { localStorage.removeItem(k); } catch {} },
+  };
+
   function showHistoryBanner(label) {
     let b = document.getElementById('__history_banner');
     if (!b) {
