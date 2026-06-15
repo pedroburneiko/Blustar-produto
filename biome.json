@@ -34,11 +34,16 @@
         "useSingleVarDeclarator": "off",
         "noVar": "off",
         "noUselessElse": "off",
-        "noParameterAssign": "off"
+        "noParameterAssign": "off",
+        "noUnusedTemplateLiteral": "off"
+      },
+      "performance": {
+        "noDelete": "off"
       },
       "suspicious": {
         "noAssignInExpressions": "off",
-        "noExplicitAny": "off"
+        "noExplicitAny": "off",
+        "noGlobalIsNan": "off"
       }
     }
   }

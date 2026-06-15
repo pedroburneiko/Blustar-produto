@@ -9,8 +9,6 @@
 //
 // Não interfere no fluxo normal: a faixa só aparece quando há erro de verdade.
 (function () {
-  'use strict';
-
   var shown = false;
   var BANNER_ID = '__blustar_error_boundary';
 

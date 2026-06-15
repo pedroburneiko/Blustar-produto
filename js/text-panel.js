@@ -101,7 +101,7 @@
   // ---- Padrão global de texto (estilo + cor) — a última escolha vira default
   // e é aplicada a TODO texto de qualquer template novo inserido. Persiste. ----
   const TEXT_DEFAULT_KEY = 'praia.text.default';
-  let textDefault = (() => {
+  const textDefault = (() => {
     try {
       return Object.assign({ style: '', color: '' }, JSON.parse(localStorage.getItem(TEXT_DEFAULT_KEY) || '{}'));
     } catch {

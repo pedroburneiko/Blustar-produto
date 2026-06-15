@@ -8,6 +8,7 @@
       .toString()
       .toLowerCase()
       .normalize('NFD')
+      // biome-ignore lint/suspicious/noMisleadingCharacterClass: intencional — remove diacríticos combinantes (U+0300–U+036F) após NFD
       .replace(/[̀-ͯ]/g, '')
       .trim()
       .replace(/[^a-z0-9]+/g, '-')

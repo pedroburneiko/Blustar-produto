@@ -790,6 +790,7 @@
   function enterTemplateEdit(cell) {
     // Edit mode disabled 2026-05-28 — templates will be rebuilt from scratch.
     return;
+    // biome-ignore lint/correctness/noUnreachable: bloco preservado de propósito p/ referência até o rebuild dos templates
     if (!cell || !document.body.classList.contains('ds-mode')) return;
     if (cell.dataset.tplCat !== 'text' && cell.dataset.tplCat !== 'images' && cell.dataset.tplCat !== 'video') return;
     selectTemplate(cell.dataset.tplName, cell);
@@ -2594,7 +2595,7 @@
     // Resolve the target block: mask-edit target wins, then the currently
     // active image item, then the active sidebar selection, then the only
     // .tpl-block in the canvas (common case).
-    let block = __maskTarget || document.querySelector('.ds-edit-canvas .tpl-block.ds-item-active') || (typeof activeItem !== 'undefined' && activeItem && activeItem.classList.contains('tpl-block') ? activeItem : null) || document.querySelector('body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb .tpl-block');
+    const block = __maskTarget || document.querySelector('.ds-edit-canvas .tpl-block.ds-item-active') || (typeof activeItem !== 'undefined' && activeItem && activeItem.classList.contains('tpl-block') ? activeItem : null) || document.querySelector('body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb .tpl-block');
     if (!block) return;
     applyFitMode(block, b.dataset.imgFit);
   });
