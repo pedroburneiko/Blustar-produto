@@ -19,8 +19,8 @@ Mapa detalhado em [ARCHITECTURE.md](ARCHITECTURE.md).
 3. **Comportamento idêntico.** Refatorações são estruturais; não mudar UI,
    estado salvo ou fluxo do usuário sem pedido explícito.
 4. **Verificar no preview** após mudanças observáveis: subir o servidor
-   estático, conferir boot limpo (sem o error boundary), e exercitar a feature.
-   Gate antes do preview: `node --check js/<arquivo>.js`.
+   estático, confirmar que o error boundary NÃO disparou (boot sem fallback), e
+   rodar o **smoke test** abaixo. Gate antes do preview: `node --check js/<arquivo>.js`.
 
 ## Onde fica cada coisa
 
@@ -37,13 +37,18 @@ Mapa detalhado em [ARCHITECTURE.md](ARCHITECTURE.md).
     carga**: quem é consumido em *load-time* (ex.: o restore do `state.js`)
     precisa carregar **antes** do consumidor. A maioria consome em handlers
     (`?.()`), então é order-tolerant — mas **audite** antes de assumir.
+    Inventário completo das globais `window.__praia*` em **ARCHITECTURE.md §5**.
+    Ao criar ou remover uma global, **atualize esse inventário** (evita a
+    superfície da ponte derivar do doc em silêncio).
   - **`state.js`** — toda a persistência (localStorage), `STATE_VERSION` +
     `migrateState()`, autosave/histórico/undo-redo. Centraliza as chaves de
     estado (`window.__praiaStateKeys`).
   - **`error-boundary.js`** — `window.onerror`/`unhandledrejection`; loga alto
     e mostra fallback discreto em vez de tela branca.
   - **Hubs** (`add-module`, `component-selection`, `ds-canvas`): IIFEs grandes,
-    mantidos inteiros (não decompor sem necessidade real).
+    mantidos inteiros (não decompor sem necessidade real). Eles contêm
+    **variáveis de closure compartilhadas entre features** — uma mudança pode
+    ter efeito não-local dentro do hub. Audite os usos da variável antes de alterar.
 
 ## Qualidade (Biome)
 
@@ -68,10 +73,28 @@ Mantenha esse hábito:
 - Mensagem clara do que mudou e **como foi verificado** (preview, node --check,
   byte-identidade).
 - `main` tem história limpa; o monorepo React/TS anterior está preservado na
-  branch `legacy-monorepo`. Tags marcam os marcos (`fundacao-fase0-5`,
-  `fase3-completa`, …).
+  branch `legacy-monorepo`. Tags reais que marcam os marcos: `fundacao-fase0-5`,
+  `fase3-leva-1`, `fase3-completa`, `refactor-completo`.
+
+## Smoke test (rode após QUALQUER mudança observável)
+
+Não há testes automatizados — **este checklist é a suíte de verificação**.
+Suba o estático (`npm run dev`) e percorra, no preview:
+
+- [ ] **Boot:** entrar em modo DEV e confirmar boot limpo — o error boundary
+      NÃO disparou (sem faixa de fallback no rodapé).
+- [ ] **Router:** `home` → `#guide` → voltar a `#home`.
+- [ ] **DS mode:** entrar no DS e navegar as seções (templates, color, icons,
+      buttons, client).
+- [ ] **Templates:** inserir um template no canvas e editar um texto.
+- [ ] **Component selection:** selecionar um componente e editar inline.
+- [ ] **Persistência:** recarregar a página e confirmar que o estado volta (restore).
+- [ ] **Reset:** abrir com `?reset=1` e confirmar que limpa e boota do zero.
 
 ## Não tocar sem fase própria
 
 - URLs/assets do Cloudinary e a mídia em `assets/`.
 - O IndexedDB `praia-videos` (blobs de vídeo) — o `?reset=1` não o limpa.
+- `GOOGLE_CLIENT_ID` é **público por design** (não é segredo) e o preset
+  Cloudinary `blustar_unsigned` é **intencional/conhecido** — não "consertar"
+  escondendo o client ID ou trancando o preset (quebraria login/upload).
