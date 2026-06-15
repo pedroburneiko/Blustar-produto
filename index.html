@@ -10549,6 +10549,28 @@ applyRoute();
 /* Autosave — persist canvas edits across reloads */
 (() => {
   const KEY = 'praia.brand.state.v5';
+  // Versão do SCHEMA do payload salvo (independente do "v5" do nome da chave).
+  // Bump quando o formato do snapshot mudar de forma incompatível, e adicione
+  // o passo correspondente em migrateState().
+  const STATE_VERSION = 1;
+  // Lê o estado salvo de forma resiliente: migra formatos antigos quando possível
+  // e DESCARTA com segurança (retorna null) o que for incompatível/futuro/corrompido,
+  // em vez de deixar o boot quebrar. Não altera dados válidos do formato atual.
+  function migrateState(data) {
+    if (!data || typeof data !== 'object') return null;
+    const v = typeof data.__v === 'number' ? data.__v : 0;
+    // v0 = estado legado sem carimbo de versão. Estruturalmente idêntico ao v1,
+    // então apenas o adotamos como v1 (sem perda de dados).
+    if (v === 0) return { ...data, __v: STATE_VERSION };
+    if (v === STATE_VERSION) return data;
+    // Mais novo do que este build sabe ler → descarta em vez de aplicar errado.
+    if (v > STATE_VERSION) {
+      console.warn('[BluStar] Estado salvo é de uma versão mais nova (__v=' + v + '); ignorando.');
+      return null;
+    }
+    // Espaço para migrações futuras (0 < v < STATE_VERSION). Sem nenhuma por ora.
+    return { ...data, __v: STATE_VERSION };
+  }
   const sideList = document.querySelector('[data-world="guide"] .guide-side-list');
   const content = document.querySelector('[data-world="guide"] .guide-content');
   const head = document.querySelector('[data-world="guide"] .world-head');
@@ -10559,8 +10581,8 @@ applyRoute();
   // Restore first
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) {
-      const data = JSON.parse(raw);
+    const data = raw ? migrateState(JSON.parse(raw)) : null;
+    if (data) {
       if (data.sideList) sideList.innerHTML = data.sideList;
       if (data.content) content.innerHTML = data.content;
       if (data.head && head) head.innerHTML = data.head;
@@ -10637,6 +10659,7 @@ applyRoute();
     const rootStyle = document.documentElement.style.cssText;
     const activePage = document.querySelector('.guide-side-item.active')?.dataset.page || null;
     return {
+      __v: STATE_VERSION,
       sideList: cloneSide.innerHTML,
       content: cloneContent.innerHTML,
       head: cloneHead ? cloneHead.innerHTML : null,
