@@ -95,6 +95,8 @@ export interface EditorState {
   addPage: (boardId: Id, name?: string, parentId?: Id | null) => Page;
   /** Renomeia uma página (coalescido no histórico, como texto). */
   renamePage: (id: Id, name: string) => void;
+  /** Define a largura (px) do artboard da página (coalescido; rajada = 1 entrada). */
+  setPageArtboardWidth: (id: Id, width: number) => void;
   /** Cria uma sub-página de `parentId` (um nível). */
   addSubPage: (parentId: Id, name?: string) => Page | null;
   /** Duplica a página (com suas layers e sub-páginas diretas). */
@@ -278,6 +280,15 @@ export const useEditorStore = create<EditorState>()(
         set((state) => {
           const page = state.document.entities.pages[id];
           if (page) page.name = name;
+        });
+        historyController.setMode('immediate');
+      },
+
+      setPageArtboardWidth: (id, width) => {
+        historyController.setMode('text'); // rajada do NumberField = 1 entrada
+        set((state) => {
+          const page = state.document.entities.pages[id];
+          if (page) page.artboardWidth = width;
         });
         historyController.setMode('immediate');
       },

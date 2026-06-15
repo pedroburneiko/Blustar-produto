@@ -172,6 +172,23 @@ describe("grid responsivo — resolveGrid + setLayerGrid", () => {
     expect(r.gutter).toBe(30); // token
   });
 
+  it("página nova nasce com artboardWidth default", () => {
+    expect(S().document.entities.pages[pageId()].artboardWidth).toBe(1280);
+  });
+
+  it("setPageArtboardWidth: coalesce em 1 entrada e é undoable", () => {
+    const pid = pageId();
+    const base = past();
+    S().setPageArtboardWidth(pid, 768);
+    S().setPageArtboardWidth(pid, 390);
+    expect(past()).toBe(base); // debounce pendente (modo texto)
+    vi.advanceTimersByTime(600);
+    expect(past()).toBe(base + 1);
+    expect(S().document.entities.pages[pid].artboardWidth).toBe(390);
+    undo();
+    expect(S().document.entities.pages[pid].artboardWidth).toBe(1280);
+  });
+
   it("setLayerGrid: rajada coalesce em 1 entrada e é undoable", () => {
     const id = addAbsolute();
     const base = past();

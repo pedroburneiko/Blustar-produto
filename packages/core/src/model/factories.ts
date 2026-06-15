@@ -71,6 +71,9 @@ export function createBoard(kind: BoardKind, name: string): Board {
   return { id: createId('board'), kind, name, pages: [] };
 }
 
+/** Largura (px) padrão do artboard de uma página nova — desktop alcançável. */
+export const DEFAULT_ARTBOARD_WIDTH = 1280;
+
 export function createPage(boardId: Id, name: string, parentId: Id | null = null): Page {
   return {
     id: createId('page'),
@@ -79,6 +82,7 @@ export function createPage(boardId: Id, name: string, parentId: Id | null = null
     parentId,
     locked: false,
     roots: [],
+    artboardWidth: DEFAULT_ARTBOARD_WIDTH,
   };
 }
 

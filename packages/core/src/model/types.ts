@@ -62,6 +62,12 @@ export interface Page {
   locked: boolean;
   /** Layers de topo da página, em ordem. */
   roots: Id[];
+  /**
+   * Largura (px) do artboard da página — a superfície de design (estilo frame do
+   * Figma). Define a largura de referência do grid responsivo. Ausente → default
+   * (DEFAULT_ARTBOARD_WIDTH). Undoable.
+   */
+  artboardWidth?: number;
 }
 
 // ---------------------------------------------------------------------------
