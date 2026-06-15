@@ -96,39 +96,43 @@ function seedMasters(doc: BrandDocument): void {
   for (const m of masters) doc.templates.masters[m.name] = m;
 }
 
-/** Semeia uma página com layers ABSOLUTAS (rect x/y/w/h) para o M4. */
+/**
+ * Semeia o playground de manipulação direta (M4/M6.E): layers ABSOLUTAS sem
+ * sobreposição, dispostas no frame 900×560 — um primitivo de cada tipo + uma
+ * instância de componente, com espaço livre para arrastar/redimensionar.
+ */
 function seedFreeCanvas(doc: BrandDocument, page: Page): void {
   const pid = page.id;
-  // Instância de componente (M6 D) — renderiza o master Hero, posicionada.
-  attach(doc, createLayer('component', pid, {
-    name: 'Hero',
-    templateName: 'Hero',
-    category: 'layout',
-    rect: { x: 440, y: 60, w: 300, h: 200 },
-    overrides: {},
-  }));
   attach(doc, createLayer('shape', pid, {
     name: 'Bloco turquesa',
     shape: 'rect',
     style: { background: 'var(--bs-brand)' },
-    rect: { x: 80, y: 60, w: 220, h: 140 },
+    rect: { x: 60, y: 60, w: 220, h: 140 },
   }));
   attach(doc, createLayer('text', pid, {
     name: 'Título',
     text: 'Arraste-me',
     font: { size: '2rem', weight: 700 },
-    rect: { x: 360, y: 80, w: 320, h: 60 },
+    rect: { x: 320, y: 60, w: 360, h: 60 },
   }));
   attach(doc, createLayer('button', pid, {
     name: 'Botão',
     variant: 'primary',
     label: 'Ação',
-    rect: { x: 360, y: 180, w: 160, h: 48 },
+    rect: { x: 320, y: 150, w: 160, h: 48 },
   }));
   attach(doc, createLayer('image', pid, {
     name: 'Imagem',
     src: '',
-    rect: { x: 120, y: 260, w: 280, h: 180 },
+    rect: { x: 60, y: 240, w: 280, h: 180 },
+  }));
+  // Instância de componente (M6 D) — renderiza o master Hero, posicionada.
+  attach(doc, createLayer('component', pid, {
+    name: 'Hero',
+    templateName: 'Hero',
+    category: 'layout',
+    rect: { x: 380, y: 240, w: 320, h: 200 },
+    overrides: {},
   }));
 }
 
