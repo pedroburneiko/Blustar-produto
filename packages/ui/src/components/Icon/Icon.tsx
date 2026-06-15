@@ -220,3 +220,26 @@ export const Redo = (p: IconProps) => (
     <path d="M20 12H9a5 5 0 00-5 5v0" />
   </Glyph>
 );
+
+/** Play (preview) — triângulo preenchido. */
+export const Play = (p: IconProps) => (
+  <Svg {...p} path="M8 5.14v13.72L19 12 8 5.14z" />
+);
+
+/** Compartilhar/Exportar — seta para cima saindo de uma bandeja. */
+export const Share = (p: IconProps) => (
+  <Glyph {...p}>
+    <path d="M12 3.5v10" />
+    <path d="M8.5 7L12 3.5 15.5 7" />
+    <path d="M6.5 11v7.5a1 1 0 001 1h9a1 1 0 001-1V11" />
+  </Glyph>
+);
+
+/** Upload — seta para cima entrando numa bandeja. */
+export const Upload = (p: IconProps) => (
+  <Glyph {...p}>
+    <path d="M12 14V4" />
+    <path d="M8 8l4-4 4 4" />
+    <path d="M5 14v4a1 1 0 001 1h12a1 1 0 001-1v-4" />
+  </Glyph>
+);

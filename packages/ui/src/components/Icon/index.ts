@@ -17,5 +17,8 @@ export {
   Logout,
   Undo,
   Redo,
+  Play,
+  Share,
+  Upload,
 } from "./Icon";
 export type { IconProps } from "./Icon";

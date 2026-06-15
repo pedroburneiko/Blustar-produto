@@ -82,6 +82,11 @@ export interface UiState {
    * do grid. Efêmero, FORA do histórico. `null` até a 1ª medição.
    */
   artboardWidth: number | null;
+  /**
+   * Modo preview (play): esconde a chrome do editor e mostra só o canvas; a barra
+   * Estilo Visual passa a flutuar por cima. Efêmero, FORA do histórico.
+   */
+  preview: boolean;
 }
 
 export interface EditorState {
@@ -172,6 +177,8 @@ export interface EditorState {
   setSaveStatus: (status: SaveStatus) => void;
   /** Define a largura medida do artboard (efêmero, fora do undo). */
   setArtboardWidth: (width: number | null) => void;
+  /** Entra/sai do modo preview (play) — efêmero, fora do undo. */
+  setPreview: (value: boolean) => void;
 }
 
 function initialState(doc?: BrandDocument): Pick<EditorState, 'document' | 'selection' | 'ui'> {
@@ -185,6 +192,7 @@ function initialState(doc?: BrandDocument): Pick<EditorState, 'document' | 'sele
       maskEdit: null,
       saveStatus: 'idle',
       artboardWidth: null,
+      preview: false,
     },
   };
 }
@@ -671,6 +679,11 @@ export const useEditorStore = create<EditorState>()(
       setArtboardWidth: (width) =>
         set((state) => {
           state.ui.artboardWidth = width;
+        }),
+
+      setPreview: (value) =>
+        set((state) => {
+          state.ui.preview = value;
         }),
     })),
     {
