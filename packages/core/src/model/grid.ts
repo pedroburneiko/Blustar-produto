@@ -8,6 +8,11 @@
 import { gridByBreakpoint, type Breakpoint, type GridBreakpointConfig } from '@blustar/tokens';
 import type { LayerBox } from './types.js';
 
+// Re-export para consumidores do core (apps/workspace) não dependerem do pacote
+// de tokens diretamente só para tipar o breakpoint.
+export { breakpointForWidth } from '@blustar/tokens';
+export type { Breakpoint, GridBreakpointConfig } from '@blustar/tokens';
+
 /** Config de grid efetiva de um container num dado breakpoint. */
 export function resolveGrid(box: LayerBox | undefined, bp: Breakpoint): GridBreakpointConfig {
   const def = gridByBreakpoint[bp];

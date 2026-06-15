@@ -1,7 +1,7 @@
 import { memo, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
 import { Button, Badge } from "@blustar/ui";
-import { useEditorStore } from "@blustar/core";
-import type { ImageLayer, Layer, LayerBox, LayerRect, LayerStyle } from "@blustar/core";
+import { useEditorStore, resolveGrid, breakpointForWidth } from "@blustar/core";
+import type { Breakpoint, ImageLayer, Layer, LayerBox, LayerRect, LayerStyle } from "@blustar/core";
 import { ResizeHandles } from "./ResizeHandles";
 import { TemplateInstanceView } from "./TemplateInstanceView";
 import { MaskEditOverlay } from "./MaskEditOverlay";
@@ -10,8 +10,14 @@ import { computeMoveSnap, siblingRects } from "./snapping";
 
 const DRAG_THRESHOLD = 3; // px para distinguir clique de arraste
 
-/** Converte o box do modelo em estilo CSS. `grid` = container de grupo. */
-function boxToStyle(box: LayerBox | undefined, grid: boolean): CSSProperties {
+/**
+ * Converte o box do modelo em estilo CSS. `grid` = container de grupo; nesse
+ * caso a config (colunas/margem/gutter) é RESOLVIDA pelo breakpoint ativo `bp`
+ * via resolveGrid (override do doc se existir, senão default do token). A margem
+ * resolvida vira padding lateral (sobrepondo o lateral de box.padding); o gutter
+ * vira columnGap; o row-gap vem de box.gap.row.
+ */
+function boxToStyle(box: LayerBox | undefined, grid: boolean, bp: Breakpoint): CSSProperties {
   if (!box) return {};
   const s: CSSProperties = {};
   if (box.width) s.width = box.width;
@@ -21,9 +27,14 @@ function boxToStyle(box: LayerBox | undefined, grid: boolean): CSSProperties {
     s.padding = `${p.top ?? "0"} ${p.right ?? "0"} ${p.bottom ?? "0"} ${p.left ?? "0"}`;
   }
   if (grid) {
+    const cfg = resolveGrid(box, bp);
     s.display = "grid";
-    s.gridTemplateColumns = `repeat(${box.cols ?? 1}, 1fr)`;
-    if (box.gap) s.gap = `${box.gap.row ?? "0"} ${box.gap.col ?? "0"}`;
+    s.gridTemplateColumns = `repeat(${cfg.columns}, 1fr)`;
+    s.columnGap = `${cfg.gutter}px`;
+    if (box.gap?.row) s.rowGap = box.gap.row;
+    // margem do grid → padding lateral (depois de box.padding, p/ vencer o lateral).
+    s.paddingLeft = `${cfg.margin}px`;
+    s.paddingRight = `${cfg.margin}px`;
   }
   return s;
 }
@@ -112,6 +123,11 @@ function ImageContent({ layer }: { layer: ImageLayer }) {
 
 /** Renderiza o conteúdo específico do tipo da layer (sem o wrapper externo). */
 function LayerContent({ layer }: { layer: Layer }) {
+  // bp ativo = derivado da largura medida do artboard (efêmero). Antes da 1ª
+  // medição cai no desktop (mesmo default do <Grid> do DS).
+  const bp = useEditorStore((s) =>
+    s.ui.artboardWidth == null ? "desktop" : breakpointForWidth(s.ui.artboardWidth),
+  );
   switch (layer.type) {
     case "text":
       return (
@@ -165,7 +181,7 @@ function LayerContent({ layer }: { layer: Layer }) {
 
     case "group":
       return (
-        <div style={boxToStyle(layer.box, true)}>
+        <div style={boxToStyle(layer.box, true, bp)}>
           {layer.children.map((id) => (
             <LayerView key={id} layerId={id} />
           ))}
@@ -275,7 +291,7 @@ function LayerViewImpl({ layerId }: LayerViewProps) {
     ? { position: "absolute", left: rect.x, top: rect.y, width: rect.w, height: rect.h }
     : layer.type === "group"
       ? {}
-      : boxToStyle(layer.box, false);
+      : boxToStyle(layer.box, false, "desktop"); // grid=false → bp não é usado
 
   const wrapperStyle: CSSProperties = {
     ...absolute,

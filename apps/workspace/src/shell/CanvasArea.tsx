@@ -1,7 +1,39 @@
+import { useCallback, useRef } from "react";
 import { useEditorStore } from "@blustar/core";
 import { LayerView } from "./LayerView";
 import { GuidesOverlay } from "./GuidesOverlay";
 import { InsertTemplateButton } from "./InsertTemplateButton";
+
+/**
+ * Callback ref que mede a largura da content-box do artboard e a publica em
+ * ui.artboardWidth (efêmero, fora do undo). É a MESMA referência que o grid usa
+ * para resolver o breakpoint no render e que o painel mostra no chip "bp ativo"
+ * — render e painel nunca discordam numa fronteira.
+ *
+ * Callback ref (não useEffect) para anexar o observer QUANDO o nó monta: o
+ * artboard só renderiza quando há página ativa, então um effect com deps [] na
+ * 1ª render veria `null` e nunca religaria. Limpa para `null` ao desmontar.
+ */
+function useArtboardWidthRef<T extends HTMLElement>() {
+  const observerRef = useRef<ResizeObserver | null>(null);
+  return useCallback((el: T | null) => {
+    observerRef.current?.disconnect();
+    observerRef.current = null;
+    const set = useEditorStore.getState().setArtboardWidth;
+    if (!el) {
+      set(null);
+      return;
+    }
+    // Medição imediata no attach (não depende do 1º callback do observer).
+    set(el.clientWidth);
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      set(entry.contentBoxSize?.[0]?.inlineSize ?? entry.contentRect.width);
+    });
+    observer.observe(el, { box: "content-box" });
+    observerRef.current = observer;
+  }, []);
+}
 
 /**
  * Área de canvas central — espelha .guide-content/.world-head do SPEC.
@@ -18,6 +50,7 @@ export function CanvasArea() {
   const isFree = useEditorStore((s) =>
     page ? page.roots.some((id) => s.document.entities.layers[id]?.rect) : false,
   );
+  const artboardRef = useArtboardWidthRef<HTMLDivElement>();
 
   return (
     <div
@@ -32,7 +65,7 @@ export function CanvasArea() {
       }}
     >
       {page ? (
-        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+        <div ref={artboardRef} style={{ maxWidth: 960, margin: "0 auto" }}>
           {/* world-head */}
           <div style={{ marginBottom: "var(--bs-space-7)" }}>
             <div
