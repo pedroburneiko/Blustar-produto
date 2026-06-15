@@ -107,5 +107,7 @@ reference/        protótipo vanilla   SPEC da migração — SOMENTE CONSULTA
 - **Grid responsivo por breakpoint — restante.** Edge cases: override em instância de
   componente (hoje o render de grid honra só **grupos**; `TemplateInstanceView` é outro caminho);
   ação `clearLayerGrid` p/ remover um override e voltar ao token; reconciliar `box.cols` legado
-  (migrar a Vitrine p/ `grid` override quando for editá-la por bp). Avaliar: breakpoint desktop
-  (≥1024) é inalcançável enquanto o artboard tem `maxWidth: 960`.
+  (migrar a Vitrine p/ `grid` override quando for editá-la por bp).
+- **Largura do artboard — feito.** Propriedade por página (`Page.artboardWidth`, default 1280),
+  editável na aba **Page** (presets + custom); o frame usa essa largura e dirige o breakpoint do
+  grid. Resolveu o "breakpoint desktop morto". (Antes era cap fixo `maxWidth: 960` no CanvasArea.)
