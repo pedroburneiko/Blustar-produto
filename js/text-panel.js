@@ -3,41 +3,40 @@
 // handlers via ?.()). Carregado ANTES do state.js por conservadorismo (exposer).
 /* Text panel sync — token-aware style + color pickers */
 (() => {
-  const trig   = document.getElementById('grt-style-trig');
+  const trig = document.getElementById('grt-style-trig');
   const nameEl = document.getElementById('grt-style-name');
   const editBtn = document.getElementById('grt-edit-style');
   if (!trig || !nameEl) return;
 
   const TOKENS = [
-    { key: 'h0',    label: 'H0',           cls: 'tk-h0' },
-    { key: 'super', label: 'H1',           cls: 'tk-super' },
-    { key: 'xl',    label: 'H2',           cls: 'tk-xl' },
-    { key: 'l',     label: 'H3',           cls: 'tk-l' },
-    { key: 'mb',    label: 'H4',           cls: 'tk-mb' },
-    { key: 'm',     label: 'Body',         cls: 'tk-m' },
-    { key: 'sb',    label: 'Caption Bold', cls: 'tk-sb' },
-    { key: 's',     label: 'Caption',      cls: 'tk-s' },
-    { key: 'xs',    label: 'Body Small',   cls: 'tk-xs' },
+    { key: 'h0', label: 'H0', cls: 'tk-h0' },
+    { key: 'super', label: 'H1', cls: 'tk-super' },
+    { key: 'xl', label: 'H2', cls: 'tk-xl' },
+    { key: 'l', label: 'H3', cls: 'tk-l' },
+    { key: 'mb', label: 'H4', cls: 'tk-mb' },
+    { key: 'm', label: 'Body', cls: 'tk-m' },
+    { key: 'sb', label: 'Caption Bold', cls: 'tk-sb' },
+    { key: 's', label: 'Caption', cls: 'tk-s' },
+    { key: 'xs', label: 'Body Small', cls: 'tk-xs' },
   ];
   const COLORS = [
-    { cls: 'cl-text',   label: 'Text',         varName: '--text' },
-    { cls: 'cl-text-2', label: 'Text muted',   varName: '--text-2' },
-    { cls: 'cl-text-3', label: 'Text subtle',  varName: '--text-3' },
-    { cls: 'cl-navy',   label: 'BluStar Navy', varName: '--bs-navy' },
-    { cls: 'cl-cyan',   label: 'BluStar Cyan', varName: '--bs-cyan' },
-    { cls: 'cl-blue',   label: 'Royal Blue',   varName: '--bs-blue' },
-    { cls: 'cl-white',  label: 'White',        varName: '--bs-white' },
+    { cls: 'cl-text', label: 'Text', varName: '--text' },
+    { cls: 'cl-text-2', label: 'Text muted', varName: '--text-2' },
+    { cls: 'cl-text-3', label: 'Text subtle', varName: '--text-3' },
+    { cls: 'cl-navy', label: 'BluStar Navy', varName: '--bs-navy' },
+    { cls: 'cl-cyan', label: 'BluStar Cyan', varName: '--bs-cyan' },
+    { cls: 'cl-blue', label: 'Royal Blue', varName: '--bs-blue' },
+    { cls: 'cl-white', label: 'White', varName: '--bs-white' },
   ];
   // Para botões, a "cor" editada é o FUNDO (classes .clbg-*), não o texto.
   const BTN_COLORS = [
-    { cls: 'clbg-cyan',  label: 'BluStar Cyan', varName: '--bs-cyan' },
-    { cls: 'clbg-navy',  label: 'BluStar Navy', varName: '--bs-navy' },
-    { cls: 'clbg-blue',  label: 'Royal Blue',   varName: '--bs-blue' },
-    { cls: 'clbg-white', label: 'White',        varName: '--bs-white' },
+    { cls: 'clbg-cyan', label: 'BluStar Cyan', varName: '--bs-cyan' },
+    { cls: 'clbg-navy', label: 'BluStar Navy', varName: '--bs-navy' },
+    { cls: 'clbg-blue', label: 'Royal Blue', varName: '--bs-blue' },
+    { cls: 'clbg-white', label: 'White', varName: '--bs-white' },
   ];
-  const isBtn = el => !!el && (el.tagName === 'BUTTON' || el.tagName === 'A'
-    || el.classList.contains('bs-cta') || el.classList.contains('am-add'));
-  const colorSetFor = el => isBtn(el) ? BTN_COLORS : COLORS;
+  const isBtn = el => !!el && (el.tagName === 'BUTTON' || el.tagName === 'A' || el.classList.contains('bs-cta') || el.classList.contains('am-add'));
+  const colorSetFor = el => (isBtn(el) ? BTN_COLORS : COLORS);
 
   // Floating popover (re-used for both style and color)
   const pop = document.createElement('div');
@@ -45,17 +44,23 @@
   document.body.appendChild(pop);
   let popMode = null; // 'style' | 'color'
 
-  function getSelected() { return document.querySelector('.canvas-selected'); }
+  function getSelected() {
+    return document.querySelector('.canvas-selected');
+  }
 
   function detectStyle(el) {
     for (const t of TOKENS) if (el.classList.contains(t.cls)) return t;
     // Fallback: match by computed font-size.
     const sz = parseFloat(getComputedStyle(el).fontSize);
-    let best = TOKENS[4], bestDelta = Infinity;
+    let best = TOKENS[4],
+      bestDelta = Infinity;
     for (const t of TOKENS) {
       const v = parseFloat(getComputedStyle(document.documentElement).getPropertyValue(`--type-${t.key}-size`));
       const d = Math.abs(v - sz);
-      if (d < bestDelta) { bestDelta = d; best = t; }
+      if (d < bestDelta) {
+        bestDelta = d;
+        best = t;
+      }
     }
     return best;
   }
@@ -69,16 +74,25 @@
     const targetStr = isBtn(el) ? cs.backgroundColor : cs.color;
     const parse = s => (String(s).match(/[\d.]+/g) || []).slice(0, 3).map(Number);
     const probe = document.createElement('span');
-    probe.style.position = 'absolute'; probe.style.visibility = 'hidden';
+    probe.style.position = 'absolute';
+    probe.style.visibility = 'hidden';
     document.body.appendChild(probe);
-    const toRGB = v => { probe.style.color = ''; probe.style.color = v; return getComputedStyle(probe).color; };
+    const toRGB = v => {
+      probe.style.color = '';
+      probe.style.color = v;
+      return getComputedStyle(probe).color;
+    };
     const target = parse(targetStr);
-    let best = set[0], bd = Infinity;
+    let best = set[0],
+      bd = Infinity;
     for (const c of set) {
       const cv = parse(toRGB(`var(${c.varName})`));
       if (cv.length < 3) continue;
       const d = Math.hypot(target[0] - cv[0], target[1] - cv[1], target[2] - cv[2]);
-      if (d < bd) { bd = d; best = c; }
+      if (d < bd) {
+        bd = d;
+        best = c;
+      }
     }
     probe.remove();
     return best;
@@ -87,12 +101,17 @@
   // ---- Padrão global de texto (estilo + cor) — a última escolha vira default
   // e é aplicada a TODO texto de qualquer template novo inserido. Persiste. ----
   const TEXT_DEFAULT_KEY = 'praia.text.default';
-  let textDefault = (() => {
-    try { return Object.assign({ style: '', color: '' }, JSON.parse(localStorage.getItem(TEXT_DEFAULT_KEY) || '{}')); }
-    catch { return { style: '', color: '' }; }
+  const textDefault = (() => {
+    try {
+      return Object.assign({ style: '', color: '' }, JSON.parse(localStorage.getItem(TEXT_DEFAULT_KEY) || '{}'));
+    } catch {
+      return { style: '', color: '' };
+    }
   })();
   function saveTextDefault() {
-    try { localStorage.setItem(TEXT_DEFAULT_KEY, JSON.stringify(textDefault)); } catch {}
+    try {
+      localStorage.setItem(TEXT_DEFAULT_KEY, JSON.stringify(textDefault));
+    } catch {}
   }
   // Aplica o padrão global (último estilo/cor escolhidos) APENAS a blocos de
   // texto simples — um único elemento de texto. Templates com hierarquia
@@ -105,7 +124,7 @@
     const els = [...root.querySelectorAll(sel)];
     if (root.matches && root.matches(sel)) els.push(root);
     const textEls = els.filter(el => !isBtn(el));
-    if (textEls.length !== 1) return;   // hierarquia (ou nenhum texto) → preserva master
+    if (textEls.length !== 1) return; // hierarquia (ou nenhum texto) → preserva master
     const el = textEls[0];
     if (textDefault.style) {
       TOKENS.forEach(t => el.classList.remove(t.cls));
@@ -129,8 +148,7 @@
   // nós que o contenteditable cria por dentro de um bloco ao digitar (<div>,
   // <br>), que de outro modo desalinhariam o índice entre instâncias gêmeas e
   // fariam o estilo cair no elemento errado.
-  const stableListFrom = root => [...root.querySelectorAll('*')]
-    .filter(n => !(n.parentElement && n.parentElement.closest('[contenteditable="true"]')));
+  const stableListFrom = root => [...root.querySelectorAll('*')].filter(n => !(n.parentElement && n.parentElement.closest('[contenteditable="true"]')));
   const stableEls = wrap => stableListFrom(mirrorOf(wrap));
   function eachTwinCounterpart(srcEl, mutate) {
     const wrap = srcEl.closest('[data-tpl-instance]');
@@ -164,8 +182,10 @@
     if (!target) return;
     mutate(target);
     window.__praiaTplOverrides[name] = (probe.querySelector('.am-tpl-thumb') || probe.firstElementChild).outerHTML;
-    window.__praiaTplOverrides['edited:' + name] = '1';   // protege do version-gate
-    try { localStorage.setItem('praia.tpl.overrides', JSON.stringify(window.__praiaTplOverrides)); } catch {}
+    window.__praiaTplOverrides['edited:' + name] = '1'; // protege do version-gate
+    try {
+      localStorage.setItem('praia.tpl.overrides', JSON.stringify(window.__praiaTplOverrides));
+    } catch {}
     // Re-mede altura (trocar de token muda o tamanho) e atualiza células/thumb.
     window.__praiaRemeasureTextTemplates?.();
   }
@@ -182,7 +202,8 @@
     setStyleClass(el, tok);
     eachTwinCounterpart(el, t => setStyleClass(t, tok));
     updateMasterOverride(el, t => setStyleClass(t, tok));
-    textDefault.style = tok ? tok.key : ''; saveTextDefault();   // vira o padrão global
+    textDefault.style = tok ? tok.key : '';
+    saveTextDefault(); // vira o padrão global
     syncPanel(el);
     window.__praiaAutosave?.();
   }
@@ -190,7 +211,8 @@
     setColorClass(el, color);
     eachTwinCounterpart(el, t => setColorClass(t, color));
     updateMasterOverride(el, t => setColorClass(t, color));
-    textDefault.color = color ? color.varName : ''; saveTextDefault();  // padrão global
+    textDefault.color = color ? color.varName : '';
+    saveTextDefault(); // padrão global
     syncPanel(el);
     window.__praiaAutosave?.();
   }
@@ -233,9 +255,11 @@
     const linkInp = document.getElementById('grt-link-input');
     if (!linkInp) return;
     const apply = () => {
-      const el = getSelected(); if (!el) return;
+      const el = getSelected();
+      if (!el) return;
       const v = linkInp.value.trim();
-      if (v) el.dataset.link = v; else delete el.dataset.link;
+      if (v) el.dataset.link = v;
+      else delete el.dataset.link;
       window.__praiaAutosave?.();
     };
     linkInp.addEventListener('input', apply);
@@ -249,7 +273,8 @@
     if (!document.body.classList.contains('preview-mode')) return;
     const t = e.target.closest('[data-link]');
     if (!t) return;
-    const href = t.dataset.link; if (!href) return;
+    const href = t.dataset.link;
+    if (!href) return;
     e.preventDefault();
     const external = /^https?:\/\//i.test(href);
     window.open(href, external ? '_blank' : '_self', external ? 'noopener' : '');
@@ -266,9 +291,12 @@
         const b = document.createElement('button');
         b.type = 'button';
         b.dataset.token = t.key;
-        b.innerHTML = `<span class="tk-prev" style="font-size:${Math.min(20, Math.max(11, Math.round(parseFloat(getComputedStyle(document.documentElement).getPropertyValue(`--type-${t.key}-size`))/3)))}px">Aa</span><span>${t.label}</span>`;
+        b.innerHTML = `<span class="tk-prev" style="font-size:${Math.min(20, Math.max(11, Math.round(parseFloat(getComputedStyle(document.documentElement).getPropertyValue(`--type-${t.key}-size`)) / 3)))}px">Aa</span><span>${t.label}</span>`;
         if (current && current.key === t.key) b.classList.add('active');
-        b.addEventListener('click', () => { if (el) applyStyle(el, t); pop.classList.remove('open'); });
+        b.addEventListener('click', () => {
+          if (el) applyStyle(el, t);
+          pop.classList.remove('open');
+        });
         pop.appendChild(b);
       });
     } else {
@@ -279,24 +307,34 @@
         b.type = 'button';
         b.innerHTML = `<span class="cl-swatch" style="background:var(${c.varName})"></span><span>${c.label}</span>`;
         if (current && current.cls === c.cls) b.classList.add('active');
-        b.addEventListener('click', () => { if (el) applyColor(el, c); pop.classList.remove('open'); });
+        b.addEventListener('click', () => {
+          if (el) applyColor(el, c);
+          pop.classList.remove('open');
+        });
         pop.appendChild(b);
       });
     }
     const r = anchor.getBoundingClientRect();
     pop.classList.add('open');
-    const pw = pop.offsetWidth, ph = pop.offsetHeight;
+    const pw = pop.offsetWidth,
+      ph = pop.offsetHeight;
     pop.style.top = Math.min(window.innerHeight - ph - 8, r.bottom + 6) + 'px';
     pop.style.left = Math.max(8, Math.min(window.innerWidth - pw - 8, r.right - pw)) + 'px';
   }
 
-  trig.addEventListener('click', e => { e.stopPropagation(); openPop(trig, 'style'); });
+  trig.addEventListener('click', e => {
+    e.stopPropagation();
+    openPop(trig, 'style');
+  });
 
   // Wire color row (already in markup) — entire row triggers the color popover.
   const colorRow = document.getElementById('grt-color-row');
   const colorDot = document.getElementById('grt-color-dot');
   if (colorRow && colorDot) {
-    colorRow.addEventListener('click', e => { e.stopPropagation(); openPop(colorDot, 'color'); });
+    colorRow.addEventListener('click', e => {
+      e.stopPropagation();
+      openPop(colorDot, 'color');
+    });
   }
 
   // Spacing inputs — margin top / bottom on the selected element.

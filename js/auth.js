@@ -6,16 +6,39 @@
   const SESSION_KEY = 'blustar.auth.user';
   const isLocalhost = ['localhost', '127.0.0.1'].includes(location.hostname);
 
-  const getSession = () => { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch { return null; } };
-  const setSession = (u) => { try { localStorage.setItem(SESSION_KEY, JSON.stringify(u)); } catch {} };
-  const clearSession = () => { try { localStorage.removeItem(SESSION_KEY); } catch {} };
+  const getSession = () => {
+    try {
+      return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+    } catch {
+      return null;
+    }
+  };
+  const setSession = u => {
+    try {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(u));
+    } catch {}
+  };
+  const clearSession = () => {
+    try {
+      localStorage.removeItem(SESSION_KEY);
+    } catch {}
+  };
 
   // Decodifica o payload do JWT (ID token) do Google p/ pegar nome/email/foto.
-  const decodeJwt = (t) => {
+  const decodeJwt = t => {
     try {
       const b = t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-      return JSON.parse(decodeURIComponent(atob(b).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
-    } catch { return null; }
+      return JSON.parse(
+        decodeURIComponent(
+          atob(b)
+            .split('')
+            .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+            .join('')
+        )
+      );
+    } catch {
+      return null;
+    }
   };
 
   // ---------- UI do gate ----------
@@ -88,27 +111,57 @@
 
   // Reflete o usuário logado (nome + foto/iniciais) na sidebar + liga o logout.
   const applyUserToSidebar = () => {
-    const u = getSession(); if (!u) return;
+    const u = getSession();
+    if (!u) return;
     const nameEl = document.getElementById('blustar-user-name');
     const avEl = document.getElementById('blustar-user-avatar');
     if (nameEl && u.name) nameEl.textContent = u.name;
     if (avEl) {
-      if (u.picture) { avEl.style.backgroundImage = `url('${u.picture}')`; avEl.textContent = ''; }
-      else if (u.name) { avEl.textContent = u.name.trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase(); }
+      if (u.picture) {
+        avEl.style.backgroundImage = `url('${u.picture}')`;
+        avEl.textContent = '';
+      } else if (u.name) {
+        avEl.textContent = u.name
+          .trim()
+          .split(/\s+/)
+          .map(w => w[0])
+          .slice(0, 2)
+          .join('')
+          .toUpperCase();
+      }
     }
   };
   const lo = document.getElementById('blustar-logout-btn');
   if (lo) {
     lo.addEventListener('click', () => window.__blustarLogout());
-    lo.addEventListener('mouseenter', () => { lo.style.background = 'rgba(255,255,255,0.08)'; lo.style.color = 'var(--text, #fff)'; });
-    lo.addEventListener('mouseleave', () => { lo.style.background = 'transparent'; lo.style.color = 'var(--text-3, #8a93a3)'; });
+    lo.addEventListener('mouseenter', () => {
+      lo.style.background = 'rgba(255,255,255,0.08)';
+      lo.style.color = 'var(--text, #fff)';
+    });
+    lo.addEventListener('mouseleave', () => {
+      lo.style.background = 'transparent';
+      lo.style.color = 'var(--text-3, #8a93a3)';
+    });
   }
 
-  const showGate = () => { gate.style.display = 'block'; document.documentElement.style.overflow = 'hidden'; };
-  const hideGate = () => { gate.style.display = 'none'; document.documentElement.style.overflow = ''; };
-  const setErr = (m) => { const e = document.getElementById('blustar-auth-err'); if (e) e.textContent = m || ''; };
+  const showGate = () => {
+    gate.style.display = 'block';
+    document.documentElement.style.overflow = 'hidden';
+  };
+  const hideGate = () => {
+    gate.style.display = 'none';
+    document.documentElement.style.overflow = '';
+  };
+  const setErr = m => {
+    const e = document.getElementById('blustar-auth-err');
+    if (e) e.textContent = m || '';
+  };
 
-  const loginWith = (user) => { setSession(user); applyUserToSidebar(); hideGate(); };
+  const loginWith = user => {
+    setSession(user);
+    applyUserToSidebar();
+    hideGate();
+  };
 
   // Atalho DEV — entra sem Google (útil no preview do Claude / testes).
   document.getElementById('blustar-dev-btn')?.addEventListener('click', () => {
@@ -116,11 +169,18 @@
   });
 
   // Logout exposto globalmente (chame window.__blustarLogout() p/ sair).
-  window.__blustarLogout = () => { clearSession(); location.reload(); };
+  window.__blustarLogout = () => {
+    clearSession();
+    location.reload();
+  };
   window.__blustarUser = getSession;
 
   // ---------- Já logado? mantém conectado ----------
-  if (getSession()) { applyUserToSidebar(); hideGate(); return; }
+  if (getSession()) {
+    applyUserToSidebar();
+    hideGate();
+    return;
+  }
 
   // ---------- Fail-safe anti-lockout ----------
   // No site no ar, se o GOOGLE_CLIENT_ID ainda não foi configurado, NÃO bloqueia
@@ -145,35 +205,51 @@
     google.accounts.id.initialize({
       client_id: GOOGLE_CLIENT_ID,
       auto_select: true,
-      callback: (resp) => {
+      callback: resp => {
         const p = decodeJwt(resp.credential);
-        if (!p || !p.email) { setErr('Não foi possível ler sua conta Google.'); return; }
+        if (!p || !p.email) {
+          setErr('Não foi possível ler sua conta Google.');
+          return;
+        }
         loginWith({ name: p.name, email: p.email, picture: p.picture });
-      }
+      },
     });
     google.accounts.id.prompt();
     // Botão custom "Continuar com Google" → fluxo OAuth token + userinfo.
     const tokenClient = google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
       scope: 'openid email profile',
-      callback: async (resp) => {
-        if (resp.error || !resp.access_token) { setErr('Não foi possível entrar com o Google.'); return; }
+      callback: async resp => {
+        if (resp.error || !resp.access_token) {
+          setErr('Não foi possível entrar com o Google.');
+          return;
+        }
         try {
           const info = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-            headers: { Authorization: 'Bearer ' + resp.access_token }
+            headers: { Authorization: 'Bearer ' + resp.access_token },
           }).then(r => r.json());
-          if (!info || !info.email) { setErr('Não foi possível ler sua conta Google.'); return; }
+          if (!info || !info.email) {
+            setErr('Não foi possível ler sua conta Google.');
+            return;
+          }
           loginWith({ name: info.name, email: info.email, picture: info.picture });
-        } catch { setErr('Falha ao obter seus dados do Google.'); }
-      }
+        } catch {
+          setErr('Falha ao obter seus dados do Google.');
+        }
+      },
     });
     const gbtn = document.getElementById('blustar-google-btn');
-    if (gbtn) gbtn.addEventListener('click', () => { setErr(''); tokenClient.requestAccessToken(); });
+    if (gbtn)
+      gbtn.addEventListener('click', () => {
+        setErr('');
+        tokenClient.requestAccessToken();
+      });
   };
 
   const s = document.createElement('script');
   s.src = 'https://accounts.google.com/gsi/client';
-  s.async = true; s.defer = true;
+  s.async = true;
+  s.defer = true;
   s.onload = initGoogle;
   s.onerror = () => setErr('Falha ao carregar o login do Google (verifique a conexão/rede).');
   document.head.appendChild(s);

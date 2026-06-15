@@ -91,7 +91,9 @@
       });
       window.__praiaRefreshHierarchy?.();
     }
-  } catch (err) { console.warn('Autosave restore failed', err); }
+  } catch (err) {
+    console.warn('Autosave restore failed', err);
+  }
 
   // Strip transient state before saving
   function snapshot() {
@@ -130,11 +132,23 @@
       homeContent: cloneHome ? cloneHome.innerHTML : null,
       rootStyle,
       activePage,
-      tplOverrides: (() => { try { return JSON.stringify(window.__grcGetTplOverrides?.() || {}); } catch { return '{}'; } })(),
+      tplOverrides: (() => {
+        try {
+          return JSON.stringify(window.__grcGetTplOverrides?.() || {});
+        } catch {
+          return '{}';
+        }
+      })(),
       // Master HTML overrides (Figma-style template canvas). Including these in
       // the history snapshot lets Cmd+Z restore a master's previous editH /
       // child positions in sync with the DOM that referenced them.
-      praiaTplOverrides: (() => { try { return JSON.stringify(window.__praiaTplOverrides || {}); } catch { return '{}'; } })(),
+      praiaTplOverrides: (() => {
+        try {
+          return JSON.stringify(window.__praiaTplOverrides || {});
+        } catch {
+          return '{}';
+        }
+      })(),
     };
   }
 
@@ -145,7 +159,11 @@
     if (window.__praiaViewingHistorical) return;
     clearTimeout(saveTimer);
     saveTimer = setTimeout(() => {
-      try { localStorage.setItem(KEY, JSON.stringify(snapshot())); } catch (err) { console.warn('Autosave failed', err); }
+      try {
+        localStorage.setItem(KEY, JSON.stringify(snapshot()));
+      } catch (err) {
+        console.warn('Autosave failed', err);
+      }
       scheduleRecordHistory();
     }, 250);
   }
@@ -160,7 +178,9 @@
     if (history.past.length > history.max) history.past.shift();
     history.future = [];
     __lastSnap = cur;
-    try { localStorage.setItem(KEY, cur); } catch {}
+    try {
+      localStorage.setItem(KEY, cur);
+    } catch {}
     pushVersion(cur);
   }
   window.__praiaAutosave = save;
@@ -180,15 +200,24 @@
       let mutated = false;
       arr.forEach(v => {
         if (!v.user || v.user.initials !== __currentUser.initials || v.user.name !== __currentUser.name) {
-          v.user = __currentUser; mutated = true;
+          v.user = __currentUser;
+          mutated = true;
         }
       });
-      if (mutated) { try { localStorage.setItem(VKEY, JSON.stringify(arr)); } catch {} }
+      if (mutated) {
+        try {
+          localStorage.setItem(VKEY, JSON.stringify(arr));
+        } catch {}
+      }
       return arr;
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   }
   function writeVersions(arr) {
-    try { localStorage.setItem(VKEY, JSON.stringify(arr.slice(-V_MAX))); } catch {}
+    try {
+      localStorage.setItem(VKEY, JSON.stringify(arr.slice(-V_MAX)));
+    } catch {}
   }
   function pushVersion(snapStr) {
     if (__applyingSnapshot) return;
@@ -197,7 +226,9 @@
     const last = arr[arr.length - 1];
     if (last && now - last.ts < V_MIN_GAP_MS) {
       // Coalesce: update the most recent entry instead of appending.
-      last.ts = now; last.snapshot = snapStr; last.user = __currentUser;
+      last.ts = now;
+      last.snapshot = snapStr;
+      last.user = __currentUser;
     } else {
       arr.push({ id: 'v-' + now.toString(36), ts: now, snapshot: snapStr, user: __currentUser });
     }
@@ -212,7 +243,8 @@
     const sameDay = d.toDateString() === now.toDateString();
     const opts = { hour: 'numeric', minute: '2-digit', hour12: true };
     if (sameDay) return 'Hoje, ' + d.toLocaleTimeString('pt-BR', opts);
-    const yesterday = new Date(now); yesterday.setDate(now.getDate() - 1);
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
     if (d.toDateString() === yesterday.toDateString()) return 'Ontem, ' + d.toLocaleTimeString('pt-BR', opts);
     const dateOpts = { day: 'numeric', month: 'short' };
     return d.toLocaleDateString('pt-BR', dateOpts) + ', ' + d.toLocaleTimeString('pt-BR', opts);
@@ -237,14 +269,18 @@
       </div>`;
     const shown = versions.slice(0, __historyShown);
     const remaining = versions.length - shown.length;
-    const items = shown.map(v => `
+    const items = shown
+      .map(
+        v => `
       <div class="grh-item${activeId === v.id ? ' active' : ''}" data-version="${v.id}">
         <span class="grh-marker">${dot}</span>
         <div class="grh-content">
           <div class="grh-title">${fmtVersionDate(v.ts)}</div>
           <div class="grh-meta">${v.user?.name || ''}</div>
         </div>
-      </div>`).join('');
+      </div>`
+      )
+      .join('');
     const groupLabel = versions.length
       ? `<button type="button" class="grh-group" id="grh-group-toggle" aria-expanded="${!__historyCollapsed}">
           <span class="grh-marker">
@@ -253,14 +289,13 @@
           <span class="grh-group-label">${versions.length} ${versions.length === 1 ? 'versão de autosave' : 'versões de autosave'}</span>
         </button>`
       : '<div class="grh-empty">Sem versões salvas ainda. Edite o Guide e elas aparecerão aqui.</div>';
-    const showOlder = !__historyCollapsed && remaining > 0
-      ? `<button type="button" class="grh-show-older" id="grh-show-older">Show older</button>`
-      : '';
+    const showOlder = !__historyCollapsed && remaining > 0 ? `<button type="button" class="grh-show-older" id="grh-show-older">Show older</button>` : '';
     list.innerHTML = currentItem + groupLabel + (__historyCollapsed ? '' : items + showOlder);
   }
 
   function openHistoryPanel() {
-    const right = document.querySelector('.guide-right'); if (!right) return;
+    const right = document.querySelector('.guide-right');
+    if (!right) return;
     window.__praiaCloseRightModes?.();
     right.classList.add('history-mode');
     const btn = document.getElementById('version-history-btn');
@@ -292,9 +327,23 @@
   // do app (tpl.overrides, icons, buttons, client, …) podem migrar pra cá depois.
   window.__praiaStateKeys = Object.freeze({ state: KEY, versions: VKEY, live: LIVE_KEY });
   window.__praiaStateStore = {
-    get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
-    set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
-    remove: (k) => { try { localStorage.removeItem(k); } catch {} },
+    get: k => {
+      try {
+        return localStorage.getItem(k);
+      } catch {
+        return null;
+      }
+    },
+    set: (k, v) => {
+      try {
+        localStorage.setItem(k, v);
+      } catch {}
+    },
+    remove: k => {
+      try {
+        localStorage.removeItem(k);
+      } catch {}
+    },
   };
 
   function showHistoryBanner(label) {
@@ -302,7 +351,8 @@
     if (!b) {
       b = document.createElement('div');
       b.id = '__history_banner';
-      b.style.cssText = 'position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:var(--bs-white);color:var(--bs-navy);padding:10px 18px;border-radius:999px;font:var(--type-sb-weight) var(--type-sb-size)/1 var(--font);letter-spacing:0;z-index:var(--z-toast);box-shadow:0 8px 24px rgba(0,0,0,0.35);display:inline-flex;align-items:center;gap:12px';
+      b.style.cssText =
+        'position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:var(--bs-white);color:var(--bs-navy);padding:10px 18px;border-radius:999px;font:var(--type-sb-weight) var(--type-sb-size)/1 var(--font);letter-spacing:0;z-index:var(--z-toast);box-shadow:0 8px 24px rgba(0,0,0,0.35);display:inline-flex;align-items:center;gap:12px';
       document.body.appendChild(b);
     }
     b.innerHTML = `<span>${label}</span>`;
@@ -324,11 +374,13 @@
   function exitHistoricalView() {
     window.__praiaViewingHistorical = false;
     hideHistoryBanner();
-    try { localStorage.removeItem(LIVE_KEY); } catch {}
+    try {
+      localStorage.removeItem(LIVE_KEY);
+    } catch {}
   }
   window.__praiaExitHistorical = exitHistoricalView;
 
-  document.getElementById('grh-list')?.addEventListener('click', (e) => {
+  document.getElementById('grh-list')?.addEventListener('click', e => {
     if (e.target.closest('#grh-group-toggle')) {
       __historyCollapsed = !__historyCollapsed;
       renderHistoryPanel();
@@ -347,7 +399,9 @@
     if (vid === '__current__') {
       // Restore the live state we stashed when entering historical view.
       let liveSnap = null;
-      try { liveSnap = localStorage.getItem(LIVE_KEY); } catch {}
+      try {
+        liveSnap = localStorage.getItem(LIVE_KEY);
+      } catch {}
       exitHistoricalView();
       if (liveSnap) applySnapshot(liveSnap);
     } else {
@@ -363,7 +417,9 @@
   document.getElementById('grh-close')?.addEventListener('click', () => {
     if (window.__praiaViewingHistorical) {
       let liveSnap = null;
-      try { liveSnap = localStorage.getItem(LIVE_KEY); } catch {}
+      try {
+        liveSnap = localStorage.getItem(LIVE_KEY);
+      } catch {}
       exitHistoricalView();
       if (liveSnap) applySnapshot(liveSnap);
     }
@@ -386,20 +442,23 @@
   // Periodic snapshot: every 5 minutes, if the current state differs from the
   // last persisted version, create a fresh version (bypasses the 60s coalesce).
   // This way long sessions still build a timeline even when edits are sparse.
-  setInterval(() => {
-    if (window.__praiaViewingHistorical) return;
-    const arr = readVersions();
-    const cur = JSON.stringify(snapshot());
-    const last = arr[arr.length - 1];
-    if (!last || last.snapshot !== cur) {
-      // Force append (skip the 60s coalesce by pushing a synthetic gap).
-      const now = Date.now();
-      const newEntry = { id: 'v-' + now.toString(36), ts: now, snapshot: cur, user: __currentUser };
-      arr.push(newEntry);
-      writeVersions(arr);
-      if (document.querySelector('.guide-right.history-mode')) renderHistoryPanel();
-    }
-  }, 5 * 60 * 1000);
+  setInterval(
+    () => {
+      if (window.__praiaViewingHistorical) return;
+      const arr = readVersions();
+      const cur = JSON.stringify(snapshot());
+      const last = arr[arr.length - 1];
+      if (!last || last.snapshot !== cur) {
+        // Force append (skip the 60s coalesce by pushing a synthetic gap).
+        const now = Date.now();
+        const newEntry = { id: 'v-' + now.toString(36), ts: now, snapshot: cur, user: __currentUser };
+        arr.push(newEntry);
+        writeVersions(arr);
+        if (document.querySelector('.guide-right.history-mode')) renderHistoryPanel();
+      }
+    },
+    5 * 60 * 1000
+  );
 
   // --- Undo / Redo (Cmd+Z / Ctrl+Z + Shift for redo) ---
   const history = { past: [], future: [], max: 20 };
@@ -434,7 +493,9 @@
       }
       if (data.rootStyle) document.documentElement.style.cssText = data.rootStyle;
       if (data.tplOverrides != null) {
-        try { window.__grcSetTplOverrides?.(JSON.parse(data.tplOverrides)); } catch {}
+        try {
+          window.__grcSetTplOverrides?.(JSON.parse(data.tplOverrides));
+        } catch {}
       }
       // Restore master HTML overrides so Cmd+Z over a template canvas crop /
       // child move syncs instances back to the previous master state.
@@ -472,17 +533,23 @@
       // measured after a Cmd+Z / version restore.
       window.__praiaEnsureMirrorObserver?.();
       requestAnimationFrame(() => window.__praiaApplyMirrorScale?.());
-    } catch (e) { console.warn('applySnapshot failed', e); }
+    } catch (e) {
+      console.warn('applySnapshot failed', e);
+    }
     __lastSnap = JSON.stringify(snapshot());
     // While viewing a historical version we must NOT persist this preview into
     // the live KEY slot — the live data is stashed in KEY+':live' until restore.
     if (!window.__praiaViewingHistorical) {
-      try { localStorage.setItem(KEY, __lastSnap); } catch {}
+      try {
+        localStorage.setItem(KEY, __lastSnap);
+      } catch {}
     }
     // Defer release so the MutationObserver callback (microtask + task) that
     // processes our innerHTML reset still sees the guard and skips
     // recordHistoryNow — otherwise undo/redo would clobber history.future.
-    setTimeout(() => { __applyingSnapshot = false; }, 0);
+    setTimeout(() => {
+      __applyingSnapshot = false;
+    }, 0);
   }
   function undo() {
     if (!history.past.length) return false;
@@ -509,8 +576,13 @@
     // browser do its native intra-field undo.
     const t = e.target;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || (t.isContentEditable && t.tagName !== 'BODY'))) return;
-    if (e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
-    else if ((e.key === 'z' && e.shiftKey) || e.key === 'y') { e.preventDefault(); redo(); }
+    if (e.key === 'z' && !e.shiftKey) {
+      e.preventDefault();
+      undo();
+    } else if ((e.key === 'z' && e.shiftKey) || e.key === 'y') {
+      e.preventDefault();
+      redo();
+    }
   });
 
   // Watch DOM mutations in the editable regions.
@@ -518,8 +590,8 @@
   // hidden-page, gsi-dragging cleanup, etc.) record a history step IMMEDIATELY
   // so each discrete action is its own undo step. Pure text typing
   // (characterData) keeps the debounce so a run of keystrokes coalesces.
-  const TRANSIENT_CLASSES = ['canvas-selected','gsi-open','gsi-dragging','gsi-drop-before','gsi-drop-after','gsi-drop-inside','active'];
-  const TRANSIENT_ATTRS = new Set(['contenteditable','spellcheck','data-drop-pos','draggable','style','class']);
+  const TRANSIENT_CLASSES = ['canvas-selected', 'gsi-open', 'gsi-dragging', 'gsi-drop-before', 'gsi-drop-after', 'gsi-drop-inside', 'active'];
+  const TRANSIENT_ATTRS = new Set(['contenteditable', 'spellcheck', 'data-drop-pos', 'draggable', 'style', 'class']);
   function isStructural(muts) {
     for (const m of muts) {
       if (m.type === 'childList' && (m.addedNodes.length || m.removedNodes.length)) {
@@ -534,7 +606,9 @@
           const diff = new Set([...before.filter(c => !after.includes(c)), ...after.filter(c => !before.includes(c))]);
           // If every changed class is transient, skip; otherwise it's a real structural change.
           let onlyTransient = true;
-          diff.forEach(c => { if (!TRANSIENT_CLASSES.includes(c)) onlyTransient = false; });
+          diff.forEach(c => {
+            if (!TRANSIENT_CLASSES.includes(c)) onlyTransient = false;
+          });
           if (!onlyTransient) return true;
           continue;
         }
@@ -550,7 +624,9 @@
   const mo = new MutationObserver(muts => {
     if (isStructural(muts)) {
       // Persist + commit a history entry NOW so this discrete action is its own undo step.
-      try { localStorage.setItem(KEY, JSON.stringify(snapshot())); } catch {}
+      try {
+        localStorage.setItem(KEY, JSON.stringify(snapshot()));
+      } catch {}
       recordHistoryNow();
     } else {
       save();
@@ -558,7 +634,7 @@
   });
   const moOpts = { childList: true, subtree: true, attributes: true, attributeOldValue: true, characterData: true };
   mo.observe(sideList, moOpts);
-  mo.observe(content,  moOpts);
+  mo.observe(content, moOpts);
   if (head) mo.observe(head, moOpts);
   if (homeContent) mo.observe(homeContent, moOpts);
   if (homeSideList) mo.observe(homeSideList, moOpts);
@@ -570,6 +646,8 @@
 
   // Save before unload as a safety net
   window.addEventListener('beforeunload', () => {
-    try { localStorage.setItem(KEY, JSON.stringify(snapshot())); } catch {}
+    try {
+      localStorage.setItem(KEY, JSON.stringify(snapshot()));
+    } catch {}
   });
 })();

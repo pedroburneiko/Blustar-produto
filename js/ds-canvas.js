@@ -23,21 +23,25 @@
     // Names match the rest of the UI (the type inspector / style picker):
     // H0, H1, H2, H3, H4, Body, Caption Bold, Caption, Body Small.
     const scales = [
-      ['tk-h0',    'H0',           'Mensagem de marca'],
-      ['tk-super', 'H1',           'Mensagem de marca'],
-      ['tk-xl',    'H2',           'Mensagem de marca'],
-      ['tk-l',     'H3',           'Mensagem de marca'],
-      ['tk-mb',    'H4',           'Mensagem de marca'],
-      ['tk-m',     'Body',         'Mensagem de marca'],
-      ['tk-sb',    'Caption Bold', 'Mensagem de marca'],
-      ['tk-s',     'Caption',      'Mensagem de marca'],
-      ['tk-xs',    'Body Small',   'Mensagem de marca'],
+      ['tk-h0', 'H0', 'Mensagem de marca'],
+      ['tk-super', 'H1', 'Mensagem de marca'],
+      ['tk-xl', 'H2', 'Mensagem de marca'],
+      ['tk-l', 'H3', 'Mensagem de marca'],
+      ['tk-mb', 'H4', 'Mensagem de marca'],
+      ['tk-m', 'Body', 'Mensagem de marca'],
+      ['tk-sb', 'Caption Bold', 'Mensagem de marca'],
+      ['tk-s', 'Caption', 'Mensagem de marca'],
+      ['tk-xs', 'Body Small', 'Mensagem de marca'],
     ];
-    const rows = scales.map(([cls, label, sample]) => `
+    const rows = scales
+      .map(
+        ([cls, label, sample]) => `
       <div style="display:grid;grid-template-columns:80px 1fr;gap:32px;align-items:baseline;padding:18px 0;border-top:1px solid var(--border)">
         <div class="tk-s" style="color:var(--text-3)">${label}</div>
         <div class="${cls}" style="color:var(--text);margin:0">${sample}</div>
-      </div>`).join('');
+      </div>`
+      )
+      .join('');
     return `<section style="margin-top:48px">
       <div class="world-eyebrow" style="margin-bottom:14px">Tokens · Tipografia</div>
       ${rows}
@@ -46,33 +50,42 @@
 
   function buildColorSection() {
     const groups = [
-      ['Brand', [
-        ['--bs-navy',      'BluStar Navy',    '#061833'],
-        ['--bs-navy-deep', 'Navy Deep',       '#04001E'],
-        ['--bs-cyan',      'BluStar Cyan',    '#0FC4D5'],
-        ['--bs-cyan-200',  'Cyan 200',        ''],
-        ['--bs-cyan-100',  'Cyan 100',        '#BFFAFF'],
-        ['--bs-cyan-50',   'Cyan 50',         '#DFFCFF'],
-        ['--bs-blue',      'Royal Blue',      '#3259FF'],
-        ['--bs-white',     'White',           '#FFFFFF'],
-      ]],
-      ['Surface', [
-        ['--bg',          'Background',  ''],
-        ['--surface',     'Surface 1',   ''],
-        ['--surface-2',   'Surface 2',   ''],
-        ['--surface-3',   'Surface 3',   ''],
-        ['--border',      'Border',      ''],
-        ['--border-strong','Border strong',''],
-      ]],
-      ['Text', [
-        ['--text',    'Text',    ''],
-        ['--text-2',  'Text 2',  ''],
-        ['--text-3',  'Text 3',  ''],
-      ]],
+      [
+        'Brand',
+        [
+          ['--bs-navy', 'BluStar Navy', '#061833'],
+          ['--bs-navy-deep', 'Navy Deep', '#04001E'],
+          ['--bs-cyan', 'BluStar Cyan', '#0FC4D5'],
+          ['--bs-cyan-200', 'Cyan 200', ''],
+          ['--bs-cyan-100', 'Cyan 100', '#BFFAFF'],
+          ['--bs-cyan-50', 'Cyan 50', '#DFFCFF'],
+          ['--bs-blue', 'Royal Blue', '#3259FF'],
+          ['--bs-white', 'White', '#FFFFFF'],
+        ],
+      ],
+      [
+        'Surface',
+        [
+          ['--bg', 'Background', ''],
+          ['--surface', 'Surface 1', ''],
+          ['--surface-2', 'Surface 2', ''],
+          ['--surface-3', 'Surface 3', ''],
+          ['--border', 'Border', ''],
+          ['--border-strong', 'Border strong', ''],
+        ],
+      ],
+      [
+        'Text',
+        [
+          ['--text', 'Text', ''],
+          ['--text-2', 'Text 2', ''],
+          ['--text-3', 'Text 3', ''],
+        ],
+      ],
     ];
     // Resolve a CSS custom property to its display value. Raw hex stays hex;
     // rgba values display in shortened rgba form so alpha is preserved.
-    const resolveHex = (token) => {
+    const resolveHex = token => {
       const raw = getComputedStyle(document.documentElement).getPropertyValue(token).trim();
       if (!raw) return '';
       if (/^#[0-9a-fA-F]{3,8}$/.test(raw)) return raw.toUpperCase();
@@ -120,34 +133,36 @@
   // fill = true renders the filled axis (default: outline).
   const _ig = (glyph, fill) => ({ glyph, fill: !!fill });
   const DEFAULT_ICONS = {
-    home:           _ig('home'),
-    guide:          _ig('menu_book'),
-    sparkle:        _ig('auto_awesome'),
-    gear:           _ig('settings'),
-    grid_4:         _ig('grid_view'),
-    clock:          _ig('schedule'),
-    play:           _ig('play_arrow', true),
-    share_up:       _ig('ios_share'),
-    desktop:        _ig('desktop_windows'),
-    tablet:         _ig('tablet_mac'),
-    mobile:         _ig('smartphone'),
-    chevron_down:   _ig('expand_more'),
-    chevron_right:  _ig('chevron_right'),
-    check:          _ig('check'),
-    plus:           _ig('add'),
-    minus:          _ig('remove'),
-    dots:           _ig('more_horiz'),
-    eye:            _ig('visibility'),
-    edit:           _ig('edit'),
-    trash:          _ig('delete'),
-    undo:           _ig('undo'),
-    arrow_right:    _ig('arrow_forward'),
-    arrow_right_alt:_ig('arrow_right_alt'),
+    home: _ig('home'),
+    guide: _ig('menu_book'),
+    sparkle: _ig('auto_awesome'),
+    gear: _ig('settings'),
+    grid_4: _ig('grid_view'),
+    clock: _ig('schedule'),
+    play: _ig('play_arrow', true),
+    share_up: _ig('ios_share'),
+    desktop: _ig('desktop_windows'),
+    tablet: _ig('tablet_mac'),
+    mobile: _ig('smartphone'),
+    chevron_down: _ig('expand_more'),
+    chevron_right: _ig('chevron_right'),
+    check: _ig('check'),
+    plus: _ig('add'),
+    minus: _ig('remove'),
+    dots: _ig('more_horiz'),
+    eye: _ig('visibility'),
+    edit: _ig('edit'),
+    trash: _ig('delete'),
+    undo: _ig('undo'),
+    arrow_right: _ig('arrow_forward'),
+    arrow_right_alt: _ig('arrow_right_alt'),
   };
   // Read library. Migrate any legacy entry (old SVG schema, string) → { glyph, fill }.
   function readIcons() {
     let raw = {};
-    try { raw = JSON.parse(localStorage.getItem(ICONS_KEY) || '{}'); } catch {}
+    try {
+      raw = JSON.parse(localStorage.getItem(ICONS_KEY) || '{}');
+    } catch {}
     const merged = Object.assign({}, DEFAULT_ICONS, raw);
     Object.keys(merged).forEach(k => {
       const e = merged[k];
@@ -161,7 +176,9 @@
     return merged;
   }
   function writeIcons(lib) {
-    try { localStorage.setItem(ICONS_KEY, JSON.stringify(lib)); } catch {}
+    try {
+      localStorage.setItem(ICONS_KEY, JSON.stringify(lib));
+    } catch {}
   }
   // Build the Material Symbols markup for a glyph entry at a given pixel size.
   function iconGlyphHTML(name, entry, sizePx) {
@@ -189,15 +206,17 @@
         if (/\bico-outline\b/.test(cls)) fill = false;
         if (el.tagName.toLowerCase() === 'svg') {
           const rect = el.getBoundingClientRect();
-          const size = Math.round(rect.width) || Math.round(rect.height)
-            || parseFloat(el.getAttribute('width')) || 24;
+          const size = Math.round(rect.width) || Math.round(rect.height) || parseFloat(el.getAttribute('width')) || 24;
           const span = document.createElement('span');
           span.className = (cls ? cls + ' ' : '') + 'bs-icon';
           span.setAttribute('data-ds-icon', name);
           span.setAttribute('data-fill', fill ? '1' : '0');
           const style = el.getAttribute('style') || '';
           span.setAttribute('style', `${style}${style && !style.trim().endsWith(';') ? ';' : ''}--bs-icon-size:${size}px`);
-          ['aria-label', 'role'].forEach(a => { const v = el.getAttribute(a); if (v != null) span.setAttribute(a, v); });
+          ['aria-label', 'role'].forEach(a => {
+            const v = el.getAttribute(a);
+            if (v != null) span.setAttribute(a, v);
+          });
           span.textContent = entry.glyph;
           el.replaceWith(span);
         } else {
@@ -206,7 +225,9 @@
           if (el.textContent.trim() !== entry.glyph) el.textContent = entry.glyph;
         }
       });
-    } finally { __broadcasting = false; }
+    } finally {
+      __broadcasting = false;
+    }
   }
   function broadcastAllIcons() {
     const lib = readIcons();
@@ -217,7 +238,7 @@
   function buildIconsSection() {
     const lib = readIcons();
     const names = Object.keys(lib);
-    const tile = (name) => `
+    const tile = name => `
       <button type="button" class="ds-icon-tile" data-icon-name="${name}" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);cursor:pointer;color:var(--text);transition:background .12s var(--ease), border-color .12s var(--ease)">
         <span class="ds-icon-host bs-icon" data-ds-icon="${name}" data-fill="${lib[name].fill ? 1 : 0}" style="--bs-icon-size:24px;color:var(--text)">${lib[name].glyph}</span>
         <span class="tk-xs" style="color:var(--text-3);font-family:var(--font);letter-spacing:0;text-transform:none">${name}</span>
@@ -252,9 +273,15 @@
         full: Object.assign({}, DEFAULT_CLIENT.full, stored.full || {}),
         mark: Object.assign({}, DEFAULT_CLIENT.mark, stored.mark || {}),
       };
-    } catch { return JSON.parse(JSON.stringify(DEFAULT_CLIENT)); }
+    } catch {
+      return JSON.parse(JSON.stringify(DEFAULT_CLIENT));
+    }
   }
-  function writeClient(c) { try { localStorage.setItem(CLIENT_KEY, JSON.stringify(c)); } catch {} }
+  function writeClient(c) {
+    try {
+      localStorage.setItem(CLIENT_KEY, JSON.stringify(c));
+    } catch {}
+  }
   function broadcastClient(id, asset) {
     document.querySelectorAll(`[data-ds-logo="${id}"]`).forEach(host => {
       host.innerHTML = asset.svg;
@@ -291,23 +318,17 @@
   // "Variante" dropdown from the same source of truth (no parallel catalog).
   window.__BUTTON_VARIANTS = window.__BUTTON_VARIANTS || null;
   const BUTTON_VARIANTS = [
-    { id: 'primary',        label: 'Primary',         selector: '.tn-btn.primary',
-      sample: '<button class="tn-btn primary" type="button">Botão</button>' },
-    { id: 'modal_primary',  label: 'Modal primary',   selector: '.am-add',
-      sample: '<button class="am-add" type="button">Botão</button>' },
-    { id: 'modal_ghost',    label: 'Modal ghost',     selector: '.am-cancel',
-      sample: '<button class="am-cancel" type="button">Botão</button>' },
-    { id: 'modal_alt',      label: 'Modal alt',       selector: '.am-ds',
-      sample: '<button class="am-ds" type="button">Botão</button>' },
-    { id: 'topnav_default', label: 'Topnav default',  selector: '.tn-btn',
-      sample: '<button class="tn-btn" type="button">Botão</button>' },
-    { id: 'content_cta',    label: 'CTA (conteúdo)',  selector: '.bs-cta',
-      sample: '<button class="bs-cta" type="button">Download</button>' },
+    { id: 'primary', label: 'Primary', selector: '.tn-btn.primary', sample: '<button class="tn-btn primary" type="button">Botão</button>' },
+    { id: 'modal_primary', label: 'Modal primary', selector: '.am-add', sample: '<button class="am-add" type="button">Botão</button>' },
+    { id: 'modal_ghost', label: 'Modal ghost', selector: '.am-cancel', sample: '<button class="am-cancel" type="button">Botão</button>' },
+    { id: 'modal_alt', label: 'Modal alt', selector: '.am-ds', sample: '<button class="am-ds" type="button">Botão</button>' },
+    { id: 'topnav_default', label: 'Topnav default', selector: '.tn-btn', sample: '<button class="tn-btn" type="button">Botão</button>' },
+    { id: 'content_cta', label: 'CTA (conteúdo)', selector: '.bs-cta', sample: '<button class="bs-cta" type="button">Download</button>' },
   ];
   window.__BUTTON_VARIANTS = BUTTON_VARIANTS;
 
   function buildButtonsSection() {
-    const tile = (v) => `
+    const tile = v => `
       <div class="ds-btn-tile" data-btn-id="${v.id}" role="button" tabindex="0">
         <div class="ds-btn-tile-stage">${v.sample}</div>
         <div class="ds-btn-tile-label">${v.label}</div>
@@ -376,13 +397,15 @@
       wrap.setAttribute('role', 'tablist');
       wrap.setAttribute('aria-label', 'Filtrar templates por categoria');
       wrap.innerHTML = [
-        ['all',    'Todos'],
-        ['text',   'Texto'],
+        ['all', 'Todos'],
+        ['text', 'Texto'],
         ['images', 'Foto'],
-        ['video',  'Video'],
-        ['basic',  'Base'],
+        ['video', 'Video'],
+        ['basic', 'Base'],
         ['colors', 'Cor'],
-      ].map(([k, l], i) => `<button type="button" class="ds-tpl-filter${i === 0 ? ' is-active' : ''}" data-tpl-filter="${k}">${l}</button>`).join('');
+      ]
+        .map(([k, l], i) => `<button type="button" class="ds-tpl-filter${i === 0 ? ' is-active' : ''}" data-tpl-filter="${k}">${l}</button>`)
+        .join('');
       grid.parentNode.insertBefore(wrap, grid);
     });
   }
@@ -393,60 +416,64 @@
   // Depth counter handles nested calls (ensureTplCells → populateTemplatesGrid).
   let __tplMO = null;
   let __tplMODepth = 0;
-  const __pauseTplMO = (fn) => {
+  const __pauseTplMO = fn => {
     __tplMODepth++;
     if (__tplMO && __tplMODepth === 1) __tplMO.disconnect();
-    try { return fn(); }
-    finally {
+    try {
+      return fn();
+    } finally {
       __tplMODepth--;
       if (__tplMO && __tplMODepth === 0) __tplMO.observe(document.body, { childList: true, subtree: true });
     }
   };
   function ensureTplCells() {
-   __pauseTplMO(() => {
-    document.querySelectorAll('section[data-ds-section="templates"]').forEach(sec => {
-      const grid = sec.querySelector('.ds-cat-grid[data-cat="all"]');
-      if (!grid) return;
-      // 2026-05-28: always rebuild from the in-scope registries (which are now
-      // empty — templates will be authored from scratch). Autosave may restore
-      // stale cells from earlier sessions; force a clean repopulate.
-      grid.innerHTML = '';
-      if (!grid.children.length) {
-        const page = sec.closest('.guide-page') || sec.parentElement;
-        if (page) populateTemplatesGrid(page);
-        return;
-      }
-      // Grid already populated by autosave restore. Re-apply any saved overrides
-      // so the cell thumb reflects the latest commitEditAndExit, even when the
-      // restored DOM snapshot pre-dates the edit.
-      if (!window.__praiaTplOverrides) {
-        try { window.__praiaTplOverrides = JSON.parse(localStorage.getItem('praia.tpl.overrides') || '{}'); }
-        catch { window.__praiaTplOverrides = {}; }
-      }
-      const overrides = window.__praiaTplOverrides || {};
-      grid.querySelectorAll('.ds-tpl-cell').forEach(cell => {
-        const name = cell.dataset.tplName;
-        const html = name && overrides[name];
-        if (!html) return;
-        const wrap = cell.querySelector('.ds-thumb-wrap');
-        if (!wrap) return;
-        if (wrap.dataset.dsOverrideApplied === name) return;
-        if (!window.__praiaWrapMasterInMirror) return;
-        const r = window.__praiaWrapMasterInMirror(html, { transparentBg: false });
-        if (!r.hasThumb) return;
-        const actions = wrap.querySelector('.ds-tpl-actions')?.cloneNode(true);
-        wrap.classList.add('praia-frame');
-        wrap.style.aspectRatio = `${r.editW}/${r.editH}`;
-        wrap.style.overflow = 'hidden';
-        wrap.style.position = 'relative';
-        wrap.innerHTML = r.html;
-        if (actions) wrap.appendChild(actions);
-        wrap.dataset.dsOverrideApplied = name;
+    __pauseTplMO(() => {
+      document.querySelectorAll('section[data-ds-section="templates"]').forEach(sec => {
+        const grid = sec.querySelector('.ds-cat-grid[data-cat="all"]');
+        if (!grid) return;
+        // 2026-05-28: always rebuild from the in-scope registries (which are now
+        // empty — templates will be authored from scratch). Autosave may restore
+        // stale cells from earlier sessions; force a clean repopulate.
+        grid.innerHTML = '';
+        if (!grid.children.length) {
+          const page = sec.closest('.guide-page') || sec.parentElement;
+          if (page) populateTemplatesGrid(page);
+          return;
+        }
+        // Grid already populated by autosave restore. Re-apply any saved overrides
+        // so the cell thumb reflects the latest commitEditAndExit, even when the
+        // restored DOM snapshot pre-dates the edit.
+        if (!window.__praiaTplOverrides) {
+          try {
+            window.__praiaTplOverrides = JSON.parse(localStorage.getItem('praia.tpl.overrides') || '{}');
+          } catch {
+            window.__praiaTplOverrides = {};
+          }
+        }
+        const overrides = window.__praiaTplOverrides || {};
+        grid.querySelectorAll('.ds-tpl-cell').forEach(cell => {
+          const name = cell.dataset.tplName;
+          const html = name && overrides[name];
+          if (!html) return;
+          const wrap = cell.querySelector('.ds-thumb-wrap');
+          if (!wrap) return;
+          if (wrap.dataset.dsOverrideApplied === name) return;
+          if (!window.__praiaWrapMasterInMirror) return;
+          const r = window.__praiaWrapMasterInMirror(html, { transparentBg: false });
+          if (!r.hasThumb) return;
+          const actions = wrap.querySelector('.ds-tpl-actions')?.cloneNode(true);
+          wrap.classList.add('praia-frame');
+          wrap.style.aspectRatio = `${r.editW}/${r.editH}`;
+          wrap.style.overflow = 'hidden';
+          wrap.style.position = 'relative';
+          wrap.innerHTML = r.html;
+          if (actions) wrap.appendChild(actions);
+          wrap.dataset.dsOverrideApplied = name;
+        });
+        window.__praiaEnsureMirrorObserver?.();
+        requestAnimationFrame(() => window.__praiaApplyMirrorScale?.());
       });
-      window.__praiaEnsureMirrorObserver?.();
-      requestAnimationFrame(() => window.__praiaApplyMirrorScale?.());
     });
-   });
   }
   // Migrate orphan instances (inserted before tagging existed). For every
   // .am-tpl-thumb on a guide page whose wrapper has no data-tpl-instance, try
@@ -457,18 +484,23 @@
   //     sanitized override — best-effort for pre-stamping orphans.
   function migrateOrphans() {
     const overrides = window.__praiaTplOverrides || JSON.parse(localStorage.getItem('praia.tpl.overrides') || '{}');
-    const fingerprints = Object.entries(overrides).map(([name, html]) => {
-      const tmp = document.createElement('div');
-      tmp.innerHTML = sanitizeOverrideForInstance(html);
-      const t = tmp.querySelector('.am-tpl-thumb');
-      return t ? { name, childCount: t.children.length, firstCls: t.firstElementChild?.className || '', signature: t.outerHTML.length } : null;
-    }).filter(Boolean);
+    const fingerprints = Object.entries(overrides)
+      .map(([name, html]) => {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = sanitizeOverrideForInstance(html);
+        const t = tmp.querySelector('.am-tpl-thumb');
+        return t ? { name, childCount: t.children.length, firstCls: t.firstElementChild?.className || '', signature: t.outerHTML.length } : null;
+      })
+      .filter(Boolean);
     document.querySelectorAll('.guide-page .am-tpl-thumb').forEach(thumb => {
       if (thumb.closest('section[data-ds-section]')) return;
       const wrap = thumb.parentElement;
       if (!wrap || wrap.dataset.tplInstance) return;
       const stamped = thumb.getAttribute('data-tpl-name') || thumb.getAttribute('data-ds-override-applied');
-      if (stamped) { wrap.dataset.tplInstance = stamped; return; }
+      if (stamped) {
+        wrap.dataset.tplInstance = stamped;
+        return;
+      }
       const match = fingerprints.find(fp => fp.childCount === thumb.children.length && fp.firstCls === (thumb.firstElementChild?.className || ''));
       if (match) wrap.dataset.tplInstance = match.name;
     });
@@ -493,7 +525,8 @@
   // new native size. Idempotent via the praia.tpl.migrated.1280 flag.
   function migrateOverridesTo1280() {
     if (localStorage.getItem('praia.tpl.migrated.1280') === '1') return;
-    const MW = 1280, MH = 800;
+    const MW = 1280,
+      MH = 800;
     const overrides = window.__praiaTplOverrides || JSON.parse(localStorage.getItem('praia.tpl.overrides') || '{}');
     Object.entries(overrides).forEach(([name, html]) => {
       const tmp = document.createElement('div');
@@ -511,11 +544,12 @@
       thumb.querySelectorAll('*').forEach(el => {
         const style = el.getAttribute('style');
         if (!style) return;
-        const next = style.replace(/(left|right|width)\s*:\s*([-\d.]+)px/g, (_, p, n) => `${p}:${(parseFloat(n) * sx).toFixed(3)}px`)
-                          .replace(/(top|bottom|height)\s*:\s*([-\d.]+)px/g, (_, p, n) => `${p}:${(parseFloat(n) * sy).toFixed(3)}px`)
-                          .replace(/(padding|margin|border-radius|gap|font-size|line-height)\s*:\s*([-\d.]+)px/g, (_, p, n) => `${p}:${(parseFloat(n) * sAvg).toFixed(3)}px`)
-                          .replace(/translate\(\s*([-\d.]+)px\s*,\s*([-\d.]+)px\s*\)/g, (_, x, y) => `translate(${(parseFloat(x) * sx).toFixed(3)}px, ${(parseFloat(y) * sy).toFixed(3)}px)`)
-                          .replace(/font\s*:\s*([^;]*?)([-\d.]+)px\s*\/\s*([\d.]+)/g, (_, pre, sz, lh) => `font: ${pre}${(parseFloat(sz) * sAvg).toFixed(2)}px/${lh}`);
+        const next = style
+          .replace(/(left|right|width)\s*:\s*([-\d.]+)px/g, (_, p, n) => `${p}:${(parseFloat(n) * sx).toFixed(3)}px`)
+          .replace(/(top|bottom|height)\s*:\s*([-\d.]+)px/g, (_, p, n) => `${p}:${(parseFloat(n) * sy).toFixed(3)}px`)
+          .replace(/(padding|margin|border-radius|gap|font-size|line-height)\s*:\s*([-\d.]+)px/g, (_, p, n) => `${p}:${(parseFloat(n) * sAvg).toFixed(3)}px`)
+          .replace(/translate\(\s*([-\d.]+)px\s*,\s*([-\d.]+)px\s*\)/g, (_, x, y) => `translate(${(parseFloat(x) * sx).toFixed(3)}px, ${(parseFloat(y) * sy).toFixed(3)}px)`)
+          .replace(/font\s*:\s*([^;]*?)([-\d.]+)px\s*\/\s*([\d.]+)/g, (_, pre, sz, lh) => `font: ${pre}${(parseFloat(sz) * sAvg).toFixed(2)}px/${lh}`);
         if (next !== style) el.setAttribute('style', next);
       });
       // Reset thumb's stamped dims to canonical and clear scale artifacts.
@@ -529,8 +563,12 @@
       overrides[name] = thumb.outerHTML;
     });
     window.__praiaTplOverrides = overrides;
-    try { localStorage.setItem('praia.tpl.overrides', JSON.stringify(overrides)); } catch {}
-    try { localStorage.setItem('praia.tpl.migrated.1280', '1'); } catch {}
+    try {
+      localStorage.setItem('praia.tpl.overrides', JSON.stringify(overrides));
+    } catch {}
+    try {
+      localStorage.setItem('praia.tpl.migrated.1280', '1');
+    } catch {}
   }
   // Migração: garante o botão Download no template texto 05 (New page) em
   // QUALQUER navegador. O override fica no localStorage de cada um, então esta
@@ -538,16 +576,24 @@
   // instâncias já em uso. Idempotente via flag.
   function migrate05Download() {
     if (localStorage.getItem('praia.tpl.05dl.v3') === '1') return;
-    const HTML05 = '<div class="am-tpl-thumb" data-ds-edit-w="1280" data-ds-edit-h="174" style="width:1280px;height:174px;padding:0;display:block;aspect-ratio:auto;background:var(--bs-navy);overflow:hidden"><section style="display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--ds-gap,24px);row-gap:16px;align-items:start;overflow-wrap:anywhere"><h1 class="tk-super" style="grid-column:1 / 9;grid-row:1;margin:0;color:var(--bs-white);letter-spacing:-0.02em">New page</h1><button type="button" class="bs-cta" style="grid-column:9 / -1;grid-row:1;justify-self:end;align-self:center"><span class="bs-icon" style="--bs-icon-size:14px">download</span>Download</button><h4 class="tk-mb" style="grid-column:1 / -1;grid-row:2;margin:0;color:var(--text-3)">Descrição da página. Clique para editar.</h4><div aria-hidden="true" style="grid-column:1 / -1;grid-row:3;height:1px;background:var(--border-strong);margin-top:16px"></div></section></div>';
+    const HTML05 =
+      '<div class="am-tpl-thumb" data-ds-edit-w="1280" data-ds-edit-h="174" style="width:1280px;height:174px;padding:0;display:block;aspect-ratio:auto;background:var(--bs-navy);overflow:hidden"><section style="display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--ds-gap,24px);row-gap:16px;align-items:start;overflow-wrap:anywhere"><h1 class="tk-super" style="grid-column:1 / 9;grid-row:1;margin:0;color:var(--bs-white);letter-spacing:-0.02em">New page</h1><button type="button" class="bs-cta" style="grid-column:9 / -1;grid-row:1;justify-self:end;align-self:center"><span class="bs-icon" style="--bs-icon-size:14px">download</span>Download</button><h4 class="tk-mb" style="grid-column:1 / -1;grid-row:2;margin:0;color:var(--text-3)">Descrição da página. Clique para editar.</h4><div aria-hidden="true" style="grid-column:1 / -1;grid-row:3;height:1px;background:var(--border-strong);margin-top:16px"></div></section></div>';
     try {
       const ov = JSON.parse(localStorage.getItem('praia.tpl.overrides') || '{}');
       if (ov['05'] !== HTML05) {
         ov['05'] = HTML05;
         localStorage.setItem('praia.tpl.overrides', JSON.stringify(ov));
         window.__praiaTplOverrides = ov;
-        try { window.__praiaPropagateTemplate && window.__praiaPropagateTemplate('05', HTML05); } catch {}
+        try {
+          window.__praiaPropagateTemplate && window.__praiaPropagateTemplate('05', HTML05);
+        } catch {}
         // Re-renderiza a grade do picker p/ a célula 05 mostrar a versão nova.
-        try { document.querySelectorAll('.ds-thumb-wrap[data-ds-override-applied="05"]').forEach(w => { delete w.dataset.dsOverrideApplied; }); ensureTplCells(); } catch {}
+        try {
+          document.querySelectorAll('.ds-thumb-wrap[data-ds-override-applied="05"]').forEach(w => {
+            delete w.dataset.dsOverrideApplied;
+          });
+          ensureTplCells();
+        } catch {}
       }
       localStorage.setItem('praia.tpl.05dl.v3', '1');
     } catch {}
@@ -566,12 +612,18 @@
     setTimeout(bootInstanceSync, 600);
   }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { ensureTplFilters(); ensureTplCells(); });
+    document.addEventListener('DOMContentLoaded', () => {
+      ensureTplFilters();
+      ensureTplCells();
+    });
   } else {
     ensureTplFilters();
     ensureTplCells();
   }
-  setTimeout(() => { ensureTplFilters(); ensureTplCells(); }, 500);
+  setTimeout(() => {
+    ensureTplFilters();
+    ensureTplCells();
+  }, 500);
   // Only react when the DS section is added/removed (page nav, autosave restore,
   // template insert/delete). Style/text mutations elsewhere in the document
   // would otherwise trigger ensureTplCells on every keystroke.
@@ -583,10 +635,12 @@
       if (!m.addedNodes.length && !m.removedNodes.length) continue;
       const involved = [...m.addedNodes, ...m.removedNodes].some(n => {
         if (n.nodeType !== 1) return false;
-        return n.matches?.('section[data-ds-section], .ds-tpl-cell, .guide-page') ||
-               n.querySelector?.('section[data-ds-section="templates"], .ds-tpl-cell');
+        return n.matches?.('section[data-ds-section], .ds-tpl-cell, .guide-page') || n.querySelector?.('section[data-ds-section="templates"], .ds-tpl-cell');
       });
-      if (involved) { relevant = true; break; }
+      if (involved) {
+        relevant = true;
+        break;
+      }
     }
     if (!relevant) return;
     if (__tplObserverPending) return;
@@ -608,10 +662,13 @@
     const imgTpls = reg.templates || [];
     const mods = reg.modules || {};
     if (!window.__praiaTplOverrides) {
-      try { window.__praiaTplOverrides = JSON.parse(localStorage.getItem('praia.tpl.overrides') || '{}'); }
-      catch { window.__praiaTplOverrides = {}; }
+      try {
+        window.__praiaTplOverrides = JSON.parse(localStorage.getItem('praia.tpl.overrides') || '{}');
+      } catch {
+        window.__praiaTplOverrides = {};
+      }
     }
-    const overrideFor = (name) => name && window.__praiaTplOverrides && window.__praiaTplOverrides[name];
+    const overrideFor = name => name && window.__praiaTplOverrides && window.__praiaTplOverrides[name];
     // Users can no longer duplicate/delete templates from the picker — the
     // per-cell action buttons are removed.
     const ACTIONS = '';
@@ -697,9 +754,12 @@
   // "Add template" modal mirrors) exists, building it lazily if the user has
   // never opened the Design System. This guarantees the picker shows the same
   // templates whether opened from Home or Guide — identical, never different.
-  window.__praiaEnsureDsTemplates = function() {
+  window.__praiaEnsureDsTemplates = function () {
     let page = content.querySelector(`.guide-page[data-page="${DS_PAGE_ID}"]`);
-    if (page && page.dataset.dsVersion !== DS_VERSION) { page.remove(); page = null; }
+    if (page && page.dataset.dsVersion !== DS_VERSION) {
+      page.remove();
+      page = null;
+    }
     if (!page) page = createCanvasPage();
     return page.querySelector('section[data-ds-section="templates"]');
   };
@@ -715,10 +775,12 @@
     if (!addedSet.size) return;
     if (__iconMO) __iconMO.disconnect();
     const lib = readIcons();
-    addedSet.forEach(name => { if (lib[name]) broadcastIcon(name, lib[name]); });
+    addedSet.forEach(name => {
+      if (lib[name]) broadcastIcon(name, lib[name]);
+    });
     if (__iconMO) __iconMO.observe(document.body, { childList: true, subtree: true });
   }
-  __iconMO = new MutationObserver((muts) => {
+  __iconMO = new MutationObserver(muts => {
     const seen = new Set();
     for (const m of muts) {
       m.addedNodes.forEach(n => {
@@ -732,11 +794,14 @@
   __iconMO.observe(document.body, { childList: true, subtree: true });
 
   // --- Icon inspector wiring (file upload, two variants: outline + filled) ---
-  let __iconEditing = null;                          // name of icon being edited
-  let __iconPending = { glyph: null, fill: false };  // Material glyph awaiting Save
+  let __iconEditing = null; // name of icon being edited
+  let __iconPending = { glyph: null, fill: false }; // Material glyph awaiting Save
   function sanitizeSvg(raw) {
     if (typeof raw !== 'string') return null;
-    let s = raw.trim().replace(/<\?xml[\s\S]*?\?>/, '').trim();
+    let s = raw
+      .trim()
+      .replace(/<\?xml[\s\S]*?\?>/, '')
+      .trim();
     s = s.replace(/<!--[\s\S]*?-->/g, '');
     s = s.replace(/<script[\s\S]*?<\/script>/gi, '');
     s = s.replace(/\son[a-z]+\s*=\s*"[^"]*"/gi, '');
@@ -765,7 +830,8 @@
     __iconEditing = name;
     const entry = lib[name];
     __iconPending = { glyph: entry.glyph || '', fill: !!entry.fill };
-    const right = document.querySelector('.guide-right'); if (!right) return;
+    const right = document.querySelector('.guide-right');
+    if (!right) return;
     window.__praiaCloseRightModes?.();
     right.classList.add('icon-mode');
     document.getElementById('gri-title').textContent = name;
@@ -784,19 +850,20 @@
     document.querySelectorAll('.ds-icon-tile.editing').forEach(t => t.classList.remove('editing'));
   }
   // Live-preview wiring: typing a glyph name / toggling fill updates the preview.
-  document.getElementById('gri-glyph-input')?.addEventListener('input', (e) => {
+  document.getElementById('gri-glyph-input')?.addEventListener('input', e => {
     __iconPending.glyph = e.target.value.trim().toLowerCase().replace(/\s+/g, '_');
     renderIconPreview();
   });
-  document.getElementById('gri-fill-toggle')?.addEventListener('change', (e) => {
+  document.getElementById('gri-fill-toggle')?.addEventListener('change', e => {
     __iconPending.fill = !!e.target.checked;
     renderIconPreview();
   });
   // Delegated click on DS canvas tiles (survives re-render)
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', e => {
     const tile = e.target.closest('.ds-icon-tile');
     if (!tile) return;
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
     openIconEditor(tile.dataset.iconName);
   });
   document.getElementById('gri-cancel')?.addEventListener('click', () => {
@@ -805,7 +872,10 @@
   document.getElementById('gri-save')?.addEventListener('click', () => {
     if (!__iconEditing) return;
     const glyph = (__iconPending.glyph || '').trim();
-    if (!glyph) { alert('Digite o nome de um ícone Material.'); return; }
+    if (!glyph) {
+      alert('Digite o nome de um ícone Material.');
+      return;
+    }
     const lib = readIcons();
     const entry = { glyph, fill: !!__iconPending.fill };
     lib[__iconEditing] = entry;
@@ -816,12 +886,16 @@
   });
   document.getElementById('gri-close')?.addEventListener('click', closeIconEditor);
   // Click outside the icon inspector / outside an icon tile → close.
-  document.addEventListener('click', (e) => {
-    if (!document.querySelector('.guide-right.icon-mode')) return;
-    if (e.target.closest('.gr-icon-insp')) return;
-    if (e.target.closest('.ds-icon-tile')) return;
-    closeIconEditor();
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      if (!document.querySelector('.guide-right.icon-mode')) return;
+      if (e.target.closest('.gr-icon-insp')) return;
+      if (e.target.closest('.ds-icon-tile')) return;
+      closeIconEditor();
+    },
+    true
+  );
 
   // ============================================================
   // CLIENT LOGO / MARK EDITOR
@@ -832,7 +906,8 @@
     const asset = c[id];
     if (!asset) return;
     __clientEditing = id;
-    const right = document.querySelector('.guide-right'); if (!right) return;
+    const right = document.querySelector('.guide-right');
+    if (!right) return;
     window.__praiaCloseRightModes?.();
     right.classList.add('client-mode');
     document.getElementById('grc-client-title').textContent = asset.label;
@@ -859,19 +934,20 @@
     preview.innerHTML = svg;
   }
   document.getElementById('grcl-svg')?.addEventListener('input', refreshClientPreview);
-  document.getElementById('grcl-size-range')?.addEventListener('input', (e) => {
+  document.getElementById('grcl-size-range')?.addEventListener('input', e => {
     document.getElementById('grcl-size-num').value = e.target.value;
     refreshClientPreview();
   });
-  document.getElementById('grcl-size-num')?.addEventListener('input', (e) => {
+  document.getElementById('grcl-size-num')?.addEventListener('input', e => {
     document.getElementById('grcl-size-range').value = e.target.value;
     refreshClientPreview();
   });
   // Delegated click on DS client tiles
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', e => {
     const tile = e.target.closest('.ds-client-tile');
     if (!tile) return;
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
     openClientEditor(tile.dataset.clientId);
   });
   document.getElementById('grcl-cancel')?.addEventListener('click', () => {
@@ -885,7 +961,10 @@
   document.getElementById('grcl-save')?.addEventListener('click', () => {
     if (!__clientEditing) return;
     const raw = (document.getElementById('grcl-svg').value || '').trim();
-    if (!raw.includes('<svg')) { alert('O markup precisa conter um <svg>.'); return; }
+    if (!raw.includes('<svg')) {
+      alert('O markup precisa conter um <svg>.');
+      return;
+    }
     const size = parseInt(document.getElementById('grcl-size-num').value, 10) || 36;
     const c = readClient();
     c[__clientEditing] = Object.assign({}, c[__clientEditing], { svg: raw, size });
@@ -899,12 +978,16 @@
   });
   document.getElementById('grcl-close')?.addEventListener('click', closeClientEditor);
   // Click outside the client inspector / outside a client tile → close.
-  document.addEventListener('click', (e) => {
-    if (!document.querySelector('.guide-right.client-mode')) return;
-    if (e.target.closest('.gr-client-insp')) return;
-    if (e.target.closest('.ds-client-tile')) return;
-    closeClientEditor();
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      if (!document.querySelector('.guide-right.client-mode')) return;
+      if (e.target.closest('.gr-client-insp')) return;
+      if (e.target.closest('.ds-client-tile')) return;
+      closeClientEditor();
+    },
+    true
+  );
 
   // ============================================================
   // BUTTON EDITOR — Figma-like inspector (Fill / Stroke / Layout)
@@ -913,26 +996,26 @@
   // Brand-named tokens for the picker popover, in Figma "Category/Name" format.
   // Naming aligned to the Blustar color tier (Asfalto/Noturno/Profundo/Céu/Turquesa/Horizonte/Aberto/Nuvem).
   const BUTTON_TOKENS = [
-    { v: 'var(--bs-navy)',      cat: 'Blustar', name: 'Asfalto',    c: 'var(--bs-navy)' },
-    { v: 'var(--bs-navy-deep)', cat: 'Blustar', name: 'Noturno',    c: 'var(--bs-navy-deep)' },
-    { v: '#0A1F3B',             cat: 'Blustar', name: 'Profundo',   c: '#0A1F3B' },
-    { v: 'var(--bs-blue)',      cat: 'Blustar', name: 'Céu',        c: 'var(--bs-blue)' },
-    { v: 'var(--bs-cyan)',      cat: 'Blustar', name: 'Turquesa',   c: 'var(--bs-cyan)' },
-    { v: 'var(--bs-cyan-200)',  cat: 'Blustar', name: 'Horizonte',  c: 'var(--bs-cyan-200)' },
-    { v: 'var(--bs-cyan-100)',  cat: 'Blustar', name: 'Aberto',     c: 'var(--bs-cyan-100)' },
-    { v: 'var(--bs-cyan-50)',   cat: 'Blustar', name: 'Nuvem',      c: 'var(--bs-cyan-50)' },
-    { v: 'var(--bs-white)',     cat: 'Blustar', name: 'White',      c: 'var(--bs-white)' },
-    { v: 'var(--text)',         cat: 'Text',    name: 'Text',       c: 'var(--text)' },
-    { v: 'var(--text-2)',       cat: 'Text',    name: 'Text 2',     c: 'var(--text-2)' },
-    { v: 'var(--text-3)',       cat: 'Text',    name: 'Text 3',     c: 'var(--text-3)' },
-    { v: 'var(--bg)',           cat: 'Surface', name: 'Background', c: 'var(--bg)' },
-    { v: 'var(--surface)',      cat: 'Surface', name: 'Surface 1',  c: 'var(--surface)' },
-    { v: 'var(--surface-2)',    cat: 'Surface', name: 'Surface 2',  c: 'var(--surface-2)' },
-    { v: 'var(--border)',       cat: 'Surface', name: 'Border',     c: 'var(--border)' },
-    { v: 'var(--border-strong)',cat: 'Surface', name: 'Border strong', c: 'var(--border-strong)' },
-    { v: 'transparent',         cat: 'Other',   name: 'Transparente', c: 'transparent', empty: true },
+    { v: 'var(--bs-navy)', cat: 'Blustar', name: 'Asfalto', c: 'var(--bs-navy)' },
+    { v: 'var(--bs-navy-deep)', cat: 'Blustar', name: 'Noturno', c: 'var(--bs-navy-deep)' },
+    { v: '#0A1F3B', cat: 'Blustar', name: 'Profundo', c: '#0A1F3B' },
+    { v: 'var(--bs-blue)', cat: 'Blustar', name: 'Céu', c: 'var(--bs-blue)' },
+    { v: 'var(--bs-cyan)', cat: 'Blustar', name: 'Turquesa', c: 'var(--bs-cyan)' },
+    { v: 'var(--bs-cyan-200)', cat: 'Blustar', name: 'Horizonte', c: 'var(--bs-cyan-200)' },
+    { v: 'var(--bs-cyan-100)', cat: 'Blustar', name: 'Aberto', c: 'var(--bs-cyan-100)' },
+    { v: 'var(--bs-cyan-50)', cat: 'Blustar', name: 'Nuvem', c: 'var(--bs-cyan-50)' },
+    { v: 'var(--bs-white)', cat: 'Blustar', name: 'White', c: 'var(--bs-white)' },
+    { v: 'var(--text)', cat: 'Text', name: 'Text', c: 'var(--text)' },
+    { v: 'var(--text-2)', cat: 'Text', name: 'Text 2', c: 'var(--text-2)' },
+    { v: 'var(--text-3)', cat: 'Text', name: 'Text 3', c: 'var(--text-3)' },
+    { v: 'var(--bg)', cat: 'Surface', name: 'Background', c: 'var(--bg)' },
+    { v: 'var(--surface)', cat: 'Surface', name: 'Surface 1', c: 'var(--surface)' },
+    { v: 'var(--surface-2)', cat: 'Surface', name: 'Surface 2', c: 'var(--surface-2)' },
+    { v: 'var(--border)', cat: 'Surface', name: 'Border', c: 'var(--border)' },
+    { v: 'var(--border-strong)', cat: 'Surface', name: 'Border strong', c: 'var(--border-strong)' },
+    { v: 'transparent', cat: 'Other', name: 'Transparente', c: 'transparent', empty: true },
   ];
-  const tokenByValue = (v) => BUTTON_TOKENS.find(t => t.v === v);
+  const tokenByValue = v => BUTTON_TOKENS.find(t => t.v === v);
   // The overrides also mirror into a hidden <span data-praia-buttons> placed
   // inside .guide-content. That element is watched by the autosave MutationObserver,
   // so each save pushes a Cmd+Z snapshot. On undo, applySnapshot restores the
@@ -953,25 +1036,38 @@
   function readButtons() {
     const el = getStateEl();
     if (el?.dataset.buttons) {
-      try { return JSON.parse(el.dataset.buttons); } catch {}
+      try {
+        return JSON.parse(el.dataset.buttons);
+      } catch {}
     }
-    try { return JSON.parse(localStorage.getItem(BUTTONS_KEY) || '{}'); } catch { return {}; }
+    try {
+      return JSON.parse(localStorage.getItem(BUTTONS_KEY) || '{}');
+    } catch {
+      return {};
+    }
   }
   function writeButtons(o) {
-    try { localStorage.setItem(BUTTONS_KEY, JSON.stringify(o)); } catch {}
+    try {
+      localStorage.setItem(BUTTONS_KEY, JSON.stringify(o));
+    } catch {}
     const el = getStateEl();
     if (el) el.dataset.buttons = JSON.stringify(o);
   }
   function applyButtonOverrides() {
     const all = readButtons();
     let styleEl = document.getElementById('praia-button-overrides');
-    if (!styleEl) { styleEl = document.createElement('style'); styleEl.id = 'praia-button-overrides'; document.head.appendChild(styleEl); }
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = 'praia-button-overrides';
+      document.head.appendChild(styleEl);
+    }
     const parts = [];
     BUTTON_VARIANTS.forEach(v => {
-      const ov = all[v.id]; if (!ov) return;
+      const ov = all[v.id];
+      if (!ov) return;
       const d = [];
-      if (ov.bg)     d.push('background:' + ov.bg);
-      if (ov.fg)     d.push('color:' + ov.fg);
+      if (ov.bg) d.push('background:' + ov.bg);
+      if (ov.fg) d.push('color:' + ov.fg);
       // Stroke: Inside uses border (default), Outside uses box-shadow ring,
       // Center uses outline with negative offset so half of the line sits over
       // the button's edge — visually like Figma's alignment options.
@@ -980,7 +1076,7 @@
         if (ov.strokePos === 'Outside') {
           d.push('border:0', 'box-shadow:0 0 0 ' + w + 'px ' + ov.border, 'outline:none');
         } else if (ov.strokePos === 'Center') {
-          d.push('border:0', 'outline:' + w + 'px solid ' + ov.border, 'outline-offset:-' + (w / 2) + 'px', 'box-shadow:none');
+          d.push('border:0', 'outline:' + w + 'px solid ' + ov.border, 'outline-offset:-' + w / 2 + 'px', 'box-shadow:none');
         } else {
           d.push('border:' + w + 'px solid ' + ov.border, 'box-shadow:none', 'outline:none');
         }
@@ -1028,7 +1124,9 @@
           // app boots into the same state next reload.
           const el = document.getElementById('praia-ds-state');
           if (el?.dataset.buttons) {
-            try { localStorage.setItem(BUTTONS_KEY, el.dataset.buttons); } catch {}
+            try {
+              localStorage.setItem(BUTTONS_KEY, el.dataset.buttons);
+            } catch {}
           }
         });
         return r;
@@ -1066,11 +1164,11 @@
     // Update trigger button (dot + name)
     const trigger = document.querySelector(`.grb-color-trigger[data-target="${target}"]`);
     if (trigger) {
-      const dot  = trigger.querySelector('.grb-color-dot');
+      const dot = trigger.querySelector('.grb-color-dot');
       const name = trigger.querySelector('.grb-color-name');
-      if (dot)  dot.style.background = value || 'transparent';
-      if (dot)  dot.style.borderStyle = value ? 'solid' : 'dashed';
-      if (name) name.textContent = tk ? (tk.cat + '/' + tk.name) : '— sem cor —';
+      if (dot) dot.style.background = value || 'transparent';
+      if (dot) dot.style.borderStyle = value ? 'solid' : 'dashed';
+      if (name) name.textContent = tk ? tk.cat + '/' + tk.name : '— sem cor —';
     }
     // Also update the open popover, if it's this target.
     document.querySelectorAll(`.grb-color-pop[data-target="${target}"] .gswatch`).forEach(b => {
@@ -1087,14 +1185,11 @@
     const pop = document.createElement('div');
     pop.className = 'tk-popover grb-color-pop open';
     pop.dataset.target = target;
-    pop.innerHTML = `<div class="grb-swatch-grid" data-target="${target}">` +
-      BUTTON_TOKENS.map(t =>
-        `<button type="button" class="gswatch${t.empty ? ' empty' : ''}${t.v === current ? ' selected' : ''}" data-color="${t.v}" title="${t.cat}/${t.name}" style="--grb-c:${t.c}"></button>`
-      ).join('') + '</div>';
+    pop.innerHTML = `<div class="grb-swatch-grid" data-target="${target}">` + BUTTON_TOKENS.map(t => `<button type="button" class="gswatch${t.empty ? ' empty' : ''}${t.v === current ? ' selected' : ''}" data-color="${t.v}" title="${t.cat}/${t.name}" style="--grb-c:${t.c}"></button>`).join('') + '</div>';
     document.body.appendChild(pop);
     const r = trigger.getBoundingClientRect();
-    pop.style.top = (r.bottom + 4) + 'px';
-    pop.style.left = (r.left) + 'px';
+    pop.style.top = r.bottom + 4 + 'px';
+    pop.style.left = r.left + 'px';
     pop.style.width = Math.max(220, r.width) + 'px';
     pop.addEventListener('click', e => {
       e.stopPropagation();
@@ -1105,7 +1200,12 @@
       pop.remove();
     });
     setTimeout(() => {
-      const off = e => { if (!pop.contains(e.target) && e.target !== trigger && !trigger.contains(e.target)) { pop.remove(); document.removeEventListener('click', off); } };
+      const off = e => {
+        if (!pop.contains(e.target) && e.target !== trigger && !trigger.contains(e.target)) {
+          pop.remove();
+          document.removeEventListener('click', off);
+        }
+      };
       document.addEventListener('click', off);
     }, 0);
   }
@@ -1113,20 +1213,22 @@
   document.addEventListener('click', e => {
     const t = e.target.closest('.grb-color-trigger');
     if (!t) return;
-    e.stopPropagation(); e.preventDefault();
+    e.stopPropagation();
+    e.preventDefault();
     openColorPicker(t);
   });
   // No-op stub (kept so any legacy openPicker/closePicker call sites don't crash)
   function closePicker() {}
 
   let __btnEditing = null;
-  let __btnSnapshot = null;   // { id, override-or-undefined } captured on open
+  let __btnSnapshot = null; // { id, override-or-undefined } captured on open
   function openButtonEditor(id) {
     const v = BUTTON_VARIANTS.find(x => x.id === id);
     if (!v) return;
     __btnEditing = id;
     __btnSnapshot = { id, override: readButtons()[id] ? JSON.parse(JSON.stringify(readButtons()[id])) : null };
-    const right = document.querySelector('.guide-right'); if (!right) return;
+    const right = document.querySelector('.guide-right');
+    if (!right) return;
     window.__praiaCloseRightModes?.();
     right.classList.add('button-mode');
     // Always start with the token picker closed — otherwise a leftover open
@@ -1135,16 +1237,16 @@
     document.getElementById('grb-title').textContent = v.label;
     document.getElementById('grb-preview').innerHTML = v.sample;
     broadcastAllIcons();
-    const cur = (readButtons()[id]) || {};
+    const cur = readButtons()[id] || {};
     // Fallback: sample the LIVE button's computed colors so the dropdowns reflect
     // what is currently applied (CSS defaults) even when there's no override.
     const liveSample = document.querySelector(v.selector);
     const liveCS2 = liveSample ? getComputedStyle(liveSample) : null;
-    const fallbackBg     = liveCS2 ? matchTokenColor(liveCS2.backgroundColor) : '';
-    const fallbackFg     = liveCS2 ? matchTokenColor(liveCS2.color)           : '';
-    const fallbackBorder = liveCS2 ? matchTokenColor(liveCS2.borderTopColor)  : '';
-    setTokenPill('bg',     cur.bg     || fallbackBg     || '');
-    setTokenPill('fg',     cur.fg     || fallbackFg     || '');
+    const fallbackBg = liveCS2 ? matchTokenColor(liveCS2.backgroundColor) : '';
+    const fallbackFg = liveCS2 ? matchTokenColor(liveCS2.color) : '';
+    const fallbackBorder = liveCS2 ? matchTokenColor(liveCS2.borderTopColor) : '';
+    setTokenPill('bg', cur.bg || fallbackBg || '');
+    setTokenPill('fg', cur.fg || fallbackFg || '');
     setTokenPill('border', cur.border || fallbackBorder || '');
     __btnTypeCurrent = cur.type || '';
     const typeSel = document.getElementById('grb-type-select');
@@ -1196,15 +1298,15 @@
   function collectButtonForm() {
     const strokeOn = document.getElementById('grb-stroke-toggle').getAttribute('aria-pressed') === 'true';
     return {
-      bg:       getTokenValue('bg') || undefined,
-      fg:       getTokenValue('fg') || undefined,
-      stroke:   strokeOn,
-      border:   strokeOn ? (getTokenValue('border') || 'var(--border-strong)') : undefined,
-      strokeW:  strokeOn ? (parseInt(document.getElementById('grb-stroke-w').value, 10) || 1) : undefined,
+      bg: getTokenValue('bg') || undefined,
+      fg: getTokenValue('fg') || undefined,
+      stroke: strokeOn,
+      border: strokeOn ? getTokenValue('border') || 'var(--border-strong)' : undefined,
+      strokeW: strokeOn ? parseInt(document.getElementById('grb-stroke-w').value, 10) || 1 : undefined,
       strokePos: strokeOn ? document.getElementById('grb-stroke-pos-label').textContent : undefined,
-      type:     __btnTypeCurrent || undefined,
-      height:   document.getElementById('grb-height-num').value || undefined,
-      radius:   document.getElementById('grb-radius-num').value || undefined,
+      type: __btnTypeCurrent || undefined,
+      height: document.getElementById('grb-height-num').value || undefined,
+      radius: document.getElementById('grb-radius-num').value || undefined,
     };
   }
   function livePreview() {
@@ -1217,15 +1319,16 @@
     queueMicrotask(() => window.__praiaRecordNow?.());
   }
   // Delegated tile click → open editor
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', e => {
     const row = e.target.closest('.ds-btn-tile, .ds-btn-row');
     if (!row) return;
     if (e.target.closest('.gr-button-insp')) return;
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
     openButtonEditor(row.dataset.btnId);
   });
   // Inspector delegated actions — swatches + type buttons
-  document.querySelector('.gr-button-insp')?.addEventListener('click', (e) => {
+  document.querySelector('.gr-button-insp')?.addEventListener('click', e => {
     const sw = e.target.closest('.gswatch');
     if (sw) {
       const target = sw.closest('.grb-swatch-grid').dataset.target;
@@ -1236,7 +1339,7 @@
     const tb = e.target.closest('#grb-type-select');
     if (tb) {
       e.stopPropagation();
-      window.__openCustDD?.(tb, BTN_TYPE_OPTS, (o) => {
+      window.__openCustDD?.(tb, BTN_TYPE_OPTS, o => {
         __btnTypeCurrent = o.value;
         tb.dataset.type = o.value;
         document.getElementById('grb-type-select-label').textContent = o.label;
@@ -1245,33 +1348,37 @@
     }
   });
   const BTN_TYPE_OPTS = [
-    { label: 'H4',            value: 'tk-mb' },
-    { label: 'Body',          value: 'tk-m' },
-    { label: 'Caption Bold',  value: 'tk-sb' },
-    { label: 'Caption',       value: 'tk-s' },
+    { label: 'H4', value: 'tk-mb' },
+    { label: 'Body', value: 'tk-m' },
+    { label: 'Caption Bold', value: 'tk-sb' },
+    { label: 'Caption', value: 'tk-s' },
     { label: 'Caption Small', value: 'tk-xs' },
   ];
-  const TOKEN_LABELS = { 'tk-super':'H1', 'tk-xl':'H2', 'tk-l':'H3', 'tk-mb':'H4', 'tk-m':'Body', 'tk-sb':'Caption Bold', 'tk-s':'Caption', 'tk-xs':'Caption Small' };
+  const TOKEN_LABELS = { 'tk-super': 'H1', 'tk-xl': 'H2', 'tk-l': 'H3', 'tk-mb': 'H4', 'tk-m': 'Body', 'tk-sb': 'Caption Bold', 'tk-s': 'Caption', 'tk-xs': 'Caption Small' };
   function detectInherentTypeLabel(el) {
     if (!el) return 'Caption Bold';
     const cs = getComputedStyle(el);
     const size = parseFloat(cs.fontSize) || 0;
     const weight = parseInt(cs.fontWeight, 10) || 400;
     const rootCS = getComputedStyle(document.documentElement);
-    let best = null, bestDist = Infinity;
+    let best = null,
+      bestDist = Infinity;
     Object.keys(TOKEN_LABELS).forEach(cls => {
       const tok = cls.replace('tk-', '');
       const tSize = parseFloat(rootCS.getPropertyValue(`--type-${tok}-size`)) || 0;
       const tWeight = parseInt(rootCS.getPropertyValue(`--type-${tok}-weight`), 10) || 400;
       if (!tSize) return;
       const dist = Math.abs(tSize - size) * 10 + Math.abs(tWeight - weight) * 0.1;
-      if (dist < bestDist) { bestDist = dist; best = cls; }
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = cls;
+      }
     });
     return best ? TOKEN_LABELS[best] : `${Math.round(size)}px / ${weight}`;
   }
   let __btnTypeCurrent = '';
   // Stroke on/off
-  document.getElementById('grb-stroke-toggle')?.addEventListener('click', (e) => {
+  document.getElementById('grb-stroke-toggle')?.addEventListener('click', e => {
     const next = e.currentTarget.getAttribute('aria-pressed') !== 'true';
     e.currentTarget.setAttribute('aria-pressed', String(next));
     document.getElementById('grb-row-stroke').hidden = !next;
@@ -1297,7 +1404,7 @@
     document.getElementById('grb-pill-lock').setAttribute('aria-pressed', 'false');
     livePreview();
   });
-  document.getElementById('grb-pill-lock')?.addEventListener('click', (e) => {
+  document.getElementById('grb-pill-lock')?.addEventListener('click', e => {
     const next = e.currentTarget.getAttribute('aria-pressed') !== 'true';
     e.currentTarget.setAttribute('aria-pressed', String(next));
     if (next) {
@@ -1325,19 +1432,23 @@
   document.getElementById('grb-close')?.addEventListener('click', closeButtonEditor);
   // Click outside the inspector / outside a tile → close the editor so the
   // panel doesn't stay "stuck" after the user moves on to something else.
-  document.addEventListener('click', (e) => {
-    if (!document.querySelector('.guide-right.button-mode')) return;
-    if (e.target.closest('.gr-button-insp')) return;
-    if (e.target.closest('.ds-btn-tile, .ds-btn-row')) return;
-    // The color picker popover lives outside the inspector — keep it open.
-    if (e.target.closest('.grb-color-pop, .tk-popover')) return;
-    closeButtonEditor();
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      if (!document.querySelector('.guide-right.button-mode')) return;
+      if (e.target.closest('.gr-button-insp')) return;
+      if (e.target.closest('.ds-btn-tile, .ds-btn-row')) return;
+      // The color picker popover lives outside the inspector — keep it open.
+      if (e.target.closest('.grb-color-pop, .tk-popover')) return;
+      closeButtonEditor();
+    },
+    true
+  );
 
   // Broadcast client assets on first paint so the sidebar host renders.
   setTimeout(broadcastAllClient, 300);
   // Re-broadcast when new [data-ds-logo] elements get inserted (after autosave restore, etc.)
-  const __clientMO = new MutationObserver((muts) => {
+  const __clientMO = new MutationObserver(muts => {
     let needed = false;
     for (const m of muts) {
       m.addedNodes.forEach(n => {
@@ -1354,7 +1465,9 @@
   // Remember scroll positions so toggling DS doesn't jump the canvas back to top
   let __dsScrollBefore = 0;
   let __dsScrollInside = 0;
-  function getScroller() { return document.querySelector('main') || document.scrollingElement || document.documentElement; }
+  function getScroller() {
+    return document.querySelector('main') || document.scrollingElement || document.documentElement;
+  }
 
   function exitCanvas() {
     const sc = getScroller();
@@ -1371,7 +1484,9 @@
       const pageId = target.dataset.page;
       document.querySelectorAll('.guide-page').forEach(p => p.classList.toggle('active', p.dataset.page === pageId));
     }
-    requestAnimationFrame(() => { getScroller().scrollTop = __dsScrollBefore; });
+    requestAnimationFrame(() => {
+      getScroller().scrollTop = __dsScrollBefore;
+    });
   }
 
   function openCanvas() {
@@ -1395,16 +1510,18 @@
     ensureDsSide(page);
     if (currentDsSection && currentDsSection.startsWith('templates-')) currentDsSection = 'templates';
     showDsSection(page, currentDsSection || 'type');
-    requestAnimationFrame(() => { getScroller().scrollTop = __dsScrollInside; });
+    requestAnimationFrame(() => {
+      getScroller().scrollTop = __dsScrollInside;
+    });
   }
 
   // ----- DS left sidebar (one link per section) -----
   const DS_SECTION_LIST = [
-    ['type',             'Tipografia'],
-    ['color',            'Cor'],
-    ['icons',            'Ícones'],
-    ['buttons',          'Botões'],
-    ['client',           'Cliente'],
+    ['type', 'Tipografia'],
+    ['color', 'Cor'],
+    ['icons', 'Ícones'],
+    ['buttons', 'Botões'],
+    ['client', 'Cliente'],
     // 'Templates' removido 2026-05-28 — acesso apenas via botão "Add template".
   ];
   let currentDsSection = null;
@@ -1419,7 +1536,7 @@
           return `<button type="button" class="ds-side-item${sub ? ' is-sub' : ''}${isParent ? ' is-parent' : ''}" data-ds-link="${k}"><span class="gsi-label">${label}</span></button>`;
         }).join('')}</div>`;
       document.body.appendChild(side);
-      side.addEventListener('click', (e) => {
+      side.addEventListener('click', e => {
         const b = e.target.closest('.ds-side-item');
         if (!b) return;
         showDsSection(page, b.dataset.dsLink);
@@ -1430,7 +1547,7 @@
     document.body.classList.remove('ds-tpl-edit');
     currentDsSection = key;
     page.querySelectorAll(':scope > section[data-ds-section]').forEach(s => {
-      s.style.display = (s.dataset.dsSection === key) ? '' : 'none';
+      s.style.display = s.dataset.dsSection === key ? '' : 'none';
     });
     document.querySelectorAll('.ds-side .ds-side-item').forEach(b => {
       const isSub = b.classList.contains('is-sub');
@@ -1450,12 +1567,12 @@
   // selects Super by default).
   function autoSelectFirstInSection(page, key) {
     const SELECTORS = {
-      'type':             () => document.querySelector('.type-item[data-token="super"]') || document.querySelector('.type-item'),
-      'color':            () => page.querySelector('section[data-ds-section="color"] .ds-color-swatch'),
-      'icons':            () => page.querySelector('section[data-ds-section="icons"] .ds-icon-tile'),
-      'buttons':          () => page.querySelector('section[data-ds-section="buttons"] .ds-btn-tile'),
-      'client':           () => page.querySelector('section[data-ds-section="client"] .ds-client-tile'),
-      'templates':        () => {
+      type: () => document.querySelector('.type-item[data-token="super"]') || document.querySelector('.type-item'),
+      color: () => page.querySelector('section[data-ds-section="color"] .ds-color-swatch'),
+      icons: () => page.querySelector('section[data-ds-section="icons"] .ds-icon-tile'),
+      buttons: () => page.querySelector('section[data-ds-section="buttons"] .ds-btn-tile'),
+      client: () => page.querySelector('section[data-ds-section="client"] .ds-client-tile'),
+      templates: () => {
         // Cover/some text templates are hidden via CSS but still in the DOM —
         // skip them and select the first cell that is actually visible (e.g.
         // Heading is the first VISIBLE template in the current grid).
@@ -1469,8 +1586,7 @@
     // (e.g. color editor) don't leak through alongside the new one.
     const right = document.querySelector('.guide-right');
     if (right) {
-      ['editing','editing-color','icon-mode','button-mode','client-mode','themepal-mode','component-mode','history-mode','text-mode','color-mode','layout-mode','spacing-mode','video-mode']
-        .forEach(c => right.classList.remove(c));
+      ['editing', 'editing-color', 'icon-mode', 'button-mode', 'client-mode', 'themepal-mode', 'component-mode', 'history-mode', 'text-mode', 'color-mode', 'layout-mode', 'spacing-mode', 'video-mode'].forEach(c => right.classList.remove(c));
     }
     // Defer so the section becomes visible (and any pending DOM population
     // — e.g. templates grids — has a chance to settle) before we click.
@@ -1479,14 +1595,21 @@
     let attempts = 0;
     (function tryClick() {
       const el = resolve();
-      if (el) { el.click(); return; }
+      if (el) {
+        el.click();
+        return;
+      }
       if (++attempts < 30) setTimeout(tryClick, 50);
     })();
   }
 
-  btn.addEventListener('click', (e) => {
-    e.preventDefault(); e.stopPropagation();
-    if (document.body.classList.contains('ds-mode')) { exitCanvas(); return; }
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (document.body.classList.contains('ds-mode')) {
+      exitCanvas();
+      return;
+    }
     // If user is on Home (or any non-guide route), switch to guide first so
     // the guide world is visible — DS canvas lives inside it.
     if (!document.body.classList.contains('route-guide')) {
@@ -1499,12 +1622,16 @@
   });
 
   // Delegated handler — Voltar button is re-created on each page render
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('#ds-back-btn')) { e.preventDefault(); e.stopPropagation(); exitCanvas(); }
+  document.addEventListener('click', e => {
+    if (e.target.closest('#ds-back-btn')) {
+      e.preventDefault();
+      e.stopPropagation();
+      exitCanvas();
+    }
   });
 
   // Escape exits DS mode (mirrors preview behavior)
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && document.body.classList.contains('ds-mode')) exitCanvas();
   });
 

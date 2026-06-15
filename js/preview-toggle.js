@@ -16,7 +16,9 @@
     // Histórico de versões é só do modo edição — fecha o painel ao entrar no preview.
     if (on) window.__praiaCloseHistory?.();
     // Restore scroll after layout settles (sidebar/right panel display change)
-    requestAnimationFrame(() => { sc.scrollTop = prev; });
+    requestAnimationFrame(() => {
+      sc.scrollTop = prev;
+    });
   };
   playBtn.addEventListener('click', toggle);
   document.addEventListener('keydown', e => {

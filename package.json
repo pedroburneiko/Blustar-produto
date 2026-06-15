@@ -1,0 +1,21 @@
+{
+  "name": "blustar-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PRAIA Brand System — BluStar workspace (app vanilla HTML/CSS/JS modular)",
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 5173",
+    "format": "biome format --write js",
+    "lint": "biome lint js",
+    "check": "biome check js",
+    "prepare": "simple-git-hooks"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx biome check --staged --no-errors-on-unmatched"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "simple-git-hooks": "^2.11.1"
+  }
+}

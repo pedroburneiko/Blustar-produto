@@ -17,7 +17,7 @@
   };
   let currentToken = null;
   const weightMap = { 400: 'Regular', 500: 'Medium', 700: 'Bold' };
-  const weightInverse = Object.fromEntries(Object.entries(weightMap).map(([k,v]) => [v,k]));
+  const weightInverse = Object.fromEntries(Object.entries(weightMap).map(([k, v]) => [v, k]));
 
   function refreshTypeList() {
     document.querySelectorAll('.type-item').forEach(item => {
@@ -92,7 +92,7 @@
     const sel = document.querySelector('.canvas-selected');
     if (sel) {
       const tag = sel.tagName;
-      const isText = ['H1','H2','H3','P','SPAN'].includes(tag) || /\b(tk-|cl-|world-eyebrow|world-title|world-sub|tile-|specimen|meta|swatch-name|swatch-hex|label|stat|desc|accent|cta)\b/.test(sel.className);
+      const isText = ['H1', 'H2', 'H3', 'P', 'SPAN'].includes(tag) || /\b(tk-|cl-|world-eyebrow|world-title|world-sub|tile-|specimen|meta|swatch-name|swatch-hex|label|stat|desc|accent|cta)\b/.test(sel.className);
       right.classList.add(isText ? 'text-mode' : 'layout-mode');
       window.__praiaSyncTextPanel?.(sel);
     }
@@ -115,7 +115,7 @@
     const linePct = parseFloat(fields.line.value) || 100;
     const trackPct = parseFloat(fields.track.value) || 0;
     root.style.setProperty(`--type-${currentToken}-line`, String(linePct / 100));
-    root.style.setProperty(`--type-${currentToken}-tracking`, (trackPct / 100) + 'em');
+    root.style.setProperty(`--type-${currentToken}-tracking`, trackPct / 100 + 'em');
     remeasureTextTemplates();
     window.__praiaAutosave?.();
   }
@@ -151,20 +151,34 @@
       const b = document.createElement('button');
       b.type = 'button';
       b.textContent = label;
-      b.addEventListener('click', () => { onPick(label); dd.remove(); });
+      b.addEventListener('click', () => {
+        onPick(label);
+        dd.remove();
+      });
       dd.appendChild(b);
     });
     document.body.appendChild(dd);
     const r = anchor.getBoundingClientRect();
-    dd.style.top = (r.bottom + 4) + 'px';
-    dd.style.left = (r.left) + 'px';
+    dd.style.top = r.bottom + 4 + 'px';
+    dd.style.left = r.left + 'px';
     setTimeout(() => {
-      const off = e => { if (!dd.contains(e.target)) { dd.remove(); document.removeEventListener('click', off); } };
+      const off = e => {
+        if (!dd.contains(e.target)) {
+          dd.remove();
+          document.removeEventListener('click', off);
+        }
+      };
       document.addEventListener('click', off);
     }, 0);
   }
-  weightBtn?.addEventListener('click', e => { e.stopPropagation(); openDD(weightBtn, ['Regular','Medium','Bold'], applyWeight); });
-  familyBtn?.addEventListener('click', e => { e.stopPropagation(); openDD(familyBtn, ['Versos','Versos Display'], applyFamily); });
+  weightBtn?.addEventListener('click', e => {
+    e.stopPropagation();
+    openDD(weightBtn, ['Regular', 'Medium', 'Bold'], applyWeight);
+  });
+  familyBtn?.addEventListener('click', e => {
+    e.stopPropagation();
+    openDD(familyBtn, ['Versos', 'Versos Display'], applyFamily);
+  });
 
   document.querySelectorAll('.type-item').forEach(item => {
     item.querySelector('.ti-edit').addEventListener('click', e => {
@@ -189,7 +203,7 @@
   [fields.size, fields.line, fields.track].forEach(f => f.addEventListener('input', applyChange));
   // Custom stepper buttons (▲/▼) — increment/decrement the sibling input by its step value
   document.querySelectorAll('.gre-step').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', e => {
       e.preventDefault();
       const input = btn.closest('.gre-num-step-wrap')?.querySelector('input');
       if (!input) return;

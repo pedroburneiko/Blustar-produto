@@ -76,37 +76,43 @@
   }
 
   // Click handler — runs before the canvas-selection handler thanks to capture phase.
-  document.addEventListener('click', e => {
-    if (document.body.classList.contains('preview-mode')) return;
-    if (e.target.closest('.guide-right, .guide-side, #topnav, #sidebar, .add-module-slot, .am-overlay, .tk-popover, .canvas-hover-tools, .canvas-ctx')) return;
-    // DS template edit mode owns its own selection (item inspector); don't clear here.
-    if (e.target.closest('.ds-edit-stage')) return;
-    const comp = e.target.closest('.praia-component');
-    const dsMode = document.body.classList.contains('ds-mode');
-    const editing = document.body.classList.contains('editing-component');
-    if (dsMode) {
-      if (comp) {
-        e.preventDefault(); e.stopPropagation();
+  document.addEventListener(
+    'click',
+    e => {
+      if (document.body.classList.contains('preview-mode')) return;
+      if (e.target.closest('.guide-right, .guide-side, #topnav, #sidebar, .add-module-slot, .am-overlay, .tk-popover, .canvas-hover-tools, .canvas-ctx')) return;
+      // DS template edit mode owns its own selection (item inspector); don't clear here.
+      if (e.target.closest('.ds-edit-stage')) return;
+      const comp = e.target.closest('.praia-component');
+      const dsMode = document.body.classList.contains('ds-mode');
+      const editing = document.body.classList.contains('editing-component');
+      if (dsMode) {
+        if (comp) {
+          e.preventDefault();
+          e.stopPropagation();
+          selectComponent(comp);
+        } else if (!document.body.classList.contains('ds-tpl-selected')) {
+          // While a template thumb is selected (and not in edit mode), keep the
+          // right inspector open — clicking outside should not deselect.
+          clearComponentSelection();
+        }
+        return;
+      }
+      if (comp && !editing) {
+        // First click on a component: select it as a single unit.
+        e.preventDefault();
+        e.stopPropagation();
         selectComponent(comp);
-      } else if (!document.body.classList.contains('ds-tpl-selected')) {
-        // While a template thumb is selected (and not in edit mode), keep the
-        // right inspector open — clicking outside should not deselect.
+        return;
+      }
+      if (!comp && editing) {
+        // Click outside the active component → exit component edit mode.
+        stopEditingComponent();
         clearComponentSelection();
       }
-      return;
-    }
-    if (comp && !editing) {
-      // First click on a component: select it as a single unit.
-      e.preventDefault(); e.stopPropagation();
-      selectComponent(comp);
-      return;
-    }
-    if (!comp && editing) {
-      // Click outside the active component → exit component edit mode.
-      stopEditingComponent();
-      clearComponentSelection();
-    }
-  }, true);
+    },
+    true
+  );
 
   function getActiveComponent() {
     return document.querySelector('.praia-component.component-selected');
@@ -125,7 +131,10 @@
     const h = document.getElementById('grc-h');
     if (w) w.value = comp.style.width || '';
     if (h) h.value = comp.style.height || '';
-    const _setVal = (id, v) => { const e = document.getElementById(id); if (e) e.value = v; };
+    const _setVal = (id, v) => {
+      const e = document.getElementById(id);
+      if (e) e.value = v;
+    };
     _setVal('grc-pt', parseInt(comp.style.paddingTop, 10) || 0);
     _setVal('grc-pb', parseInt(comp.style.paddingBottom, 10) || 0);
     _setVal('grc-pad', parseInt(comp.style.paddingLeft, 10) || 0);
@@ -142,7 +151,8 @@
   function bindCompEdits() {
     const lock = document.getElementById('grc-lock');
     lock?.addEventListener('click', () => {
-      const comp = getActiveComponent(); if (!comp) return;
+      const comp = getActiveComponent();
+      if (!comp) return;
       const cur = comp.dataset.locked === 'true';
       comp.dataset.locked = (!cur).toString();
       lock.setAttribute('aria-pressed', (!cur).toString());
@@ -150,7 +160,8 @@
     });
     document.querySelectorAll('.gr-comp-advanced .grl-seg-btn').forEach(b => {
       b.addEventListener('click', () => {
-        const comp = getActiveComponent(); if (!comp) return;
+        const comp = getActiveComponent();
+        if (!comp) return;
         document.querySelectorAll('.gr-comp-advanced .grl-seg-btn').forEach(x => x.classList.toggle('active', x === b));
         comp.dataset.bg = b.dataset.bg;
         comp.style.background = b.dataset.bg === 'dark' ? 'var(--bs-ink)' : '';
@@ -160,7 +171,8 @@
     });
     const cols = document.getElementById('grc-cols');
     cols?.addEventListener('input', () => {
-      const comp = getActiveComponent(); if (!comp) return;
+      const comp = getActiveComponent();
+      if (!comp) return;
       const n = Math.max(1, Math.min(24, parseInt(cols.value, 10) || 12));
       comp.dataset.cols = String(n);
       // Apply CSS grid if the component uses display:grid; otherwise just store.
@@ -170,36 +182,44 @@
     });
     const w = document.getElementById('grc-w');
     w?.addEventListener('input', () => {
-      const comp = getActiveComponent(); if (!comp) return;
+      const comp = getActiveComponent();
+      if (!comp) return;
       comp.style.width = w.value || '';
     });
     const h = document.getElementById('grc-h');
     h?.addEventListener('input', () => {
-      const comp = getActiveComponent(); if (!comp) return;
+      const comp = getActiveComponent();
+      if (!comp) return;
       comp.style.height = h.value || '';
     });
     document.getElementById('grc-pt')?.addEventListener('input', e => {
-      const comp = getActiveComponent(); if (!comp) return;
+      const comp = getActiveComponent();
+      if (!comp) return;
       comp.style.paddingTop = (parseInt(e.target.value, 10) || 0) + 'px';
     });
     document.getElementById('grc-pb')?.addEventListener('input', e => {
-      const comp = getActiveComponent(); if (!comp) return;
+      const comp = getActiveComponent();
+      if (!comp) return;
       comp.style.paddingBottom = (parseInt(e.target.value, 10) || 0) + 'px';
     });
     document.getElementById('grc-pad')?.addEventListener('input', e => {
-      const comp = getActiveComponent(); if (!comp) return;
+      const comp = getActiveComponent();
+      if (!comp) return;
       comp.style.paddingLeft = (parseInt(e.target.value, 10) || 0) + 'px';
     });
     document.getElementById('grc-pad-2')?.addEventListener('input', e => {
-      const comp = getActiveComponent(); if (!comp) return;
+      const comp = getActiveComponent();
+      if (!comp) return;
       comp.style.paddingRight = (parseInt(e.target.value, 10) || 0) + 'px';
     });
     document.getElementById('grc-gap-row')?.addEventListener('input', e => {
-      const comp = getActiveComponent(); if (!comp) return;
+      const comp = getActiveComponent();
+      if (!comp) return;
       comp.style.rowGap = (parseInt(e.target.value, 10) || 0) + 'px';
     });
     document.getElementById('grc-gap-col')?.addEventListener('input', e => {
-      const comp = getActiveComponent(); if (!comp) return;
+      const comp = getActiveComponent();
+      if (!comp) return;
       comp.style.columnGap = (parseInt(e.target.value, 10) || 0) + 'px';
     });
   }
@@ -207,36 +227,36 @@
 
   // ---- Customizar (Family / Weight / Size / Cor) com Save/Cancel + propagação ----
   const FAMILY_OPTS = [
-    { label: 'Versos',         value: "'Versos', sans-serif" },
+    { label: 'Versos', value: "'Versos', sans-serif" },
     { label: 'Versos Display', value: "'Versos', sans-serif" },
   ];
   const WEIGHT_OPTS = [
-    { label: 'Regular',  value: '400' },
-    { label: 'Medium',   value: '500' },
+    { label: 'Regular', value: '400' },
+    { label: 'Medium', value: '500' },
     { label: 'Semibold', value: '600' },
-    { label: 'Bold',     value: '700' },
+    { label: 'Bold', value: '700' },
   ];
   // Apenas tokens de type do DS — sem px arbitrário. Selecionar = aplicar o
   // token correspondente, que continua respondendo ao Design System.
   const SIZE_OPTS = [
-    { label: 'Padrão',       value: '' },
-    { label: 'H1',           value: 'var(--type-super-size)' },
-    { label: 'H2',           value: 'var(--type-xl-size)' },
-    { label: 'H3',           value: 'var(--type-l-size)' },
-    { label: 'H4',           value: 'var(--type-mb-size)' },
-    { label: 'Body',         value: 'var(--type-m-size)' },
+    { label: 'Padrão', value: '' },
+    { label: 'H1', value: 'var(--type-super-size)' },
+    { label: 'H2', value: 'var(--type-xl-size)' },
+    { label: 'H3', value: 'var(--type-l-size)' },
+    { label: 'H4', value: 'var(--type-mb-size)' },
+    { label: 'Body', value: 'var(--type-m-size)' },
     { label: 'Caption Bold', value: 'var(--type-sb-size)' },
-    { label: 'Caption',      value: 'var(--type-s-size)' },
-    { label: 'Body Small',   value: 'var(--type-xs-size)' },
+    { label: 'Caption', value: 'var(--type-s-size)' },
+    { label: 'Body Small', value: 'var(--type-xs-size)' },
   ];
   const COLOR_OPTS = [
-    { label: 'Padrão',            value: '',        swatch: 'transparent' },
-    { label: 'Surface/Background',value: 'var(--bg)', swatch: 'var(--bg)' },
-    { label: 'Navy',              value: '#061833', swatch: '#061833' },
-    { label: 'Cyan',              value: '#0FC4D5', swatch: '#0FC4D5' },
-    { label: 'Blue',              value: '#3259FF', swatch: '#3259FF' },
-    { label: 'White',             value: '#FFFFFF', swatch: '#FFFFFF' },
-    { label: 'Dark',              value: '#0a1018', swatch: '#0a1018' },
+    { label: 'Padrão', value: '', swatch: 'transparent' },
+    { label: 'Surface/Background', value: 'var(--bg)', swatch: 'var(--bg)' },
+    { label: 'Navy', value: '#061833', swatch: '#061833' },
+    { label: 'Cyan', value: '#0FC4D5', swatch: '#0FC4D5' },
+    { label: 'Blue', value: '#3259FF', swatch: '#3259FF' },
+    { label: 'White', value: '#FFFFFF', swatch: '#FFFFFF' },
+    { label: 'Dark', value: '#0a1018', swatch: '#0a1018' },
   ];
   function labelFor(opts, value) {
     return (opts.find(o => o.value === value) || opts[0]).label;
@@ -250,28 +270,37 @@
       const b = document.createElement('button');
       b.type = 'button';
       b.textContent = o.label;
-      b.addEventListener('click', () => { onPick(o); dd.remove(); });
+      b.addEventListener('click', () => {
+        onPick(o);
+        dd.remove();
+      });
       dd.appendChild(b);
     });
     document.body.appendChild(dd);
     const r = anchor.getBoundingClientRect();
     // Mirror the Type dropdown: right-align to the anchor, clamp to viewport
     // so colors don't get cut off near the screen edges.
-    dd.style.top = '0px'; dd.style.left = '0px';
+    dd.style.top = '0px';
+    dd.style.left = '0px';
     const mr = dd.getBoundingClientRect();
     const spaceBelow = innerHeight - r.bottom;
-    const top = (spaceBelow >= mr.height + 12) ? r.bottom + 6 : Math.max(8, r.top - mr.height - 6);
+    const top = spaceBelow >= mr.height + 12 ? r.bottom + 6 : Math.max(8, r.top - mr.height - 6);
     const left = Math.min(Math.max(8, r.right - mr.width), innerWidth - mr.width - 8);
     dd.style.top = `${top}px`;
     dd.style.left = `${left}px`;
     setTimeout(() => {
-      const off = e => { if (!dd.contains(e.target) && e.target !== anchor) { dd.remove(); document.removeEventListener('click', off); } };
+      const off = e => {
+        if (!dd.contains(e.target) && e.target !== anchor) {
+          dd.remove();
+          document.removeEventListener('click', off);
+        }
+      };
       document.addEventListener('click', off);
     }, 0);
   }
 
-  let custSnapshot = null;        // { name, items: [{el, fontFamily, fontSize, fontWeight, color}] }
-  let custPending  = { fontFamily: '', fontSize: '', fontWeight: '', color: '' };
+  let custSnapshot = null; // { name, items: [{el, fontFamily, fontSize, fontWeight, color}] }
+  let custPending = { fontFamily: '', fontSize: '', fontWeight: '', color: '' };
 
   function snapshotCust(comp) {
     const grab = el => ({ el, fontFamily: el.style.fontFamily, fontSize: el.style.fontSize, fontWeight: el.style.fontWeight, color: el.style.color });
@@ -291,10 +320,10 @@
   function setCustLabels(state) {
     const fam = document.querySelector('#grc-cust-family span');
     const wgt = document.querySelector('#grc-cust-weight span');
-    const sz  = document.querySelector('#grc-cust-size span');
+    const sz = document.querySelector('#grc-cust-size span');
     if (fam) fam.textContent = labelFor(FAMILY_OPTS, state.fontFamily || '');
     if (wgt) wgt.textContent = labelFor(WEIGHT_OPTS, state.fontWeight || '');
-    if (sz)  sz.textContent  = labelFor(SIZE_OPTS,   state.fontSize   || '');
+    if (sz) sz.textContent = labelFor(SIZE_OPTS, state.fontSize || '');
     const colorOpt = COLOR_OPTS.find(o => o.value === (state.color || '')) || COLOR_OPTS[0];
     const colorName = document.getElementById('grc-cust-color-name');
     const colorSwatch = document.getElementById('grc-cust-color-swatch');
@@ -307,9 +336,9 @@
     custSnapshot = null;
     custPending = {
       fontFamily: comp.style.fontFamily || '',
-      fontSize:   comp.style.fontSize   || '',
+      fontSize: comp.style.fontSize || '',
       fontWeight: comp.style.fontWeight || '',
-      color:      comp.style.color      || '',
+      color: comp.style.color || '',
     };
     setCustLabels(custPending);
   }
@@ -320,9 +349,9 @@
   // Clicking a `.ds-tpl-cell` selects the template definition itself; Save
   // propagates to every `.praia-component[data-component-name="<name>"]`
   // (existing + future via a global stylesheet override).
-  let activeTplName = null;           // currently selected template definition
-  let tplOverrides = {};              // { name: { fontSize, fontWeight, color } } — saved
-  let tplDraft = null;                // pending preview overrides for activeTplName
+  let activeTplName = null; // currently selected template definition
+  let tplOverrides = {}; // { name: { fontSize, fontWeight, color } } — saved
+  let tplDraft = null; // pending preview overrides for activeTplName
 
   function ensureTplStyleEl() {
     let el = document.getElementById('grc-tpl-overrides');
@@ -339,9 +368,9 @@
     Object.entries(tplOverrides).forEach(([name, o]) => {
       const decls = [];
       if (o.fontFamily) decls.push(`font-family: ${o.fontFamily} !important`);
-      if (o.fontSize)   decls.push(`font-size: ${o.fontSize} !important`);
+      if (o.fontSize) decls.push(`font-size: ${o.fontSize} !important`);
       if (o.fontWeight) decls.push(`font-weight: ${o.fontWeight} !important`);
-      if (o.color)      decls.push(`color: ${o.color} !important`);
+      if (o.color) decls.push(`color: ${o.color} !important`);
       const escName = name.replace(/"/g, '\\"');
       if (decls.length) {
         const sel = `.praia-component[data-component-name="${escName}"]`;
@@ -350,12 +379,7 @@
       // Anchor — applied to child item(s) carrying data-ds-anchor inside the template.
       if (o.anchor && ANCHOR_MAP[o.anchor]) {
         const a = ANCHOR_MAP[o.anchor];
-        const aDecls = [
-          `align-self: ${a.align} !important`,
-          `justify-self: ${a.justify} !important`,
-          `align-items: ${a.align} !important`,
-          `justify-content: ${a.justify} !important`,
-        ].join(';');
+        const aDecls = [`align-self: ${a.align} !important`, `justify-self: ${a.justify} !important`, `align-items: ${a.align} !important`, `justify-content: ${a.justify} !important`].join(';');
         const aSel = `.praia-component[data-component-name="${escName}"] [data-ds-anchor]`;
         rules.push(`${aSel}{${aDecls}}`);
       }
@@ -391,19 +415,33 @@
       };
       const onClick = e => {
         const b = e.target.closest('[data-tpl-confirm]');
-        if (b) { e.preventDefault(); e.stopPropagation(); close(b.dataset.tplConfirm === 'ok'); return; }
+        if (b) {
+          e.preventDefault();
+          e.stopPropagation();
+          close(b.dataset.tplConfirm === 'ok');
+          return;
+        }
         if (e.target === dlg) close(false);
       };
       const onKey = e => {
-        if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(false); }
-        else if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); close(true); }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          e.stopPropagation();
+          close(false);
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          e.stopPropagation();
+          close(true);
+        }
       };
       dlg.addEventListener('click', onClick);
       document.addEventListener('keydown', onKey, true);
     });
   }
 
-  function getActiveTemplateName() { return activeTplName; }
+  function getActiveTemplateName() {
+    return activeTplName;
+  }
   window.__grcClearTplSelection = () => {
     activeTplName = null;
     tplDraft = null;
@@ -431,11 +469,11 @@
         // Reset any scale baked in by commitEditAndExit so we can rescale to
         // fit the right-panel preview box without compounding transforms.
         clone.style.transform = '';
-        clone.style.width  = '';
+        clone.style.width = '';
         clone.style.height = '';
         clone.style.position = '';
         clone.style.left = '';
-        clone.style.top  = '';
+        clone.style.top = '';
         // Prefer the captured edit-canvas dimensions so the preview matches
         // the cell thumb pixel-for-pixel (same source of truth).
         const editW = parseFloat(previewSrc.dataset.dsEditW) || 0;
@@ -445,17 +483,17 @@
         // there are no empty bars on top/bottom. Computed BEFORE the scale so
         // the wrap width drives the scale calculation cleanly.
         requestAnimationFrame(() => {
-          const baseW = editW || clone.getBoundingClientRect().width  || 1;
+          const baseW = editW || clone.getBoundingClientRect().width || 1;
           const baseH = editH || clone.getBoundingClientRect().height || 1;
           thumb.style.aspectRatio = `${baseW} / ${baseH}`;
           const thumbRect = thumb.getBoundingClientRect();
           const s = thumbRect.width / baseW; // width-driven; height matches via aspect-ratio
-          clone.style.width  = baseW + 'px';
+          clone.style.width = baseW + 'px';
           clone.style.height = baseH + 'px';
           clone.style.transformOrigin = '0 0';
           clone.style.transform = `scale(${s})`;
-          inner.style.width  = (baseW * s) + 'px';
-          inner.style.height = (baseH * s) + 'px';
+          inner.style.width = baseW * s + 'px';
+          inner.style.height = baseH * s + 'px';
           inner.style.transform = 'translate(-50%, -50%)';
         });
       }
@@ -492,10 +530,14 @@
     // Clear the item inspector so the next edit session starts fresh.
     if (typeof activeItem !== 'undefined') activeItem = null;
     document.querySelectorAll('.ds-edit-canvas .ds-item-active').forEach(el => el.classList.remove('ds-item-active'));
-    const rIn = document.getElementById('grc-item-radius'); if (rIn) rIn.value = 0;
-    const cIn = document.getElementById('grc-grid-cols');   if (cIn) cIn.value = 12;
-    const gIn = document.getElementById('grc-grid-gap');    if (gIn) gIn.value = 16;
-    const typeLabel = document.getElementById('grc-item-type-label'); if (typeLabel) typeLabel.textContent = '—';
+    const rIn = document.getElementById('grc-item-radius');
+    if (rIn) rIn.value = 0;
+    const cIn = document.getElementById('grc-grid-cols');
+    if (cIn) cIn.value = 12;
+    const gIn = document.getElementById('grc-grid-gap');
+    if (gIn) gIn.value = 16;
+    const typeLabel = document.getElementById('grc-item-type-label');
+    if (typeLabel) typeLabel.textContent = '—';
     paintAnchorButton?.('center');
     document.querySelectorAll('.gr-anchor-menu.open').forEach(m => m.classList.remove('open'));
   }
@@ -573,7 +615,9 @@
           window.__praiaTplOverrides[name] = fresh.outerHTML;
           // Mark as user-edited so the text-template version gate won't reset it.
           window.__praiaTplOverrides['edited:' + name] = '1';
-          try { localStorage.setItem('praia.tpl.overrides', JSON.stringify(window.__praiaTplOverrides)); } catch {}
+          try {
+            localStorage.setItem('praia.tpl.overrides', JSON.stringify(window.__praiaTplOverrides));
+          } catch {}
           // Propagate master → all instances inserted on guide pages.
           window.__praiaPropagateTemplate?.(name, fresh.outerHTML);
         }
@@ -592,64 +636,72 @@
   // Legacy callers expect __praiaApplyScaledThumbs — point them at the unified
   // mirror scale function so the cell/instance/modal pipelines stay in sync.
   window.__praiaApplyScaledThumbs = () => window.__praiaApplyMirrorScale?.();
-  document.addEventListener('click', e => {
-    if (e.target.closest('[data-ds-edit-back]')) {
-      e.preventDefault(); e.stopPropagation();
-      // Voltar agora salva direto — sem perguntar. As mudanças do canvas já
-      // estão refletidas no thumb via commitEditAndExit.
-      commitEditAndExit();
-      return;
-    }
-    const conf = e.target.closest('[data-confirm]');
-    if (conf) {
-      e.preventDefault(); e.stopPropagation();
-      const dlg = ensureConfirmDialog();
-      dlg.classList.remove('open');
-      if (conf.dataset.confirm === 'save') commitEditAndExit();
-      else exitEdit();
-      return;
-    }
-    // Click outside the dialog box (on the backdrop) just closes the modal —
-    // user stays in edit mode without losing changes.
-    const openDlg = document.querySelector('.ds-edit-confirm.open');
-    if (openDlg && e.target === openDlg) {
-      openDlg.classList.remove('open');
-      return;
-    }
-    const actionBtn = e.target.closest('[data-ds-tpl-action]');
-    if (actionBtn) {
-      const cell = actionBtn.closest('.ds-tpl-cell');
-      if (!cell) return;
-      e.preventDefault(); e.stopPropagation();
-      const action = actionBtn.dataset.dsTplAction;
-      if (action === 'duplicate') {
-        const clone = cell.cloneNode(true);
-        clone.classList.remove('is-selected');
-        const baseName = cell.dataset.tplName || '';
-        clone.dataset.tplName = baseName + ' copy';
-        const label = clone.querySelector(':scope > .tk-sb');
-        if (label) label.textContent = clone.dataset.tplName;
-        cell.parentNode.insertBefore(clone, cell.nextSibling);
-      } else if (action === 'delete') {
-        const name = cell.dataset.tplName || 'este template';
-        confirmTplDelete(name).then(ok => {
-          if (!ok) return;
-          if (cell.classList.contains('is-selected')) {
-            window.__grcClearTplSelection && window.__grcClearTplSelection();
-          }
-          cell.remove();
-        });
+  document.addEventListener(
+    'click',
+    e => {
+      if (e.target.closest('[data-ds-edit-back]')) {
+        e.preventDefault();
+        e.stopPropagation();
+        // Voltar agora salva direto — sem perguntar. As mudanças do canvas já
+        // estão refletidas no thumb via commitEditAndExit.
+        commitEditAndExit();
+        return;
       }
-      return;
-    }
-    const cell = e.target.closest('.ds-tpl-cell');
-    if (!cell) return;
-    if (!document.body.classList.contains('ds-mode')) return;
-    e.preventDefault(); e.stopPropagation();
-    // Single-click only selects the template (highlight + open inspector).
-    // Double-click is what enters the full edit canvas (see dblclick handler below).
-    selectTemplate(cell.dataset.tplName, cell);
-  }, true);
+      const conf = e.target.closest('[data-confirm]');
+      if (conf) {
+        e.preventDefault();
+        e.stopPropagation();
+        const dlg = ensureConfirmDialog();
+        dlg.classList.remove('open');
+        if (conf.dataset.confirm === 'save') commitEditAndExit();
+        else exitEdit();
+        return;
+      }
+      // Click outside the dialog box (on the backdrop) just closes the modal —
+      // user stays in edit mode without losing changes.
+      const openDlg = document.querySelector('.ds-edit-confirm.open');
+      if (openDlg && e.target === openDlg) {
+        openDlg.classList.remove('open');
+        return;
+      }
+      const actionBtn = e.target.closest('[data-ds-tpl-action]');
+      if (actionBtn) {
+        const cell = actionBtn.closest('.ds-tpl-cell');
+        if (!cell) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const action = actionBtn.dataset.dsTplAction;
+        if (action === 'duplicate') {
+          const clone = cell.cloneNode(true);
+          clone.classList.remove('is-selected');
+          const baseName = cell.dataset.tplName || '';
+          clone.dataset.tplName = baseName + ' copy';
+          const label = clone.querySelector(':scope > .tk-sb');
+          if (label) label.textContent = clone.dataset.tplName;
+          cell.parentNode.insertBefore(clone, cell.nextSibling);
+        } else if (action === 'delete') {
+          const name = cell.dataset.tplName || 'este template';
+          confirmTplDelete(name).then(ok => {
+            if (!ok) return;
+            if (cell.classList.contains('is-selected')) {
+              window.__grcClearTplSelection && window.__grcClearTplSelection();
+            }
+            cell.remove();
+          });
+        }
+        return;
+      }
+      const cell = e.target.closest('.ds-tpl-cell');
+      if (!cell) return;
+      if (!document.body.classList.contains('ds-mode')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      // Single-click only selects the template (highlight + open inspector).
+      // Double-click is what enters the full edit canvas (see dblclick handler below).
+      selectTemplate(cell.dataset.tplName, cell);
+    },
+    true
+  );
 
   // Double-click on a text/image template → enter the edit canvas.
   // Edit-canvas scale management. The master is locked at 1280px native width,
@@ -676,7 +728,7 @@
     canvas.style.setProperty('--praia-edit-scale', scale);
     // Reserve canvas height to match the scaled thumb height (transform doesn't
     // affect layout, so without this the canvas would size to native 800px).
-    canvas.style.height = (editH * scale) + 'px';
+    canvas.style.height = editH * scale + 'px';
   }
   window.__praiaApplyEditScale = applyEditScale;
   let __editScaleRO = null;
@@ -726,12 +778,19 @@
     __livePropagateMO.observe(canvas, { childList: true, subtree: true, characterData: true, attributes: true });
   }
   function stopLivePropagation() {
-    if (__livePropagateMO) { __livePropagateMO.disconnect(); __livePropagateMO = null; }
-    if (__livePropagateRaf) { cancelAnimationFrame(__livePropagateRaf); __livePropagateRaf = 0; }
+    if (__livePropagateMO) {
+      __livePropagateMO.disconnect();
+      __livePropagateMO = null;
+    }
+    if (__livePropagateRaf) {
+      cancelAnimationFrame(__livePropagateRaf);
+      __livePropagateRaf = 0;
+    }
   }
   function enterTemplateEdit(cell) {
     // Edit mode disabled 2026-05-28 — templates will be rebuilt from scratch.
     return;
+    // biome-ignore lint/correctness/noUnreachable: bloco preservado de propósito p/ referência até o rebuild dos templates
     if (!cell || !document.body.classList.contains('ds-mode')) return;
     if (cell.dataset.tplCat !== 'text' && cell.dataset.tplCat !== 'images' && cell.dataset.tplCat !== 'video') return;
     selectTemplate(cell.dataset.tplName, cell);
@@ -763,48 +822,63 @@
     editingSourceCell = cell;
     requestAnimationFrame(() => {
       const cols = parseInt(document.getElementById('grc-grid-cols')?.value, 10) || 12;
-      const gap  = parseInt(document.getElementById('grc-grid-gap')?.value, 10)  || 0;
+      const gap = parseInt(document.getElementById('grc-grid-gap')?.value, 10) || 0;
       applyGrid(cols, gap);
       applyEditScale();
       ensureEditScaleObserver();
     });
     startLivePropagation(canvas, cell.dataset.tplName);
   }
-  document.addEventListener('dblclick', e => {
-    const cell = e.target.closest('.ds-tpl-cell');
-    if (!cell) return;
-    // Don't intercept dbl-click inside the Add template modal mirror — that
-    // grid uses dbl-click to insert, not to enter the DS edit canvas.
-    if (e.target.closest('#am-body-mirror')) return;
-    e.preventDefault(); e.stopPropagation();
-    enterTemplateEdit(cell);
-  }, true);
+  document.addEventListener(
+    'dblclick',
+    e => {
+      const cell = e.target.closest('.ds-tpl-cell');
+      if (!cell) return;
+      // Don't intercept dbl-click inside the Add template modal mirror — that
+      // grid uses dbl-click to insert, not to enter the DS edit canvas.
+      if (e.target.closest('#am-body-mirror')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      enterTemplateEdit(cell);
+    },
+    true
+  );
 
   // Right-panel "Deletar template" button — pede confirmação, deleta o cell
   // e sai do edit mode.
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('#ds-tpl-delete-btn');
-    if (!btn) return;
-    e.preventDefault(); e.stopPropagation();
-    if (!editingSourceCell) return;
-    const name = editingSourceCell.dataset.tplName || 'este template';
-    confirmTplDelete(name).then(ok => {
-      if (!ok) return;
-      const toRemove = editingSourceCell;
-      window.__grcClearTplSelection && window.__grcClearTplSelection();
-      exitEdit();
-      toRemove.remove();
-    });
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      const btn = e.target.closest('#ds-tpl-delete-btn');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (!editingSourceCell) return;
+      const name = editingSourceCell.dataset.tplName || 'este template';
+      confirmTplDelete(name).then(ok => {
+        if (!ok) return;
+        const toRemove = editingSourceCell;
+        window.__grcClearTplSelection && window.__grcClearTplSelection();
+        exitEdit();
+        toRemove.remove();
+      });
+    },
+    true
+  );
 
   // Right-panel "Editar" button — same effect as double-clicking the thumb.
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('#ds-tpl-edit-btn');
-    if (!btn) return;
-    e.preventDefault(); e.stopPropagation();
-    const selected = document.querySelector('.ds-tpl-cell.is-selected');
-    if (selected) enterTemplateEdit(selected);
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      const btn = e.target.closest('#ds-tpl-edit-btn');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const selected = document.querySelector('.ds-tpl-cell.is-selected');
+      if (selected) enterTemplateEdit(selected);
+    },
+    true
+  );
 
   // Grid toggle button — show/hide the grid overlay inside the edit canvas.
   // The choice persists across sessions via localStorage so the user doesn't
@@ -813,7 +887,9 @@
   function applyGridHidden(hidden) {
     document.body.classList.toggle('ds-tpl-grid-hidden', hidden);
     document.querySelectorAll('[data-ds-grid-toggle]').forEach(b => b.setAttribute('aria-pressed', String(!hidden)));
-    try { localStorage.setItem(GRID_KEY, hidden ? '1' : '0'); } catch (_) {}
+    try {
+      localStorage.setItem(GRID_KEY, hidden ? '1' : '0');
+    } catch (_) {}
   }
   function restoreGridState() {
     try {
@@ -823,12 +899,17 @@
     } catch (_) {}
   }
   window.__restoreGridState = restoreGridState;
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('[data-ds-grid-toggle]');
-    if (!btn) return;
-    e.preventDefault(); e.stopPropagation();
-    applyGridHidden(!document.body.classList.contains('ds-tpl-grid-hidden'));
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      const btn = e.target.closest('[data-ds-grid-toggle]');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      applyGridHidden(!document.body.classList.contains('ds-tpl-grid-hidden'));
+    },
+    true
+  );
 
   // ---- Text alignment (left / center / right / justify) ----
   function paintTextAlignButtons(align) {
@@ -836,46 +917,73 @@
       b.classList.toggle('is-active', b.dataset.textAlign === (align || 'left'));
     });
   }
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.ds-textalign-btn');
-    if (!btn || !activeItem) return;
-    e.preventDefault(); e.stopPropagation();
-    const align = btn.dataset.textAlign;
-    activeItem.style.textAlign = align;
-    paintTextAlignButtons(align);
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      const btn = e.target.closest('.ds-textalign-btn');
+      if (!btn || !activeItem) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const align = btn.dataset.textAlign;
+      activeItem.style.textAlign = align;
+      paintTextAlignButtons(align);
+    },
+    true
+  );
 
   // ---- Position (left/hcenter/right + top/vcenter/bottom) ----
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.ds-pos-btn');
-    if (!btn || !activeItem) return;
-    e.preventDefault(); e.stopPropagation();
-    const canvas = activeItem.closest('.am-tpl-thumb');
-    if (!canvas) return;
-    const cs = getComputedStyle(canvas);
-    const margin = parseFloat(cs.getPropertyValue('--ds-margin')) || 0;
-    const cr = canvas.getBoundingClientRect();
-    const ir = activeItem.getBoundingClientRect();
-    activeItem.style.position = 'absolute';
-    activeItem.style.transform = 'none';
-    const pos = btn.dataset.pos;
-    switch (pos) {
-      case 'left':    activeItem.style.left = margin + 'px'; break;
-      case 'hcenter': activeItem.style.left = ((cr.width - ir.width) / 2) + 'px'; break;
-      case 'right':   activeItem.style.left = (cr.width - ir.width - margin) + 'px'; break;
-      case 'top':     activeItem.style.top  = margin + 'px'; break;
-      case 'vcenter': activeItem.style.top  = ((cr.height - ir.height) / 2) + 'px'; break;
-      case 'bottom':  activeItem.style.top  = (cr.height - ir.height - margin) + 'px'; break;
-    }
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      const btn = e.target.closest('.ds-pos-btn');
+      if (!btn || !activeItem) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const canvas = activeItem.closest('.am-tpl-thumb');
+      if (!canvas) return;
+      const cs = getComputedStyle(canvas);
+      const margin = parseFloat(cs.getPropertyValue('--ds-margin')) || 0;
+      const cr = canvas.getBoundingClientRect();
+      const ir = activeItem.getBoundingClientRect();
+      activeItem.style.position = 'absolute';
+      activeItem.style.transform = 'none';
+      const pos = btn.dataset.pos;
+      switch (pos) {
+        case 'left':
+          activeItem.style.left = margin + 'px';
+          break;
+        case 'hcenter':
+          activeItem.style.left = (cr.width - ir.width) / 2 + 'px';
+          break;
+        case 'right':
+          activeItem.style.left = cr.width - ir.width - margin + 'px';
+          break;
+        case 'top':
+          activeItem.style.top = margin + 'px';
+          break;
+        case 'vcenter':
+          activeItem.style.top = (cr.height - ir.height) / 2 + 'px';
+          break;
+        case 'bottom':
+          activeItem.style.top = cr.height - ir.height - margin + 'px';
+          break;
+      }
+    },
+    true
+  );
 
   // ---- Image replace (right-inspector "Substituir imagem") ----
-  document.addEventListener('click', e => {
-    if (e.target.closest('#grc-item-image-replace')) {
-      e.preventDefault(); e.stopPropagation();
-      document.getElementById('grc-item-image-input')?.click();
-    }
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      if (e.target.closest('#grc-item-image-replace')) {
+        e.preventDefault();
+        e.stopPropagation();
+        document.getElementById('grc-item-image-input')?.click();
+      }
+    },
+    true
+  );
   document.getElementById('grc-item-image-input')?.addEventListener('change', e => {
     const file = e.target.files?.[0];
     if (!file || !activeItem) return;
@@ -900,41 +1008,48 @@
   let __marquee = null;
   let __marqueeStart = null;
   let __marqueeJustDragged = false; // set on mouseup after a real drag to swallow the trailing click
-  document.addEventListener('mousedown', e => {
-    if (!document.body.classList.contains('ds-tpl-edit')) return;
-    if (e.button !== 0) return;
-    // Skip UI chrome (toolbar, sidebars, popovers) always.
-    if (e.target.closest('.guide-right, .guide-side, #sidebar, #topnav, .ds-side, [data-ds-edit-back], [data-ds-grid-toggle], [data-ds-addblock], .ds-addblock-pop, .ds-ctx-menu, .gr-anchor-menu, .tk-popover, .ds-edit-confirm')) return;
-    // With shift held, ALWAYS start a marquee — even when starting on an item.
-    // Without shift, clicking on an ALREADY-SELECTED item routes to the drag
-    // handler (so selected items can be moved). Mousedown on an unselected
-    // item starts a marquee so users can lasso-select photos that fill the
-    // canvas (and a no-drag release falls through to single-select that item).
-    if (!e.shiftKey) {
-      const onItem = e.target.closest('.ds-edit-canvas .am-tpl-thumb > *:not(.ds-grid-overlay)');
-      if (onItem && onItem.classList.contains('ds-item-active')) return;
-    }
-    const thumb = document.querySelector('body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb');
-    if (!thumb) return;
-    e.preventDefault();
-    // Shift extends an existing selection; without shift we clear first.
-    if (!e.shiftKey) {
-      document.querySelectorAll('.ds-edit-canvas .ds-item-active').forEach(el => el.classList.remove('ds-item-active'));
-      document.body.classList.remove('ds-item-selected', 'ds-item-text', 'ds-item-block', 'ds-item-image', 'ds-item-button', 'ds-multi-selected');
-      if (typeof clearResizeHandles === 'function') clearResizeHandles();
-    }
-    const startedOnItem = e.target.closest('.ds-edit-canvas .am-tpl-thumb > *:not(.ds-grid-overlay)');
-    __marqueeStart = { x: e.clientX, y: e.clientY, thumb, additive: e.shiftKey, startedOnItem };
-    __marquee = document.createElement('div');
-    __marquee.className = 'ds-marquee';
-    document.body.appendChild(__marquee);
-    paintMarquee(e.clientX, e.clientY);
-  }, true);
+  document.addEventListener(
+    'mousedown',
+    e => {
+      if (!document.body.classList.contains('ds-tpl-edit')) return;
+      if (e.button !== 0) return;
+      // Skip UI chrome (toolbar, sidebars, popovers) always.
+      if (e.target.closest('.guide-right, .guide-side, #sidebar, #topnav, .ds-side, [data-ds-edit-back], [data-ds-grid-toggle], [data-ds-addblock], .ds-addblock-pop, .ds-ctx-menu, .gr-anchor-menu, .tk-popover, .ds-edit-confirm')) return;
+      // With shift held, ALWAYS start a marquee — even when starting on an item.
+      // Without shift, clicking on an ALREADY-SELECTED item routes to the drag
+      // handler (so selected items can be moved). Mousedown on an unselected
+      // item starts a marquee so users can lasso-select photos that fill the
+      // canvas (and a no-drag release falls through to single-select that item).
+      if (!e.shiftKey) {
+        const onItem = e.target.closest('.ds-edit-canvas .am-tpl-thumb > *:not(.ds-grid-overlay)');
+        if (onItem && onItem.classList.contains('ds-item-active')) return;
+      }
+      const thumb = document.querySelector('body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb');
+      if (!thumb) return;
+      e.preventDefault();
+      // Shift extends an existing selection; without shift we clear first.
+      if (!e.shiftKey) {
+        document.querySelectorAll('.ds-edit-canvas .ds-item-active').forEach(el => el.classList.remove('ds-item-active'));
+        document.body.classList.remove('ds-item-selected', 'ds-item-text', 'ds-item-block', 'ds-item-image', 'ds-item-button', 'ds-multi-selected');
+        if (typeof clearResizeHandles === 'function') clearResizeHandles();
+      }
+      const startedOnItem = e.target.closest('.ds-edit-canvas .am-tpl-thumb > *:not(.ds-grid-overlay)');
+      __marqueeStart = { x: e.clientX, y: e.clientY, thumb, additive: e.shiftKey, startedOnItem };
+      __marquee = document.createElement('div');
+      __marquee.className = 'ds-marquee';
+      document.body.appendChild(__marquee);
+      paintMarquee(e.clientX, e.clientY);
+    },
+    true
+  );
   function paintMarquee(x, y) {
     if (!__marquee || !__marqueeStart) return;
-    const x0 = __marqueeStart.x, y0 = __marqueeStart.y;
-    const l = Math.min(x0, x), t = Math.min(y0, y);
-    const w = Math.abs(x - x0), h = Math.abs(y - y0);
+    const x0 = __marqueeStart.x,
+      y0 = __marqueeStart.y;
+    const l = Math.min(x0, x),
+      t = Math.min(y0, y);
+    const w = Math.abs(x - x0),
+      h = Math.abs(y - y0);
     __marquee.style.left = l + 'px';
     __marquee.style.top = t + 'px';
     __marquee.style.width = w + 'px';
@@ -975,7 +1090,10 @@
     items.forEach(it => {
       const ir = it.getBoundingClientRect();
       const intersects = !(ir.right < rect.left || ir.left > rect.right || ir.bottom < rect.top || ir.top > rect.bottom);
-      if (intersects) { it.classList.add('ds-item-active'); picked++; }
+      if (intersects) {
+        it.classList.add('ds-item-active');
+        picked++;
+      }
     });
     picked = document.querySelectorAll('.ds-edit-canvas .ds-item-active').length;
     if (picked > 0) {
@@ -1012,7 +1130,9 @@
       ['ungroup', 'Ungroup'],
       ['front', 'Bring to front'],
       ['back', 'Send to back'],
-    ].map(([k, l]) => `<button type="button" data-ctx="${k}">${l}</button>`).join('');
+    ]
+      .map(([k, l]) => `<button type="button" data-ctx="${k}">${l}</button>`)
+      .join('');
     document.body.appendChild(pop);
     pop.addEventListener('click', e => {
       const b = e.target.closest('[data-ctx]');
@@ -1048,11 +1168,12 @@
       const top = parseFloat(el.style.top) || 50;
       const left = parseFloat(el.style.left) || 50;
       el.style.position = 'absolute';
-      el.style.top = (top + 4) + '%';
-      el.style.left = (left + 4) + '%';
+      el.style.top = top + 4 + '%';
+      el.style.left = left + 4 + '%';
       el.classList.remove('ds-item-active');
       const overlay = canvas.querySelector(':scope > .ds-grid-overlay');
-      if (overlay) canvas.insertBefore(el, overlay); else canvas.appendChild(el);
+      if (overlay) canvas.insertBefore(el, overlay);
+      else canvas.appendChild(el);
       if (typeof tagItem === 'function') tagItem(el);
       if (typeof selectItem === 'function') selectItem(el);
     } else if (action === 'group') {
@@ -1077,13 +1198,13 @@
         // Lock the current rendered size in pixels — items using percentage
         // widths (e.g. .tpl-block with width:60%) would otherwise resize when
         // re-parented into the smaller group box.
-        it.style.width  = r.width + 'px';
+        it.style.width = r.width + 'px';
         it.style.height = r.height + 'px';
         // Children become absolute-positioned inside the group at their
         // original on-canvas position offset by the group origin.
         it.style.position = 'absolute';
-        it.style.left = (r.left - minL) + 'px';
-        it.style.top = (r.top - minT) + 'px';
+        it.style.left = r.left - minL + 'px';
+        it.style.top = r.top - minT + 'px';
         it.style.transform = 'none';
         // Strip place-self / grid placement that would otherwise compete with
         // the absolute positioning inside the group.
@@ -1119,61 +1240,65 @@
       target.style.zIndex = 0;
     }
   }
-  document.addEventListener('keydown', e => {
-    if (!document.body.classList.contains('ds-tpl-edit')) return;
-    const t = e.target;
-    const inField = t && (t.matches?.('input, textarea, [contenteditable="true"]') || t.closest?.('[contenteditable="true"]'));
-    const isMac = navigator.platform.toLowerCase().includes('mac');
-    const cmd = isMac ? e.metaKey : e.ctrlKey;
-    const canvas = document.querySelector('.ds-edit-canvas .am-tpl-thumb');
-    if (!canvas) return;
+  document.addEventListener(
+    'keydown',
+    e => {
+      if (!document.body.classList.contains('ds-tpl-edit')) return;
+      const t = e.target;
+      const inField = t && (t.matches?.('input, textarea, [contenteditable="true"]') || t.closest?.('[contenteditable="true"]'));
+      const isMac = navigator.platform.toLowerCase().includes('mac');
+      const cmd = isMac ? e.metaKey : e.ctrlKey;
+      const canvas = document.querySelector('.ds-edit-canvas .am-tpl-thumb');
+      if (!canvas) return;
 
-    // Ctrl+G — toggle the grid overlay (Ctrl on all platforms, NOT Cmd on Mac,
-    // so it doesn't collide with the browser's Cmd shortcuts).
-    if (e.ctrlKey && !e.metaKey && (e.key === 'g' || e.key === 'G')) {
+      // Ctrl+G — toggle the grid overlay (Ctrl on all platforms, NOT Cmd on Mac,
+      // so it doesn't collide with the browser's Cmd shortcuts).
+      if (e.ctrlKey && !e.metaKey && (e.key === 'g' || e.key === 'G')) {
+        if (inField) return;
+        e.preventDefault();
+        const wasHidden = document.body.classList.contains('ds-tpl-grid-hidden');
+        if (typeof applyGridHidden === 'function') applyGridHidden(!wasHidden);
+        return;
+      }
+
+      // Delete / Backspace — remove active items (skip when typing in a field).
+      if (!cmd && (e.key === 'Delete' || e.key === 'Backspace')) {
+        if (inField) return;
+        const active = [...canvas.querySelectorAll(':scope > .ds-item-active')];
+        if (!active.length) return;
+        e.preventDefault();
+        active.forEach(el => el.remove());
+        document.body.classList.remove('ds-item-selected', 'ds-item-text', 'ds-item-block', 'ds-item-image', 'ds-item-button', 'ds-multi-selected');
+        if (typeof clearItemSelection === 'function') clearItemSelection();
+        return;
+      }
+
+      if (!cmd) return;
       if (inField) return;
-      e.preventDefault();
-      const wasHidden = document.body.classList.contains('ds-tpl-grid-hidden');
-      if (typeof applyGridHidden === 'function') applyGridHidden(!wasHidden);
-      return;
-    }
 
-    // Delete / Backspace — remove active items (skip when typing in a field).
-    if (!cmd && (e.key === 'Delete' || e.key === 'Backspace')) {
-      if (inField) return;
-      const active = [...canvas.querySelectorAll(':scope > .ds-item-active')];
-      if (!active.length) return;
-      e.preventDefault();
-      active.forEach(el => el.remove());
-      document.body.classList.remove('ds-item-selected', 'ds-item-text', 'ds-item-block', 'ds-item-image', 'ds-item-button', 'ds-multi-selected');
-      if (typeof clearItemSelection === 'function') clearItemSelection();
-      return;
-    }
-
-    if (!cmd) return;
-    if (inField) return;
-
-    if (e.key === 'c' || e.key === 'C') {
-      const active = canvas.querySelector(':scope > .ds-item-active');
-      if (!active) return;
-      e.preventDefault();
-      runCtxAction('copy', active);
-    } else if (e.key === 'v' || e.key === 'V') {
-      if (!__ctxClipboard) return;
-      e.preventDefault();
-      const ref = canvas.querySelector(':scope > .ds-item-active') || canvas.querySelector(':scope > *:not(.ds-grid-overlay)');
-      if (ref) runCtxAction('paste', ref);
-    } else if (e.key === 'a' || e.key === 'A') {
-      // Cmd/Ctrl+A — select every item on the canvas.
-      e.preventDefault();
-      const items = [...canvas.querySelectorAll(':scope > *:not(.ds-grid-overlay)')];
-      if (!items.length) return;
-      items.forEach(it => it.classList.add('ds-item-active'));
-      document.body.classList.add('ds-item-selected');
-      document.body.classList.toggle('ds-multi-selected', items.length > 1);
-      if (typeof activeItem !== 'undefined') activeItem = items[items.length - 1];
-    }
-  }, true);
+      if (e.key === 'c' || e.key === 'C') {
+        const active = canvas.querySelector(':scope > .ds-item-active');
+        if (!active) return;
+        e.preventDefault();
+        runCtxAction('copy', active);
+      } else if (e.key === 'v' || e.key === 'V') {
+        if (!__ctxClipboard) return;
+        e.preventDefault();
+        const ref = canvas.querySelector(':scope > .ds-item-active') || canvas.querySelector(':scope > *:not(.ds-grid-overlay)');
+        if (ref) runCtxAction('paste', ref);
+      } else if (e.key === 'a' || e.key === 'A') {
+        // Cmd/Ctrl+A — select every item on the canvas.
+        e.preventDefault();
+        const items = [...canvas.querySelectorAll(':scope > *:not(.ds-grid-overlay)')];
+        if (!items.length) return;
+        items.forEach(it => it.classList.add('ds-item-active'));
+        document.body.classList.add('ds-item-selected');
+        document.body.classList.toggle('ds-multi-selected', items.length > 1);
+        if (typeof activeItem !== 'undefined') activeItem = items[items.length - 1];
+      }
+    },
+    true
+  );
   document.addEventListener('contextmenu', e => {
     if (!document.body.classList.contains('ds-tpl-edit')) return;
     const item = e.target.closest('.ds-edit-canvas .am-tpl-thumb > *:not(.ds-grid-overlay)');
@@ -1194,7 +1319,8 @@
     pop.querySelector('[data-ctx="group"]').style.display = isGroup ? 'none' : '';
     pop.querySelector('[data-ctx="ungroup"]').style.display = isGroup ? '' : 'none';
     pop.classList.add('open');
-    pop.style.top = '0px'; pop.style.left = '0px';
+    pop.style.top = '0px';
+    pop.style.left = '0px';
     const mr = pop.getBoundingClientRect();
     const top = Math.min(e.clientY, innerHeight - mr.height - 8);
     const left = Math.min(e.clientX, innerWidth - mr.width - 8);
@@ -1209,10 +1335,10 @@
 
   // ---- ADD BLOCK button: insert Essentials (Text / Image / Video / Botão) ----
   const BLOCK_DEFS = [
-    { key: 'text',   label: 'Text',   icon: '<span class="bs-icon" style="--bs-icon-size:16px">title</span>' },
-    { key: 'image',  label: 'Image',  icon: '<span class="bs-icon" style="--bs-icon-size:16px">image</span>' },
-    { key: 'video',  label: 'Video',  icon: '<span class="bs-icon" style="--bs-icon-size:16px">movie</span>' },
-    { key: 'button', label: 'Botão',  icon: '<span class="bs-icon" style="--bs-icon-size:16px">smart_button</span>' },
+    { key: 'text', label: 'Text', icon: '<span class="bs-icon" style="--bs-icon-size:16px">title</span>' },
+    { key: 'image', label: 'Image', icon: '<span class="bs-icon" style="--bs-icon-size:16px">image</span>' },
+    { key: 'video', label: 'Video', icon: '<span class="bs-icon" style="--bs-icon-size:16px">movie</span>' },
+    { key: 'button', label: 'Botão', icon: '<span class="bs-icon" style="--bs-icon-size:16px">smart_button</span>' },
   ];
   function createBlockEl(key) {
     // Stamp authoritative kind so tagItem can skip SVG-path sniffing.
@@ -1260,8 +1386,8 @@
     if (__addBlockPop) return __addBlockPop;
     const pop = document.createElement('div');
     pop.className = 'ds-glass-pop ds-addblock-pop';
-    pop.innerHTML = `<div class="ds-addblock-eyebrow" style="padding:6px 10px;color:var(--text-3);font:600 var(--type-s-size)/1 var(--font);letter-spacing:.08em;text-transform:uppercase">Essentials</div>` +
-      BLOCK_DEFS.map(d => `<button type="button" data-block="${d.key}">${d.icon}<span>${d.label}</span></button>`).join('');
+    pop.innerHTML =
+      `<div class="ds-addblock-eyebrow" style="padding:6px 10px;color:var(--text-3);font:600 var(--type-s-size)/1 var(--font);letter-spacing:.08em;text-transform:uppercase">Essentials</div>` + BLOCK_DEFS.map(d => `<button type="button" data-block="${d.key}">${d.icon}<span>${d.label}</span></button>`).join('');
     document.body.appendChild(pop);
     pop.addEventListener('click', e => {
       const b = e.target.closest('[data-block]');
@@ -1277,16 +1403,11 @@
     if (!el || el.classList.contains('ds-grid-overlay')) return;
     // Authoritative kind from createBlockEl wins; SVG sniffing only for legacy static templates.
     if (el.dataset.dsItemKind) return;
-    const isText = !el.classList.contains('tpl-block')
-                && !el.querySelector('.tpl-block, img, video, picture')
-                && !!(el.textContent || '').trim()
-                && el.tagName !== 'BUTTON';
+    const isText = !el.classList.contains('tpl-block') && !el.querySelector('.tpl-block, img, video, picture') && !!(el.textContent || '').trim() && el.tagName !== 'BUTTON';
     const isButton = el.tagName === 'BUTTON';
     const hasVideoSvg = !!el.querySelector('svg path[d^="M10 9l5 3"]');
     const isVideo = !!el.querySelector('video') || hasVideoSvg;
-    const isImage = el.dataset.dsImage === 'true'
-                 || !!el.querySelector('img, picture')
-                 || (el.classList.contains('tpl-block') && !isVideo);
+    const isImage = el.dataset.dsImage === 'true' || !!el.querySelector('img, picture') || (el.classList.contains('tpl-block') && !isVideo);
     let kind = 'block';
     if (isButton) kind = 'button';
     else if (isText) kind = 'text';
@@ -1327,49 +1448,61 @@
     // (MO would catch it), but force-flush so Cmd+Z is responsive immediately.
     window.__praiaRecordNow?.();
   }
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('[data-ds-addblock]');
-    if (btn) {
-      e.preventDefault(); e.stopPropagation();
-      const pop = ensureAddBlockPop();
-      const open = pop.classList.contains('open');
-      pop.classList.toggle('open');
-      if (!open) {
-        // Position below the trigger, clamped to viewport (same pattern as Cor/Type DD).
-        pop.style.top = '0px'; pop.style.left = '0px';
-        const r = btn.getBoundingClientRect();
-        const mr = pop.getBoundingClientRect();
-        const spaceBelow = innerHeight - r.bottom;
-        const top = (spaceBelow >= mr.height + 12) ? r.bottom + 8 : Math.max(8, r.top - mr.height - 8);
-        const left = Math.min(Math.max(8, r.left), innerWidth - mr.width - 8);
-        pop.style.top = `${top}px`;
-        pop.style.left = `${left}px`;
+  document.addEventListener(
+    'click',
+    e => {
+      const btn = e.target.closest('[data-ds-addblock]');
+      if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const pop = ensureAddBlockPop();
+        const open = pop.classList.contains('open');
+        pop.classList.toggle('open');
+        if (!open) {
+          // Position below the trigger, clamped to viewport (same pattern as Cor/Type DD).
+          pop.style.top = '0px';
+          pop.style.left = '0px';
+          const r = btn.getBoundingClientRect();
+          const mr = pop.getBoundingClientRect();
+          const spaceBelow = innerHeight - r.bottom;
+          const top = spaceBelow >= mr.height + 12 ? r.bottom + 8 : Math.max(8, r.top - mr.height - 8);
+          const left = Math.min(Math.max(8, r.left), innerWidth - mr.width - 8);
+          pop.style.top = `${top}px`;
+          pop.style.left = `${left}px`;
+        }
+        return;
       }
-      return;
-    }
-    if (__addBlockPop?.classList.contains('open') && !e.target.closest('.ds-addblock-pop')) {
-      __addBlockPop.classList.remove('open');
-    }
-  }, true);
+      if (__addBlockPop?.classList.contains('open') && !e.target.closest('.ds-addblock-pop')) {
+        __addBlockPop.classList.remove('open');
+      }
+    },
+    true
+  );
 
   // ---- Item inspector (DS template edit mode) ----
   // Clicking a direct child of the cloned template selects it and exposes
   // margin / corner-radius / anchor controls in the right inspector.
   const ANCHOR_MAP = {
-    'top-left':      { align: 'start',  justify: 'start'  },
-    'top-center':    { align: 'start',  justify: 'center' },
-    'top-right':     { align: 'start',  justify: 'end'    },
-    'center-left':   { align: 'center', justify: 'start'  },
-    'center':        { align: 'center', justify: 'center' },
-    'center-right':  { align: 'center', justify: 'end'    },
-    'bottom-left':   { align: 'end',    justify: 'start'  },
-    'bottom-center': { align: 'end',    justify: 'center' },
-    'bottom-right':  { align: 'end',    justify: 'end'    },
+    'top-left': { align: 'start', justify: 'start' },
+    'top-center': { align: 'start', justify: 'center' },
+    'top-right': { align: 'start', justify: 'end' },
+    'center-left': { align: 'center', justify: 'start' },
+    center: { align: 'center', justify: 'center' },
+    'center-right': { align: 'center', justify: 'end' },
+    'bottom-left': { align: 'end', justify: 'start' },
+    'bottom-center': { align: 'end', justify: 'center' },
+    'bottom-right': { align: 'end', justify: 'end' },
   };
   const ANCHOR_LABELS = {
-    'top-left':'Top Left','top-center':'Top Center','top-right':'Top Right',
-    'center-left':'Center Left','center':'Center','center-right':'Center Right',
-    'bottom-left':'Bottom Left','bottom-center':'Bottom Center','bottom-right':'Bottom Right',
+    'top-left': 'Top Left',
+    'top-center': 'Top Center',
+    'top-right': 'Top Right',
+    'center-left': 'Center Left',
+    center: 'Center',
+    'center-right': 'Center Right',
+    'bottom-left': 'Bottom Left',
+    'bottom-center': 'Bottom Center',
+    'bottom-right': 'Bottom Right',
   };
   const ANCHOR_KEYS = Object.keys(ANCHOR_MAP);
 
@@ -1389,25 +1522,28 @@
   function buildAnchorMenu() {
     const menu = document.getElementById('grc-item-anchor-menu');
     if (!menu) return;
-    menu.innerHTML = ANCHOR_KEYS.map((k, i) =>
-      `<button type="button" class="gr-anchor-opt" data-anchor="${k}">${makeAnchorGrid(i)}<span>${ANCHOR_LABELS[k]}</span></button>`
-    ).join('');
+    menu.innerHTML = ANCHOR_KEYS.map((k, i) => `<button type="button" class="gr-anchor-opt" data-anchor="${k}">${makeAnchorGrid(i)}<span>${ANCHOR_LABELS[k]}</span></button>`).join('');
   }
   buildAnchorMenu();
 
   // ---- Type picker (DS type tokens applied via tk-* classes) ----
   const TYPE_TOKENS = [
-    ['h0', 'H0'], ['super', 'H1'], ['xl', 'H2'], ['l', 'H3'], ['mb', 'H4'],
-    ['m', 'Body'], ['sb', 'Caption Bold'], ['s', 'Caption'], ['xs', 'Body Small'],
+    ['h0', 'H0'],
+    ['super', 'H1'],
+    ['xl', 'H2'],
+    ['l', 'H3'],
+    ['mb', 'H4'],
+    ['m', 'Body'],
+    ['sb', 'Caption Bold'],
+    ['s', 'Caption'],
+    ['xs', 'Body Small'],
   ];
   const TK_REGEX = /\btk-(?:h0|super|xl|l|mb|m|sb|s|xs)\b/g;
   function buildTypeMenu() {
     const menu = document.getElementById('grc-item-type-menu');
     if (!menu) return;
     const defaultOpt = `<button type="button" class="gr-anchor-opt" data-type=""><span class="gr-aa" style="color:var(--text-3)">Aa</span><span>Default</span></button>`;
-    menu.innerHTML = defaultOpt + TYPE_TOKENS.map(([tok, name]) =>
-      `<button type="button" class="gr-anchor-opt" data-type="${tok}"><span class="gr-aa">Aa</span><span>${name}</span></button>`
-    ).join('');
+    menu.innerHTML = defaultOpt + TYPE_TOKENS.map(([tok, name]) => `<button type="button" class="gr-anchor-opt" data-type="${tok}"><span class="gr-aa">Aa</span><span>${name}</span></button>`).join('');
   }
   buildTypeMenu();
   function getItemType(el) {
@@ -1417,12 +1553,16 @@
     const rs = getComputedStyle(document.documentElement);
     const itemSize = parseFloat(getComputedStyle(el).fontSize) || 0;
     if (!itemSize) return '';
-    let best = '', bestDiff = Infinity;
+    let best = '',
+      bestDiff = Infinity;
     TYPE_TOKENS.forEach(([tok]) => {
       const tokSize = parseFloat(rs.getPropertyValue(`--type-${tok}-size`));
       if (!tokSize) return;
       const d = Math.abs(tokSize - itemSize);
-      if (d < bestDiff) { bestDiff = d; best = tok; }
+      if (d < bestDiff) {
+        bestDiff = d;
+        best = tok;
+      }
     });
     // Only claim a match if within 2px — otherwise leave blank (Default).
     return bestDiff <= 2 ? best : '';
@@ -1445,10 +1585,11 @@
     menu.classList.toggle('open');
     if (willOpen) {
       const br = btn.getBoundingClientRect();
-      menu.style.left = '0px'; menu.style.top = '0px';
+      menu.style.left = '0px';
+      menu.style.top = '0px';
       const mr = menu.getBoundingClientRect();
       const spaceBelow = innerHeight - br.bottom;
-      const top = (spaceBelow >= mr.height + 12) ? br.bottom + 6 : Math.max(8, br.top - mr.height - 6);
+      const top = spaceBelow >= mr.height + 12 ? br.bottom + 6 : Math.max(8, br.top - mr.height - 6);
       const left = Math.min(Math.max(8, br.right - mr.width), innerWidth - mr.width - 8);
       menu.style.top = `${top}px`;
       menu.style.left = `${left}px`;
@@ -1477,7 +1618,9 @@
   // ---- Button variant picker (DS button presets) ----
   // BUTTON_VARIANTS lives further down the file; resolve lazily so this code
   // doesn't need to be re-ordered.
-  function btnVariants() { return window.__BUTTON_VARIANTS || []; }
+  function btnVariants() {
+    return window.__BUTTON_VARIANTS || [];
+  }
   function btnVarClasses(v) {
     // '.tn-btn.primary' → ['tn-btn', 'primary']
     return (v.selector || '').split('.').filter(Boolean);
@@ -1511,9 +1654,13 @@
     if (v) {
       const keep = ['position', 'left', 'top', 'right', 'bottom', 'transform', 'zIndex', 'placeSelf'];
       const saved = {};
-      keep.forEach(k => { saved[k] = el.style[k]; });
+      keep.forEach(k => {
+        saved[k] = el.style[k];
+      });
       el.style.cssText = '';
-      Object.entries(saved).forEach(([k, val]) => { if (val) el.style[k] = val; });
+      Object.entries(saved).forEach(([k, val]) => {
+        if (val) el.style[k] = val;
+      });
     }
     window.__praiaRecordNow?.();
   }
@@ -1526,9 +1673,9 @@
   function buildBtnVarMenu() {
     const menu = document.getElementById('grc-item-btnvar-menu');
     if (!menu) return;
-    menu.innerHTML = btnVariants().map(v =>
-      `<button type="button" class="gr-anchor-opt" data-btnvar="${v.id}"><span>${v.label}</span></button>`
-    ).join('');
+    menu.innerHTML = btnVariants()
+      .map(v => `<button type="button" class="gr-anchor-opt" data-btnvar="${v.id}"><span>${v.label}</span></button>`)
+      .join('');
   }
   // Defer until BUTTON_VARIANTS is defined later in this script.
   setTimeout(buildBtnVarMenu, 0);
@@ -1542,10 +1689,11 @@
     menu.classList.toggle('open');
     if (willOpen) {
       const br = btn.getBoundingClientRect();
-      menu.style.left = '0px'; menu.style.top = '0px';
+      menu.style.left = '0px';
+      menu.style.top = '0px';
       const mr = menu.getBoundingClientRect();
       const spaceBelow = innerHeight - br.bottom;
-      const top = (spaceBelow >= mr.height + 12) ? br.bottom + 6 : Math.max(8, br.top - mr.height - 6);
+      const top = spaceBelow >= mr.height + 12 ? br.bottom + 6 : Math.max(8, br.top - mr.height - 6);
       const left = Math.min(Math.max(8, br.right - mr.width), innerWidth - mr.width - 8);
       menu.style.top = `${top}px`;
       menu.style.left = `${left}px`;
@@ -1591,10 +1739,12 @@
   function matchColorOpt(hex) {
     if (!hex) return null;
     const up = hex.toUpperCase();
-    return COLOR_OPTS.find(o => {
-      if (!o.value || o.value.startsWith('var(')) return false;
-      return o.value.toUpperCase() === up;
-    }) || null;
+    return (
+      COLOR_OPTS.find(o => {
+        if (!o.value || o.value.startsWith('var(')) return false;
+        return o.value.toUpperCase() === up;
+      }) || null
+    );
   }
   function paintColorButton(hex) {
     const name = document.getElementById('grc-cust-color-name');
@@ -1646,10 +1796,10 @@
     // Both rects are SCREEN px (the thumb may be under `transform: scale`).
     // Inline style.left/top is CSS px, multiplied by the canvas scale to reach
     // screen — so divide the screen-px delta by the scale before writing.
-    const scale = (typeof window.__praiaGetCanvasScale === 'function') ? window.__praiaGetCanvasScale() : 1;
+    const scale = typeof window.__praiaGetCanvasScale === 'function' ? window.__praiaGetCanvasScale() : 1;
     el.style.position = 'absolute';
-    el.style.left = ((ir.left - tr.left) / scale) + 'px';
-    el.style.top  = ((ir.top  - tr.top)  / scale) + 'px';
+    el.style.left = (ir.left - tr.left) / scale + 'px';
+    el.style.top = (ir.top - tr.top) / scale + 'px';
     el.style.transform = 'none';
   }
   function selectItem(el) {
@@ -1689,267 +1839,311 @@
     // Item must be positioned for absolute handles to anchor correctly.
     const pos = getComputedStyle(el).position;
     if (pos === 'static') el.style.position = 'relative';
-    ['nw','n','ne','e','se','s','sw','w'].forEach(dir => {
+    ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'].forEach(dir => {
       const h = document.createElement('div');
       h.className = `ds-resize-handle h-${dir}`;
       h.dataset.dir = dir;
       el.appendChild(h);
     });
   }
-  document.addEventListener('pointerdown', e => {
-    const handle = e.target.closest('.ds-resize-handle');
-    if (!handle) return;
-    if (!document.body.classList.contains('ds-tpl-edit')) return;
-    // Handles on the mask-image overlay are owned by the mask-edit handler.
-    if (handle.dataset.maskHandle === 'true') return;
-    const item = handle.closest('.ds-edit-canvas .am-tpl-thumb > *, .ds-edit-canvas .am-tpl-thumb .tpl-block');
-    if (!item) return;
-    e.preventDefault();
-    e.stopPropagation();
-    const rect = item.getBoundingClientRect();
-    // For image masks: lock bg-size to px BEFORE the resize starts so changing
-    // the frame's box won't trigger a re-cover (which would re-scale and
-    // distort the image relative to the user's previous crop).
-    if (item.classList.contains('tpl-block') && item.dataset.dsItemKind === 'image') {
-      const hasPx = /\d+(\.\d+)?px\s+\d+(\.\d+)?px/.test(item.style.backgroundSize || '');
-      if (!hasPx) {
-        const cs2 = getComputedStyle(item);
-        const m2 = (cs2.backgroundImage || '').match(/url\(["']?([^"')]+)["']?\)/);
-        if (m2) {
-          const im2 = new Image();
-          im2.src = m2[1];
-          // If the image is already cached the width/height are immediately
-          // available; otherwise we fall back to the frame box (acceptable
-          // because the snap-to-px happens once and persists).
-          const natW = im2.naturalWidth || rect.width;
-          const natH = im2.naturalHeight || rect.height;
-          const s = Math.max(rect.width / natW, rect.height / natH);
-          const w = natW * s, h = natH * s;
-          item.style.backgroundSize = w + 'px ' + h + 'px';
-          item.style.backgroundPosition = ((rect.width - w) / 2) + 'px ' + ((rect.height - h) / 2) + 'px';
-        }
-      }
-    }
-    const dir = handle.dataset.dir;
-    // Column boundaries from the .am-tpl-thumb grid, in viewport coords —
-    // resize edges snap to these column lines (same scheme used by drag).
-    const thumb = item.closest('.am-tpl-thumb');
-    const cs = thumb ? getComputedStyle(thumb) : null;
-    const cols = cs ? (parseInt(cs.getPropertyValue('--ds-cols'), 10) || 12) : 12;
-    const margin = cs ? (parseFloat(cs.getPropertyValue('--ds-margin')) || 0) : 0;
-    const gap = cs ? (parseFloat(cs.getPropertyValue('--ds-gap')) || 0) : 0;
-    const tRect = thumb ? thumb.getBoundingClientRect() : null;
-    const innerLeft = tRect ? tRect.left + margin : 0;
-    const innerW = tRect ? tRect.width - 2 * margin : 0;
-    const colW = cols > 0 ? (innerW - (cols - 1) * gap) / cols : 0;
-    const xLines = [];
-    if (tRect) {
-      // Include both the LEFT and RIGHT edge of every column. This lets a
-      // resized edge snap to either side of the gap, so users can align the
-      // right side of a photo to "end of column N" as well as "start of N+1".
-      for (let i = 0; i < cols; i++) {
-        const colStart = innerLeft + i * (colW + gap);
-        xLines.push(colStart);
-        xLines.push(colStart + colW);
-      }
-    }
-    const yLines = tRect ? [tRect.top + margin, tRect.bottom - margin] : [];
-    // The resize handler's math runs in SCREEN pixels (rects + clientX). Inline
-    // style values are in CSS pixels — multiplied by canvas scale to reach the
-    // screen. Capture scale once so the read/writes to style.left/top/width
-    // /height can convert in both directions without affecting the rest of
-    // the math.
-    const __scale = (typeof window.__praiaGetCanvasScale === 'function') ? window.__praiaGetCanvasScale() : 1;
-    const __parentRect = item.parentElement.getBoundingClientRect();
-    const __styleLeft = parseFloat(item.style.left);
-    const __styleTop  = parseFloat(item.style.top);
-    const start = {
-      x: e.clientX, y: e.clientY,
-      w: rect.width, h: rect.height,
-      left: rect.left, top: rect.top,
-      parentRect: __parentRect,
-      origLeftPx: isNaN(__styleLeft) ? (rect.left - __parentRect.left) : __styleLeft * __scale,
-      origTopPx:  isNaN(__styleTop)  ? (rect.top  - __parentRect.top)  : __styleTop  * __scale,
-    };
-    const SNAP = 8;
-    function snap(v, lines) {
-      let best = v, bestD = SNAP + 1;
-      for (const ln of lines) { const d = Math.abs(ln - v); if (d < bestD) { bestD = d; best = ln; } }
-      return bestD <= SNAP ? best : v;
-    }
-    // Use the existing smart-guide overlays so the user sees exactly which
-    // column / margin line the edge snapped to (Figma-style).
-    if (typeof ensureSmartGuides === 'function') ensureSmartGuides();
-    // Convert to absolute px so width/height are predictable.
-    item.style.aspectRatio = '';
-    item.style.placeSelf = '';
-    if (item.style.position !== 'absolute' && item.style.position !== 'fixed') {
-      item.style.position = 'absolute';
-      item.style.left = (start.origLeftPx / __scale) + 'px';
-      item.style.top  = (start.origTopPx / __scale) + 'px';
-    }
-    // Lock width/height in px immediately so the item doesn't collapse when
-    // taken out of its flex/grid parent.
-    item.style.width  = (start.w / __scale) + 'px';
-    item.style.height = (start.h / __scale) + 'px';
-    try { handle.setPointerCapture?.(e.pointerId); } catch (_) { /* synthetic events or stale id */ }
-    let __resizeMoved = false;
-    function onMove(ev) {
-      __resizeMoved = true;
-      const dx = ev.clientX - start.x;
-      const dy = ev.clientY - start.y;
-      let w = start.w, h = start.h, left = start.origLeftPx, top = start.origTopPx;
-      if (dir.includes('e')) w = Math.max(8, start.w + dx);
-      if (dir.includes('s')) h = Math.max(8, start.h + dy);
-      if (dir.includes('w')) { w = Math.max(8, start.w - dx); left = start.origLeftPx + (start.w - w); }
-      if (dir.includes('n')) { h = Math.max(8, start.h - dy); top  = start.origTopPx  + (start.h - h); }
-      let snappedX = null, snappedY = null;
-      const isCorner = dir.length === 2;
-      const isVideo = item.dataset.dsItemKind === 'video';
-      // Videos are always locked to 16:9 — resizing from any handle (corner
-      // or edge) preserves that ratio. Other items only lock when Shift is held.
-      const aspect = isVideo ? (16 / 9) : (start.w / Math.max(start.h, 1));
-      const lockAspect = isVideo || (isCorner && ev.shiftKey);
-
-      // Aspect lock first. Snap below adjusts the driver axis
-      // and recomputes the other to preserve the ratio.
-      if (lockAspect) {
-        const ratioW = w / start.w, ratioH = h / start.h;
-        const k = Math.abs(ratioW - 1) > Math.abs(ratioH - 1) ? ratioW : ratioH;
-        const nw = start.w * k, nh = start.h * k;
-        if (dir.includes('w')) left = start.origLeftPx + (start.w - nw);
-        if (dir.includes('n')) top  = start.origTopPx  + (start.h - nh);
-        w = Math.max(8, nw); h = Math.max(8, nh);
-      }
-
-      // Snap edges. When aspect is locked, snapping one axis recomputes the
-      // other from the aspect ratio so the resize stays proportional.
-      if (lockAspect) {
-        // Try snapping the X edge of the corner; if it snaps, derive h from w.
-        let didX = false;
-        if (dir.includes('e')) {
-          const rightV = start.left + w;
-          const s = snap(rightV, xLines);
-          if (s !== rightV) {
-            w = Math.max(8, s - start.left);
-            h = w / aspect;
-            if (dir.includes('n')) top = start.origTopPx + (start.h - h);
-            snappedX = s; didX = true;
-          }
-        } else if (dir.includes('w')) {
-          const leftV = start.left + (start.w - w);
-          const s = snap(leftV, xLines);
-          if (s !== leftV) {
-            w = Math.max(8, (start.left + start.w) - s);
-            left = start.origLeftPx + (start.w - w);
-            h = w / aspect;
-            if (dir.includes('n')) top = start.origTopPx + (start.h - h);
-            snappedX = s; didX = true;
+  document.addEventListener(
+    'pointerdown',
+    e => {
+      const handle = e.target.closest('.ds-resize-handle');
+      if (!handle) return;
+      if (!document.body.classList.contains('ds-tpl-edit')) return;
+      // Handles on the mask-image overlay are owned by the mask-edit handler.
+      if (handle.dataset.maskHandle === 'true') return;
+      const item = handle.closest('.ds-edit-canvas .am-tpl-thumb > *, .ds-edit-canvas .am-tpl-thumb .tpl-block');
+      if (!item) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const rect = item.getBoundingClientRect();
+      // For image masks: lock bg-size to px BEFORE the resize starts so changing
+      // the frame's box won't trigger a re-cover (which would re-scale and
+      // distort the image relative to the user's previous crop).
+      if (item.classList.contains('tpl-block') && item.dataset.dsItemKind === 'image') {
+        const hasPx = /\d+(\.\d+)?px\s+\d+(\.\d+)?px/.test(item.style.backgroundSize || '');
+        if (!hasPx) {
+          const cs2 = getComputedStyle(item);
+          const m2 = (cs2.backgroundImage || '').match(/url\(["']?([^"')]+)["']?\)/);
+          if (m2) {
+            const im2 = new Image();
+            im2.src = m2[1];
+            // If the image is already cached the width/height are immediately
+            // available; otherwise we fall back to the frame box (acceptable
+            // because the snap-to-px happens once and persists).
+            const natW = im2.naturalWidth || rect.width;
+            const natH = im2.naturalHeight || rect.height;
+            const s = Math.max(rect.width / natW, rect.height / natH);
+            const w = natW * s,
+              h = natH * s;
+            item.style.backgroundSize = w + 'px ' + h + 'px';
+            item.style.backgroundPosition = (rect.width - w) / 2 + 'px ' + (rect.height - h) / 2 + 'px';
           }
         }
-        // If X didn't snap, try Y; recompute w from h.
-        if (!didX) {
+      }
+      const dir = handle.dataset.dir;
+      // Column boundaries from the .am-tpl-thumb grid, in viewport coords —
+      // resize edges snap to these column lines (same scheme used by drag).
+      const thumb = item.closest('.am-tpl-thumb');
+      const cs = thumb ? getComputedStyle(thumb) : null;
+      const cols = cs ? parseInt(cs.getPropertyValue('--ds-cols'), 10) || 12 : 12;
+      const margin = cs ? parseFloat(cs.getPropertyValue('--ds-margin')) || 0 : 0;
+      const gap = cs ? parseFloat(cs.getPropertyValue('--ds-gap')) || 0 : 0;
+      const tRect = thumb ? thumb.getBoundingClientRect() : null;
+      const innerLeft = tRect ? tRect.left + margin : 0;
+      const innerW = tRect ? tRect.width - 2 * margin : 0;
+      const colW = cols > 0 ? (innerW - (cols - 1) * gap) / cols : 0;
+      const xLines = [];
+      if (tRect) {
+        // Include both the LEFT and RIGHT edge of every column. This lets a
+        // resized edge snap to either side of the gap, so users can align the
+        // right side of a photo to "end of column N" as well as "start of N+1".
+        for (let i = 0; i < cols; i++) {
+          const colStart = innerLeft + i * (colW + gap);
+          xLines.push(colStart);
+          xLines.push(colStart + colW);
+        }
+      }
+      const yLines = tRect ? [tRect.top + margin, tRect.bottom - margin] : [];
+      // The resize handler's math runs in SCREEN pixels (rects + clientX). Inline
+      // style values are in CSS pixels — multiplied by canvas scale to reach the
+      // screen. Capture scale once so the read/writes to style.left/top/width
+      // /height can convert in both directions without affecting the rest of
+      // the math.
+      const __scale = typeof window.__praiaGetCanvasScale === 'function' ? window.__praiaGetCanvasScale() : 1;
+      const __parentRect = item.parentElement.getBoundingClientRect();
+      const __styleLeft = parseFloat(item.style.left);
+      const __styleTop = parseFloat(item.style.top);
+      const start = {
+        x: e.clientX,
+        y: e.clientY,
+        w: rect.width,
+        h: rect.height,
+        left: rect.left,
+        top: rect.top,
+        parentRect: __parentRect,
+        origLeftPx: isNaN(__styleLeft) ? rect.left - __parentRect.left : __styleLeft * __scale,
+        origTopPx: isNaN(__styleTop) ? rect.top - __parentRect.top : __styleTop * __scale,
+      };
+      const SNAP = 8;
+      function snap(v, lines) {
+        let best = v,
+          bestD = SNAP + 1;
+        for (const ln of lines) {
+          const d = Math.abs(ln - v);
+          if (d < bestD) {
+            bestD = d;
+            best = ln;
+          }
+        }
+        return bestD <= SNAP ? best : v;
+      }
+      // Use the existing smart-guide overlays so the user sees exactly which
+      // column / margin line the edge snapped to (Figma-style).
+      if (typeof ensureSmartGuides === 'function') ensureSmartGuides();
+      // Convert to absolute px so width/height are predictable.
+      item.style.aspectRatio = '';
+      item.style.placeSelf = '';
+      if (item.style.position !== 'absolute' && item.style.position !== 'fixed') {
+        item.style.position = 'absolute';
+        item.style.left = start.origLeftPx / __scale + 'px';
+        item.style.top = start.origTopPx / __scale + 'px';
+      }
+      // Lock width/height in px immediately so the item doesn't collapse when
+      // taken out of its flex/grid parent.
+      item.style.width = start.w / __scale + 'px';
+      item.style.height = start.h / __scale + 'px';
+      try {
+        handle.setPointerCapture?.(e.pointerId);
+      } catch (_) {
+        /* synthetic events or stale id */
+      }
+      let __resizeMoved = false;
+      function onMove(ev) {
+        __resizeMoved = true;
+        const dx = ev.clientX - start.x;
+        const dy = ev.clientY - start.y;
+        let w = start.w,
+          h = start.h,
+          left = start.origLeftPx,
+          top = start.origTopPx;
+        if (dir.includes('e')) w = Math.max(8, start.w + dx);
+        if (dir.includes('s')) h = Math.max(8, start.h + dy);
+        if (dir.includes('w')) {
+          w = Math.max(8, start.w - dx);
+          left = start.origLeftPx + (start.w - w);
+        }
+        if (dir.includes('n')) {
+          h = Math.max(8, start.h - dy);
+          top = start.origTopPx + (start.h - h);
+        }
+        let snappedX = null,
+          snappedY = null;
+        const isCorner = dir.length === 2;
+        const isVideo = item.dataset.dsItemKind === 'video';
+        // Videos are always locked to 16:9 — resizing from any handle (corner
+        // or edge) preserves that ratio. Other items only lock when Shift is held.
+        const aspect = isVideo ? 16 / 9 : start.w / Math.max(start.h, 1);
+        const lockAspect = isVideo || (isCorner && ev.shiftKey);
+
+        // Aspect lock first. Snap below adjusts the driver axis
+        // and recomputes the other to preserve the ratio.
+        if (lockAspect) {
+          const ratioW = w / start.w,
+            ratioH = h / start.h;
+          const k = Math.abs(ratioW - 1) > Math.abs(ratioH - 1) ? ratioW : ratioH;
+          const nw = start.w * k,
+            nh = start.h * k;
+          if (dir.includes('w')) left = start.origLeftPx + (start.w - nw);
+          if (dir.includes('n')) top = start.origTopPx + (start.h - nh);
+          w = Math.max(8, nw);
+          h = Math.max(8, nh);
+        }
+
+        // Snap edges. When aspect is locked, snapping one axis recomputes the
+        // other from the aspect ratio so the resize stays proportional.
+        if (lockAspect) {
+          // Try snapping the X edge of the corner; if it snaps, derive h from w.
+          let didX = false;
+          if (dir.includes('e')) {
+            const rightV = start.left + w;
+            const s = snap(rightV, xLines);
+            if (s !== rightV) {
+              w = Math.max(8, s - start.left);
+              h = w / aspect;
+              if (dir.includes('n')) top = start.origTopPx + (start.h - h);
+              snappedX = s;
+              didX = true;
+            }
+          } else if (dir.includes('w')) {
+            const leftV = start.left + (start.w - w);
+            const s = snap(leftV, xLines);
+            if (s !== leftV) {
+              w = Math.max(8, start.left + start.w - s);
+              left = start.origLeftPx + (start.w - w);
+              h = w / aspect;
+              if (dir.includes('n')) top = start.origTopPx + (start.h - h);
+              snappedX = s;
+              didX = true;
+            }
+          }
+          // If X didn't snap, try Y; recompute w from h.
+          if (!didX) {
+            if (dir.includes('s')) {
+              const bottomV = start.top + h;
+              const s = snap(bottomV, yLines);
+              if (s !== bottomV) {
+                h = Math.max(8, s - start.top);
+                w = h * aspect;
+                if (dir.includes('w')) left = start.origLeftPx + (start.w - w);
+                snappedY = s;
+              }
+            } else if (dir.includes('n')) {
+              const topV = start.top + (start.h - h);
+              const s = snap(topV, yLines);
+              if (s !== topV) {
+                h = Math.max(8, start.top + start.h - s);
+                top = start.origTopPx + (start.h - h);
+                w = h * aspect;
+                if (dir.includes('w')) left = start.origLeftPx + (start.w - w);
+                snappedY = s;
+              }
+            }
+          }
+        } else {
+          // Free resize: snap each moving edge independently.
+          if (dir.includes('e')) {
+            const rightV = start.left + w;
+            const s = snap(rightV, xLines);
+            if (s !== rightV) {
+              w = Math.max(8, s - start.left);
+              snappedX = s;
+            }
+          }
+          if (dir.includes('w')) {
+            const leftV = start.left + (start.w - w);
+            const s = snap(leftV, xLines);
+            if (s !== leftV) {
+              w = Math.max(8, start.left + start.w - s);
+              left = start.origLeftPx + (start.w - w);
+              snappedX = s;
+            }
+          }
           if (dir.includes('s')) {
             const bottomV = start.top + h;
             const s = snap(bottomV, yLines);
             if (s !== bottomV) {
               h = Math.max(8, s - start.top);
-              w = h * aspect;
-              if (dir.includes('w')) left = start.origLeftPx + (start.w - w);
               snappedY = s;
             }
-          } else if (dir.includes('n')) {
+          }
+          if (dir.includes('n')) {
             const topV = start.top + (start.h - h);
             const s = snap(topV, yLines);
             if (s !== topV) {
-              h = Math.max(8, (start.top + start.h) - s);
+              h = Math.max(8, start.top + start.h - s);
               top = start.origTopPx + (start.h - h);
-              w = h * aspect;
-              if (dir.includes('w')) left = start.origLeftPx + (start.w - w);
               snappedY = s;
             }
           }
         }
-      } else {
-        // Free resize: snap each moving edge independently.
-        if (dir.includes('e')) {
-          const rightV = start.left + w;
-          const s = snap(rightV, xLines);
-          if (s !== rightV) { w = Math.max(8, s - start.left); snappedX = s; }
-        }
-        if (dir.includes('w')) {
-          const leftV = start.left + (start.w - w);
-          const s = snap(leftV, xLines);
-          if (s !== leftV) {
-            w = Math.max(8, (start.left + start.w) - s);
-            left = start.origLeftPx + (start.w - w);
-            snappedX = s;
-          }
-        }
-        if (dir.includes('s')) {
-          const bottomV = start.top + h;
-          const s = snap(bottomV, yLines);
-          if (s !== bottomV) { h = Math.max(8, s - start.top); snappedY = s; }
-        }
-        if (dir.includes('n')) {
-          const topV = start.top + (start.h - h);
-          const s = snap(topV, yLines);
-          if (s !== topV) {
-            h = Math.max(8, (start.top + start.h) - s);
-            top = start.origTopPx + (start.h - h);
-            snappedY = s;
-          }
-        }
-      }
 
-      // Paint smart guides exactly on the snap line.
-      if (__guideV) {
-        if (snappedX !== null && tRect) {
-          __guideV.style.left = snappedX + 'px';
-          __guideV.style.top  = tRect.top + 'px';
-          __guideV.style.height = tRect.height + 'px';
-          __guideV.classList.add('open');
-        } else { __guideV.classList.remove('open'); }
+        // Paint smart guides exactly on the snap line.
+        if (__guideV) {
+          if (snappedX !== null && tRect) {
+            __guideV.style.left = snappedX + 'px';
+            __guideV.style.top = tRect.top + 'px';
+            __guideV.style.height = tRect.height + 'px';
+            __guideV.classList.add('open');
+          } else {
+            __guideV.classList.remove('open');
+          }
+        }
+        if (__guideH) {
+          if (snappedY !== null && tRect) {
+            __guideH.style.top = snappedY + 'px';
+            __guideH.style.left = tRect.left + 'px';
+            __guideH.style.width = tRect.width + 'px';
+            __guideH.classList.add('open');
+          } else {
+            __guideH.classList.remove('open');
+          }
+        }
+        item.style.width = w / __scale + 'px';
+        item.style.height = h / __scale + 'px';
+        if (dir.includes('w')) item.style.left = left / __scale + 'px';
+        if (dir.includes('n')) item.style.top = top / __scale + 'px';
       }
-      if (__guideH) {
-        if (snappedY !== null && tRect) {
-          __guideH.style.top  = snappedY + 'px';
-          __guideH.style.left = tRect.left + 'px';
-          __guideH.style.width = tRect.width + 'px';
-          __guideH.classList.add('open');
-        } else { __guideH.classList.remove('open'); }
+      function onUp() {
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        if (typeof hideSmartGuides === 'function') hideSmartGuides();
+        // record undo step at gesture commit — skip if no actual resize happened
+        // (handle pressed and released without movement).
+        if (__resizeMoved) window.__praiaRecordNow?.();
       }
-      item.style.width  = (w / __scale) + 'px';
-      item.style.height = (h / __scale) + 'px';
-      if (dir.includes('w')) item.style.left = (left / __scale) + 'px';
-      if (dir.includes('n')) item.style.top  = (top  / __scale) + 'px';
-    }
-    function onUp() {
-      document.removeEventListener('pointermove', onMove);
-      document.removeEventListener('pointerup', onUp);
-      if (typeof hideSmartGuides === 'function') hideSmartGuides();
-      // record undo step at gesture commit — skip if no actual resize happened
-      // (handle pressed and released without movement).
-      if (__resizeMoved) window.__praiaRecordNow?.();
-    }
-    document.addEventListener('pointermove', onMove);
-    document.addEventListener('pointerup', onUp);
-  }, true);
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp);
+    },
+    true
+  );
 
   // ---- Canvas height crop (Figma-style frame resize) ----
   // Hover near top/bottom edge of the .am-tpl-thumb in edit mode → cursor
   // becomes ns-resize; click and drag to change ONLY the canvas height.
   // Width is never modified. Top edge: drag up = grow; bottom edge: drag down
   // = grow. Heights below MIN_H are clamped.
-  const CANVAS_EDGE_HIT = 8;     // px from edge that triggers the cursor
-  const CANVAS_MIN_H    = 120;
+  const CANVAS_EDGE_HIT = 8; // px from edge that triggers the cursor
+  const CANVAS_MIN_H = 120;
   function __canvasEdgeFor(e) {
     if (!document.body.classList.contains('ds-tpl-edit')) return null;
     const thumb = document.querySelector('.ds-edit-canvas .am-tpl-thumb');
     if (!thumb) return null;
     const r = thumb.getBoundingClientRect();
     if (e.clientX < r.left - 2 || e.clientX > r.right + 2) return null;
-    if (Math.abs(e.clientY - r.top)    <= CANVAS_EDGE_HIT) return { thumb, edge: 'n', r };
+    if (Math.abs(e.clientY - r.top) <= CANVAS_EDGE_HIT) return { thumb, edge: 'n', r };
     if (Math.abs(e.clientY - r.bottom) <= CANVAS_EDGE_HIT) return { thumb, edge: 's', r };
     return null;
   }
@@ -1963,38 +2157,42 @@
       document.body.classList.toggle('ds-canvas-h-hover', on);
     }
   });
-  document.addEventListener('pointerdown', e => {
-    if (e.button !== 0) return;
-    const hit = __canvasEdgeFor(e);
-    if (!hit) return;
-    e.preventDefault();
-    e.stopPropagation();
-    const { thumb, edge, r } = hit;
-    const startY = e.clientY;
-    const startH = r.height;
-    const sign = edge === 's' ? 1 : -1;
-    document.body.classList.add('ds-canvas-h-dragging');
-    let moved = false;
-    const __cScale = (typeof window.__praiaGetCanvasScale === 'function') ? window.__praiaGetCanvasScale() : 1;
-    function onMove(ev) {
-      const dy = ev.clientY - startY;
-      const h = Math.max(CANVAS_MIN_H, startH + sign * dy);
-      // startH and h are SCREEN px (rect-derived). Thumb's inline height is
-      // CSS px (multiplied by --praia-edit-scale to reach screen). Divide.
-      thumb.style.height = (h / __cScale) + 'px';
-      // Recompute the canvas viewport height so the bottom edge follows.
-      window.__praiaApplyEditScale?.();
-      if (Math.abs(dy) > 1) moved = true;
-    }
-    function onUp() {
-      document.removeEventListener('pointermove', onMove, true);
-      document.removeEventListener('pointerup', onUp, true);
-      document.body.classList.remove('ds-canvas-h-dragging');
-      if (moved) window.__praiaRecordNow?.();
-    }
-    document.addEventListener('pointermove', onMove, true);
-    document.addEventListener('pointerup', onUp, true);
-  }, true);
+  document.addEventListener(
+    'pointerdown',
+    e => {
+      if (e.button !== 0) return;
+      const hit = __canvasEdgeFor(e);
+      if (!hit) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const { thumb, edge, r } = hit;
+      const startY = e.clientY;
+      const startH = r.height;
+      const sign = edge === 's' ? 1 : -1;
+      document.body.classList.add('ds-canvas-h-dragging');
+      let moved = false;
+      const __cScale = typeof window.__praiaGetCanvasScale === 'function' ? window.__praiaGetCanvasScale() : 1;
+      function onMove(ev) {
+        const dy = ev.clientY - startY;
+        const h = Math.max(CANVAS_MIN_H, startH + sign * dy);
+        // startH and h are SCREEN px (rect-derived). Thumb's inline height is
+        // CSS px (multiplied by --praia-edit-scale to reach screen). Divide.
+        thumb.style.height = h / __cScale + 'px';
+        // Recompute the canvas viewport height so the bottom edge follows.
+        window.__praiaApplyEditScale?.();
+        if (Math.abs(dy) > 1) moved = true;
+      }
+      function onUp() {
+        document.removeEventListener('pointermove', onMove, true);
+        document.removeEventListener('pointerup', onUp, true);
+        document.body.classList.remove('ds-canvas-h-dragging');
+        if (moved) window.__praiaRecordNow?.();
+      }
+      document.addEventListener('pointermove', onMove, true);
+      document.addEventListener('pointerup', onUp, true);
+    },
+    true
+  );
 
   // ---- Image mask edit (Figma-style) ----
   // Double-click a photo to enter mask mode. The .tpl-block stays in place as
@@ -2004,10 +2202,10 @@
   // dragging the body of the image pans it. On exit, the image's geometry is
   // committed back to the frame's background-size / background-position so
   // the crop persists.
-  let __maskTarget = null;       // the .tpl-block being edited
-  let __maskWrap   = null;       // the .ds-mask-img-wrap overlay
-  let __maskOrigBg = null;       // saved background-image to restore
-  let __maskInitial = null;      // snapshot for ESC revert (no commit)
+  let __maskTarget = null; // the .tpl-block being edited
+  let __maskWrap = null; // the .ds-mask-img-wrap overlay
+  let __maskOrigBg = null; // saved background-image to restore
+  let __maskInitial = null; // snapshot for ESC revert (no commit)
   function enterMaskEdit(block) {
     if (!block || __maskTarget === block) return;
     exitMaskEdit();
@@ -2033,15 +2231,16 @@
     function readPx(value, fallback) {
       if (!value) return fallback;
       const parts = value.split(/\s+/);
-      const px = parseFloat(parts[0]); const py = parseFloat(parts[1] != null ? parts[1] : parts[0]);
+      const px = parseFloat(parts[0]);
+      const py = parseFloat(parts[1] != null ? parts[1] : parts[0]);
       return [isNaN(px) ? fallback[0] : px, isNaN(py) ? fallback[1] : py];
     }
     function buildWrap(w, h, x, y) {
       const wrap = document.createElement('div');
       wrap.className = 'ds-mask-img-wrap';
       wrap.style.left = x + 'px';
-      wrap.style.top  = y + 'px';
-      wrap.style.width  = w + 'px';
+      wrap.style.top = y + 'px';
+      wrap.style.width = w + 'px';
       wrap.style.height = h + 'px';
       if (url) {
         const img = document.createElement('img');
@@ -2049,7 +2248,7 @@
         img.draggable = false;
         wrap.appendChild(img);
       }
-      ['nw','n','ne','e','se','s','sw','w'].forEach(dir => {
+      ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'].forEach(dir => {
         const hd = document.createElement('div');
         hd.className = `ds-resize-handle h-${dir}`;
         hd.dataset.dir = dir;
@@ -2069,14 +2268,16 @@
         [x, y] = readPx(block.style.backgroundPosition, [0, 0]);
       } else {
         const scale = Math.max(r.width / natW, r.height / natH);
-        w = natW * scale; h = natH * scale;
-        x = (r.width  - w) / 2; y = (r.height - h) / 2;
+        w = natW * scale;
+        h = natH * scale;
+        x = (r.width - w) / 2;
+        y = (r.height - h) / 2;
       }
       buildWrap(w, h, x, y);
     }
     if (url) {
       const im = new Image();
-      im.onload  = () => init(im.naturalWidth  || r.width, im.naturalHeight || r.height);
+      im.onload = () => init(im.naturalWidth || r.width, im.naturalHeight || r.height);
       im.onerror = () => init(r.width, r.height);
       im.src = url;
     } else {
@@ -2093,8 +2294,14 @@
       if (__maskInitial.w) block.style.width = __maskInitial.w;
       if (__maskInitial.h) block.style.height = __maskInitial.h;
     }
-    if (__maskWrap) { __maskWrap.remove(); __maskWrap = null; }
-    if (__maskOrigBg) { block.style.backgroundImage = __maskOrigBg; __maskOrigBg = null; }
+    if (__maskWrap) {
+      __maskWrap.remove();
+      __maskWrap = null;
+    }
+    if (__maskOrigBg) {
+      block.style.backgroundImage = __maskOrigBg;
+      __maskOrigBg = null;
+    }
     block.classList.remove('ds-mask-target');
     __maskTarget = null;
     __maskInitial = null;
@@ -2121,7 +2328,10 @@
       __maskWrap.remove();
       __maskWrap = null;
     }
-    if (__maskOrigBg) { block.style.backgroundImage = __maskOrigBg; __maskOrigBg = null; }
+    if (__maskOrigBg) {
+      block.style.backgroundImage = __maskOrigBg;
+      __maskOrigBg = null;
+    }
     block.classList.remove('ds-mask-target');
     __maskTarget = null;
     __maskInitial = null;
@@ -2129,151 +2339,191 @@
     // record undo step at gesture commit — only if the crop actually changed.
     if (__maskCommitted) window.__praiaRecordNow?.();
   }
-  document.addEventListener('dblclick', e => {
-    if (!document.body.classList.contains('ds-tpl-edit')) return;
-    const block = e.target.closest('.ds-edit-canvas .am-tpl-thumb .tpl-block');
-    if (!block) return;
-    if (block.dataset.dsItemKind !== 'image') return;
-    e.preventDefault(); e.stopPropagation();
-    enterMaskEdit(block);
-  }, true);
-
-  // Pan and resize handlers operate on the image WRAP, not the frame.
-  document.addEventListener('pointerdown', e => {
-    if (!__maskTarget || !__maskWrap) return;
-    // Resize handle on the wrap → scale the image proportionally.
-    const handle = e.target.closest('.ds-mask-img-wrap > .ds-resize-handle');
-    if (handle) {
-      e.preventDefault(); e.stopPropagation();
-      const wrap = __maskWrap;
-      const dir = handle.dataset.dir;
-      const startW = parseFloat(wrap.style.width);
-      const startH = parseFloat(wrap.style.height);
-      const startX = parseFloat(wrap.style.left);
-      const startY = parseFloat(wrap.style.top);
-      const aspect = startW / Math.max(startH, 1);
-      const sX = e.clientX, sY = e.clientY;
-      // The mask wrap lives inside the scaled .am-tpl-thumb — mouse deltas
-      // are SCREEN px, wrap inline styles are CSS px (scaled visually).
-      const __mScale = (typeof window.__praiaGetCanvasScale === 'function') ? window.__praiaGetCanvasScale() : 1;
-      try { handle.setPointerCapture?.(e.pointerId); } catch (_) {}
-      function onMove(ev) {
-        const dx = (ev.clientX - sX) / __mScale;
-        const dy = (ev.clientY - sY) / __mScale;
-        let w = startW, h = startH, x = startX, y = startY;
-        if (dir.includes('e')) w = Math.max(8, startW + dx);
-        if (dir.includes('s')) h = Math.max(8, startH + dy);
-        if (dir.includes('w')) { w = Math.max(8, startW - dx); x = startX + (startW - w); }
-        if (dir.includes('n')) { h = Math.max(8, startH - dy); y = startY + (startH - h); }
-        // Mask edit ALWAYS preserves the image aspect by default (resizing a
-        // photo to a different ratio would distort it). Shift breaks the lock.
-        if (!ev.shiftKey) {
-          const rW = w / startW, rH = h / startH;
-          // For edge handles (1-axis), the driver is whichever axis we moved.
-          // For corner handles, use the larger relative change.
-          const k = Math.abs(rW - 1) > Math.abs(rH - 1) ? rW : rH;
-          const nw = startW * k, nh = startH * k;
-          // Anchor opposite edge/corner so the image doesn't drift while
-          // scaling — picks the side appropriate to the handle direction.
-          if (dir.includes('w'))      x = startX + (startW - nw);
-          else if (!dir.includes('e')) x = startX + (startW - nw) / 2; // top/bottom edge → keep centered horizontally
-          if (dir.includes('n'))      y = startY + (startH - nh);
-          else if (!dir.includes('s')) y = startY + (startH - nh) / 2; // left/right edge → keep centered vertically
-          w = Math.max(8, nw); h = Math.max(8, nh);
-        }
-        wrap.style.width = w + 'px';
-        wrap.style.height = h + 'px';
-        wrap.style.left = x + 'px';
-        wrap.style.top  = y + 'px';
-      }
-      function onUp() {
-        document.removeEventListener('pointermove', onMove);
-        document.removeEventListener('pointerup', onUp);
-      }
-      document.addEventListener('pointermove', onMove);
-      document.addEventListener('pointerup', onUp);
-      return;
-    }
-    // Pointerdown on the wrap body → pan.
-    const wrap = e.target.closest('.ds-mask-img-wrap');
-    if (wrap) {
-      e.preventDefault(); e.stopPropagation();
-      const startX = parseFloat(wrap.style.left);
-      const startY = parseFloat(wrap.style.top);
-      const sX = e.clientX, sY = e.clientY;
-      const __pScale = (typeof window.__praiaGetCanvasScale === 'function') ? window.__praiaGetCanvasScale() : 1;
-      wrap.classList.add('is-panning');
-      try { wrap.setPointerCapture?.(e.pointerId); } catch (_) {}
-      function onMove(ev) {
-        wrap.style.left = (startX + (ev.clientX - sX) / __pScale) + 'px';
-        wrap.style.top  = (startY + (ev.clientY - sY) / __pScale) + 'px';
-      }
-      function onUp() {
-        document.removeEventListener('pointermove', onMove);
-        document.removeEventListener('pointerup', onUp);
-        wrap.classList.remove('is-panning');
-      }
-      document.addEventListener('pointermove', onMove);
-      document.addEventListener('pointerup', onUp);
-      return;
-    }
-    // Clicking inside the frame but outside the wrap: swallow the event so the
-    // item-drag handler doesn't try to move the frame underneath us.
-    if (e.target.closest('.ds-mask-target')) {
-      e.preventDefault(); e.stopPropagation();
-      return;
-    }
-    // Clicking fully outside the frame exits mask edit.
-    e.preventDefault(); e.stopPropagation();
-    exitMaskEdit();
-  }, true);
-
-  // ESC reverts mask edit (no commit); Enter commits; Cmd/Ctrl+Z is swallowed in mask mode.
-  document.addEventListener('keydown', e => {
-    if (!__maskTarget) return;
-    if (e.key === 'Escape') {
+  document.addEventListener(
+    'dblclick',
+    e => {
+      if (!document.body.classList.contains('ds-tpl-edit')) return;
+      const block = e.target.closest('.ds-edit-canvas .am-tpl-thumb .tpl-block');
+      if (!block) return;
+      if (block.dataset.dsItemKind !== 'image') return;
       e.preventDefault();
       e.stopPropagation();
-      exitMaskEditRevert();
-      return;
-    }
-    if (e.key === 'Enter') {
+      enterMaskEdit(block);
+    },
+    true
+  );
+
+  // Pan and resize handlers operate on the image WRAP, not the frame.
+  document.addEventListener(
+    'pointerdown',
+    e => {
+      if (!__maskTarget || !__maskWrap) return;
+      // Resize handle on the wrap → scale the image proportionally.
+      const handle = e.target.closest('.ds-mask-img-wrap > .ds-resize-handle');
+      if (handle) {
+        e.preventDefault();
+        e.stopPropagation();
+        const wrap = __maskWrap;
+        const dir = handle.dataset.dir;
+        const startW = parseFloat(wrap.style.width);
+        const startH = parseFloat(wrap.style.height);
+        const startX = parseFloat(wrap.style.left);
+        const startY = parseFloat(wrap.style.top);
+        const aspect = startW / Math.max(startH, 1);
+        const sX = e.clientX,
+          sY = e.clientY;
+        // The mask wrap lives inside the scaled .am-tpl-thumb — mouse deltas
+        // are SCREEN px, wrap inline styles are CSS px (scaled visually).
+        const __mScale = typeof window.__praiaGetCanvasScale === 'function' ? window.__praiaGetCanvasScale() : 1;
+        try {
+          handle.setPointerCapture?.(e.pointerId);
+        } catch (_) {}
+        function onMove(ev) {
+          const dx = (ev.clientX - sX) / __mScale;
+          const dy = (ev.clientY - sY) / __mScale;
+          let w = startW,
+            h = startH,
+            x = startX,
+            y = startY;
+          if (dir.includes('e')) w = Math.max(8, startW + dx);
+          if (dir.includes('s')) h = Math.max(8, startH + dy);
+          if (dir.includes('w')) {
+            w = Math.max(8, startW - dx);
+            x = startX + (startW - w);
+          }
+          if (dir.includes('n')) {
+            h = Math.max(8, startH - dy);
+            y = startY + (startH - h);
+          }
+          // Mask edit ALWAYS preserves the image aspect by default (resizing a
+          // photo to a different ratio would distort it). Shift breaks the lock.
+          if (!ev.shiftKey) {
+            const rW = w / startW,
+              rH = h / startH;
+            // For edge handles (1-axis), the driver is whichever axis we moved.
+            // For corner handles, use the larger relative change.
+            const k = Math.abs(rW - 1) > Math.abs(rH - 1) ? rW : rH;
+            const nw = startW * k,
+              nh = startH * k;
+            // Anchor opposite edge/corner so the image doesn't drift while
+            // scaling — picks the side appropriate to the handle direction.
+            if (dir.includes('w')) x = startX + (startW - nw);
+            else if (!dir.includes('e')) x = startX + (startW - nw) / 2; // top/bottom edge → keep centered horizontally
+            if (dir.includes('n')) y = startY + (startH - nh);
+            else if (!dir.includes('s')) y = startY + (startH - nh) / 2; // left/right edge → keep centered vertically
+            w = Math.max(8, nw);
+            h = Math.max(8, nh);
+          }
+          wrap.style.width = w + 'px';
+          wrap.style.height = h + 'px';
+          wrap.style.left = x + 'px';
+          wrap.style.top = y + 'px';
+        }
+        function onUp() {
+          document.removeEventListener('pointermove', onMove);
+          document.removeEventListener('pointerup', onUp);
+        }
+        document.addEventListener('pointermove', onMove);
+        document.addEventListener('pointerup', onUp);
+        return;
+      }
+      // Pointerdown on the wrap body → pan.
+      const wrap = e.target.closest('.ds-mask-img-wrap');
+      if (wrap) {
+        e.preventDefault();
+        e.stopPropagation();
+        const startX = parseFloat(wrap.style.left);
+        const startY = parseFloat(wrap.style.top);
+        const sX = e.clientX,
+          sY = e.clientY;
+        const __pScale = typeof window.__praiaGetCanvasScale === 'function' ? window.__praiaGetCanvasScale() : 1;
+        wrap.classList.add('is-panning');
+        try {
+          wrap.setPointerCapture?.(e.pointerId);
+        } catch (_) {}
+        function onMove(ev) {
+          wrap.style.left = startX + (ev.clientX - sX) / __pScale + 'px';
+          wrap.style.top = startY + (ev.clientY - sY) / __pScale + 'px';
+        }
+        function onUp() {
+          document.removeEventListener('pointermove', onMove);
+          document.removeEventListener('pointerup', onUp);
+          wrap.classList.remove('is-panning');
+        }
+        document.addEventListener('pointermove', onMove);
+        document.addEventListener('pointerup', onUp);
+        return;
+      }
+      // Clicking inside the frame but outside the wrap: swallow the event so the
+      // item-drag handler doesn't try to move the frame underneath us.
+      if (e.target.closest('.ds-mask-target')) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      // Clicking fully outside the frame exits mask edit.
       e.preventDefault();
       e.stopPropagation();
       exitMaskEdit();
-      return;
-    }
-    // Block global undo while in mask mode — revert-to-initial is the local undo.
-    if ((e.metaKey || e.ctrlKey) && (e.key === 'z' || e.key === 'Z')) {
-      e.preventDefault();
-      e.stopPropagation();
-      exitMaskEditRevert();
-    }
-  }, true);
+    },
+    true
+  );
+
+  // ESC reverts mask edit (no commit); Enter commits; Cmd/Ctrl+Z is swallowed in mask mode.
+  document.addEventListener(
+    'keydown',
+    e => {
+      if (!__maskTarget) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        exitMaskEditRevert();
+        return;
+      }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        exitMaskEdit();
+        return;
+      }
+      // Block global undo while in mask mode — revert-to-initial is the local undo.
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'z' || e.key === 'Z')) {
+        e.preventDefault();
+        e.stopPropagation();
+        exitMaskEditRevert();
+      }
+    },
+    true
+  );
 
   // Wheel zoom on the image wrap while in mask edit, anchored to the cursor.
-  document.addEventListener('wheel', e => {
-    if (!__maskTarget || !__maskWrap) return;
-    if (!e.target.closest('.ds-mask-img-wrap, .ds-mask-target')) return;
-    e.preventDefault();
-    const wrap = __maskWrap;
-    const sw = parseFloat(wrap.style.width);
-    const sh = parseFloat(wrap.style.height);
-    const sx = parseFloat(wrap.style.left);
-    const sy = parseFloat(wrap.style.top);
-    const factor = e.deltaY < 0 ? 1.08 : 1 / 1.08;
-    const nw = Math.max(20, sw * factor);
-    const nh = Math.max(20, sh * factor);
-    // Cursor position relative to the frame (.ds-mask-target).
-    const fr = __maskTarget.getBoundingClientRect();
-    const cx = e.clientX - fr.left, cy = e.clientY - fr.top;
-    const npx = cx - (cx - sx) * (nw / sw);
-    const npy = cy - (cy - sy) * (nh / sh);
-    wrap.style.width = nw + 'px';
-    wrap.style.height = nh + 'px';
-    wrap.style.left = npx + 'px';
-    wrap.style.top  = npy + 'px';
-  }, { passive: false });
+  document.addEventListener(
+    'wheel',
+    e => {
+      if (!__maskTarget || !__maskWrap) return;
+      if (!e.target.closest('.ds-mask-img-wrap, .ds-mask-target')) return;
+      e.preventDefault();
+      const wrap = __maskWrap;
+      const sw = parseFloat(wrap.style.width);
+      const sh = parseFloat(wrap.style.height);
+      const sx = parseFloat(wrap.style.left);
+      const sy = parseFloat(wrap.style.top);
+      const factor = e.deltaY < 0 ? 1.08 : 1 / 1.08;
+      const nw = Math.max(20, sw * factor);
+      const nh = Math.max(20, sh * factor);
+      // Cursor position relative to the frame (.ds-mask-target).
+      const fr = __maskTarget.getBoundingClientRect();
+      const cx = e.clientX - fr.left,
+        cy = e.clientY - fr.top;
+      const npx = cx - (cx - sx) * (nw / sw);
+      const npy = cy - (cy - sy) * (nh / sh);
+      wrap.style.width = nw + 'px';
+      wrap.style.height = nh + 'px';
+      wrap.style.left = npx + 'px';
+      wrap.style.top = npy + 'px';
+    },
+    { passive: false }
+  );
 
   // ---- Fill / Fit / Crop / Center modes (right inspector) ----
   function getNaturalSize(block, cb) {
@@ -2282,37 +2532,50 @@
     const url = m ? m[1] : null;
     if (!url) return cb(null);
     const im = new Image();
-    im.onload  = () => cb({ w: im.naturalWidth, h: im.naturalHeight, url });
+    im.onload = () => cb({ w: im.naturalWidth, h: im.naturalHeight, url });
     im.onerror = () => cb(null);
     im.src = url;
   }
   function applyFitMode(block, mode) {
     if (!block) return;
     block.dataset.imgFit = mode;
-    if (mode === 'crop') { paintFitButtons(mode); return; } // manual — leave as-is
+    if (mode === 'crop') {
+      paintFitButtons(mode);
+      return;
+    } // manual — leave as-is
     const r = block.getBoundingClientRect();
-    getNaturalSize(block, (nat) => {
+    getNaturalSize(block, nat => {
       if (!nat) return;
       let w, h;
       if (mode === 'fill') {
         const s = Math.max(r.width / nat.w, r.height / nat.h);
-        w = nat.w * s; h = nat.h * s;
+        w = nat.w * s;
+        h = nat.h * s;
       } else if (mode === 'fit') {
         const s = Math.min(r.width / nat.w, r.height / nat.h);
-        w = nat.w * s; h = nat.h * s;
-      } else { // center — keep current size, just re-center
+        w = nat.w * s;
+        h = nat.h * s;
+      } else {
+        // center — keep current size, just re-center
         const cur = (block.style.backgroundSize || '').split(/\s+/).map(parseFloat);
-        if (cur.length === 2 && !isNaN(cur[0]) && !isNaN(cur[1])) { w = cur[0]; h = cur[1]; }
-        else { const s = Math.max(r.width / nat.w, r.height / nat.h); w = nat.w * s; h = nat.h * s; }
+        if (cur.length === 2 && !isNaN(cur[0]) && !isNaN(cur[1])) {
+          w = cur[0];
+          h = cur[1];
+        } else {
+          const s = Math.max(r.width / nat.w, r.height / nat.h);
+          w = nat.w * s;
+          h = nat.h * s;
+        }
       }
-      const x = (r.width - w) / 2, y = (r.height - h) / 2;
+      const x = (r.width - w) / 2,
+        y = (r.height - h) / 2;
       // If currently editing this block in mask mode, drive the wrap too so the
       // change is visible immediately.
       if (__maskTarget === block && __maskWrap) {
         __maskWrap.style.width = w + 'px';
         __maskWrap.style.height = h + 'px';
         __maskWrap.style.left = x + 'px';
-        __maskWrap.style.top  = y + 'px';
+        __maskWrap.style.top = y + 'px';
       }
       block.style.backgroundSize = w + 'px ' + h + 'px';
       block.style.backgroundPosition = x + 'px ' + y + 'px';
@@ -2327,26 +2590,28 @@
   document.addEventListener('click', e => {
     const b = e.target.closest('.gr-imgfit-btn');
     if (!b) return;
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
     // Resolve the target block: mask-edit target wins, then the currently
     // active image item, then the active sidebar selection, then the only
     // .tpl-block in the canvas (common case).
-    let block = __maskTarget
-      || document.querySelector('.ds-edit-canvas .tpl-block.ds-item-active')
-      || (typeof activeItem !== 'undefined' && activeItem && activeItem.classList.contains('tpl-block') ? activeItem : null)
-      || document.querySelector('body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb .tpl-block');
+    const block = __maskTarget || document.querySelector('.ds-edit-canvas .tpl-block.ds-item-active') || (typeof activeItem !== 'undefined' && activeItem && activeItem.classList.contains('tpl-block') ? activeItem : null) || document.querySelector('body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb .tpl-block');
     if (!block) return;
     applyFitMode(block, b.dataset.imgFit);
   });
   // When an image item is selected, reflect its current fit mode in the buttons.
   const __origSyncImagePanel = window.__syncImageName;
   // Hook syncItemPanel via the existing chain: refresh fit-button state on selection.
-  document.addEventListener('click', e => {
-    const block = e.target.closest('.ds-edit-canvas .tpl-block');
-    if (!block) return;
-    const mode = block.dataset.imgFit || 'fill';
-    paintFitButtons(mode);
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      const block = e.target.closest('.ds-edit-canvas .tpl-block');
+      if (!block) return;
+      const mode = block.dataset.imgFit || 'fill';
+      paintFitButtons(mode);
+    },
+    true
+  );
 
   function findSelectable(target) {
     // Prefer the deepest .tpl-block (image cells in image templates), then
@@ -2359,12 +2624,18 @@
     if (!document.body.classList.contains('ds-tpl-edit')) return;
     // Swallow the click that fires after a marquee drag — it would otherwise
     // collapse the multi-selection back to a single item under the cursor.
-    if (__marqueeJustDragged) { __marqueeJustDragged = false; e.preventDefault(); e.stopPropagation(); return; }
+    if (__marqueeJustDragged) {
+      __marqueeJustDragged = false;
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
     // Clicks on the right inspector or back button should not deselect
     if (e.target.closest('.guide-right') || e.target.closest('[data-ds-edit-back]')) return;
     const item = findSelectable(e.target);
     if (item && !item.classList.contains('ds-grid-overlay')) {
-      e.preventDefault(); e.stopPropagation();
+      e.preventDefault();
+      e.stopPropagation();
       selectItem(item);
       return;
     }
@@ -2392,7 +2663,8 @@
     return all[0] || null;
   }
   function applyGrid(cols, gap) {
-    const t = currentThumb(); if (!t) return;
+    const t = currentThumb();
+    if (!t) return;
     t.style.setProperty('--ds-cols', String(cols));
     t.style.setProperty('--ds-gap', `${gap}px`);
     let ov = t.querySelector(':scope > .ds-grid-overlay');
@@ -2408,14 +2680,16 @@
   }
   function readGridInputs() {
     const cols = Math.max(1, parseInt(document.getElementById('grc-grid-cols')?.value, 10) || 12);
-    const gap  = Math.max(0, parseInt(document.getElementById('grc-grid-gap')?.value, 10)  || 0);
+    const gap = Math.max(0, parseInt(document.getElementById('grc-grid-gap')?.value, 10) || 0);
     return { cols, gap };
   }
   document.getElementById('grc-grid-cols')?.addEventListener('input', () => {
-    const { cols, gap } = readGridInputs(); applyGrid(cols, gap);
+    const { cols, gap } = readGridInputs();
+    applyGrid(cols, gap);
   });
   document.getElementById('grc-grid-gap')?.addEventListener('input', () => {
-    const { cols, gap } = readGridInputs(); applyGrid(cols, gap);
+    const { cols, gap } = readGridInputs();
+    applyGrid(cols, gap);
   });
 
   // ---- Drag with snap-to-grid for the selected item
@@ -2432,11 +2706,11 @@
   function getTranslate(el) {
     const m = (el.style.transform || '').match(/translate\(([-\d.]+)px,\s*([-\d.]+)px\)/);
     if (!m) return { x: 0, y: 0 };
-    const scale = (typeof window.__praiaGetCanvasScale === 'function') ? window.__praiaGetCanvasScale() : 1;
+    const scale = typeof window.__praiaGetCanvasScale === 'function' ? window.__praiaGetCanvasScale() : 1;
     return { x: parseFloat(m[1]) * scale, y: parseFloat(m[2]) * scale };
   }
   function setTranslate(el, x, y) {
-    const scale = (typeof window.__praiaGetCanvasScale === 'function') ? window.__praiaGetCanvasScale() : 1;
+    const scale = typeof window.__praiaGetCanvasScale === 'function' ? window.__praiaGetCanvasScale() : 1;
     el.style.transform = `translate(${x / scale}px, ${y / scale}px)`;
   }
   document.addEventListener('pointerdown', e => {
@@ -2486,7 +2760,9 @@
     const allSelected = [...thumb.querySelectorAll(':scope > .ds-item-active')];
     if (allSelected.length > 1) {
       // Safety net for multi-drag — each selected item may have skipped selectItem.
-      allSelected.forEach(s => { if (s !== item) normalizeItemToPx(s); });
+      allSelected.forEach(s => {
+        if (s !== item) normalizeItemToPx(s);
+      });
     }
     const others = allSelected.filter(s => s !== item).map(s => ({ el: s, start: getTranslate(s) }));
     drag = {
@@ -2515,7 +2791,8 @@
   });
   // Smart guides — cyan dashed lines that appear when the dragged item's center
   // aligns with the container's horizontal or vertical centerline (Figma-style).
-  let __guideV = null, __guideH = null;
+  let __guideV = null,
+    __guideH = null;
   function ensureSmartGuides() {
     if (!__guideV) {
       __guideV = document.createElement('div');
@@ -2532,8 +2809,8 @@
     __guideV?.classList.remove('open');
     __guideH?.classList.remove('open');
   }
-  const SMART_SNAP = 6;  // tolerance for explicit guides (margins + centerlines)
-  const COL_SNAP   = 3;  // tighter tolerance for column boundaries (lighter feel)
+  const SMART_SNAP = 6; // tolerance for explicit guides (margins + centerlines)
+  const COL_SNAP = 3; // tighter tolerance for column boundaries (lighter feel)
   document.addEventListener('pointermove', e => {
     if (!drag) return;
     // Desired new left of the item: where the pointer would put it.
@@ -2547,17 +2824,18 @@
     const desiredItemCx = desiredLeft + drag.itemW / 2;
     const desiredItemRight = desiredLeft + drag.itemW;
     const xCandidates = [
-      { guide: thumbCx,         newLeft: thumbCx - drag.itemW / 2,     d: Math.abs(desiredItemCx - thumbCx) },
-      { guide: drag.innerLeft,  newLeft: drag.innerLeft,               d: Math.abs(desiredLeft - drag.innerLeft) },
+      { guide: thumbCx, newLeft: thumbCx - drag.itemW / 2, d: Math.abs(desiredItemCx - thumbCx) },
+      { guide: drag.innerLeft, newLeft: drag.innerLeft, d: Math.abs(desiredLeft - drag.innerLeft) },
       { guide: drag.innerRight, newLeft: drag.innerRight - drag.itemW, d: Math.abs(desiredItemRight - drag.innerRight) },
     ];
     // Column boundaries: snap on item's left edge AND right edge.
     for (const col of drag.boundaries) {
-      xCandidates.push({ guide: col, newLeft: col,                d: Math.abs(desiredLeft - col) });
-      xCandidates.push({ guide: col, newLeft: col - drag.itemW,   d: Math.abs(desiredItemRight - col) });
+      xCandidates.push({ guide: col, newLeft: col, d: Math.abs(desiredLeft - col) });
+      xCandidates.push({ guide: col, newLeft: col - drag.itemW, d: Math.abs(desiredItemRight - col) });
     }
     const xPicks = xCandidates.filter(c => c.d <= SMART_SNAP).sort((a, b) => a.d - b.d);
-    let showV = false, snapVX = null;
+    let showV = false,
+      snapVX = null;
     if (xPicks[0]) {
       bestX = xPicks[0].newLeft;
       snapVX = xPicks[0].guide;
@@ -2570,11 +2848,14 @@
     const thumbCy = thumb.top + thumb.height / 2;
     const desiredItemCy = desiredTop + drag.itemH / 2;
     const yCandidates = [
-      { guide: thumbCy,         newTop: thumbCy - drag.itemH / 2,    d: Math.abs(desiredItemCy - thumbCy) },
-      { guide: drag.innerTop,   newTop: drag.innerTop,               d: Math.abs(desiredTop - drag.innerTop) },
-      { guide: drag.innerBottom,newTop: drag.innerBottom - drag.itemH, d: Math.abs((desiredTop + drag.itemH) - drag.innerBottom) },
-    ].filter(c => c.d <= SMART_SNAP).sort((a, b) => a.d - b.d);
-    let showH = false, snapHY = null;
+      { guide: thumbCy, newTop: thumbCy - drag.itemH / 2, d: Math.abs(desiredItemCy - thumbCy) },
+      { guide: drag.innerTop, newTop: drag.innerTop, d: Math.abs(desiredTop - drag.innerTop) },
+      { guide: drag.innerBottom, newTop: drag.innerBottom - drag.itemH, d: Math.abs(desiredTop + drag.itemH - drag.innerBottom) },
+    ]
+      .filter(c => c.d <= SMART_SNAP)
+      .sort((a, b) => a.d - b.d);
+    let showH = false,
+      snapHY = null;
     if (yCandidates[0]) {
       desiredTop = yCandidates[0].newTop;
       snapHY = yCandidates[0].guide;
@@ -2630,12 +2911,11 @@
     if (willOpen) {
       const br = btn.getBoundingClientRect();
       // Render once to measure, then place above/below the button and clamp to viewport
-      menu.style.left = '0px'; menu.style.top = '0px';
+      menu.style.left = '0px';
+      menu.style.top = '0px';
       const mr = menu.getBoundingClientRect();
       const spaceBelow = innerHeight - br.bottom;
-      const top = (spaceBelow >= mr.height + 12)
-        ? br.bottom + 6
-        : Math.max(8, br.top - mr.height - 6);
+      const top = spaceBelow >= mr.height + 12 ? br.bottom + 6 : Math.max(8, br.top - mr.height - 6);
       const left = Math.min(Math.max(8, br.right - mr.width), innerWidth - mr.width - 8);
       menu.style.top = `${top}px`;
       menu.style.left = `${left}px`;
@@ -2667,17 +2947,22 @@
       activeItem.style[prop] = value;
       window.__praiaRecordNow?.();
       // Keep the customize labels in sync so the inspector reflects the change.
-      try { setCustLabels({ ...(custPending || {}), [prop]: value }); } catch {}
+      try {
+        setCustLabels({ ...(custPending || {}), [prop]: value });
+      } catch {}
       return;
     }
     if (activeTplName) {
       tplDraft[prop] = value;
       tplOverrides[activeTplName] = tplDraft;
       renderTplOverridesCSS();
-      try { localStorage.setItem('grc-tpl-overrides', JSON.stringify(tplOverrides)); } catch {}
+      try {
+        localStorage.setItem('grc-tpl-overrides', JSON.stringify(tplOverrides));
+      } catch {}
       window.__praiaRecordNow?.();
     } else {
-      const comp = ensureCustSnapshot(); if (!comp) return;
+      const comp = ensureCustSnapshot();
+      if (!comp) return;
       custPending[prop] = value;
       // CSS property keys map 1:1 to style props here.
       comp.style[prop] = value;
@@ -2687,14 +2972,16 @@
   }
   // Expose for snapshot/applySnapshot so Cmd+Z can round-trip template overrides.
   window.__grcGetTplOverrides = () => tplOverrides;
-  window.__grcSetTplOverrides = (next) => {
-    tplOverrides = (next && typeof next === 'object') ? next : {};
+  window.__grcSetTplOverrides = next => {
+    tplOverrides = next && typeof next === 'object' ? next : {};
     if (activeTplName) {
       tplDraft = { fontFamily: '', fontSize: '', fontWeight: '', color: '', anchor: '', ...(tplOverrides[activeTplName] || {}) };
       setCustLabels(tplDraft);
     }
     renderTplOverridesCSS();
-    try { localStorage.setItem('grc-tpl-overrides', JSON.stringify(tplOverrides)); } catch {}
+    try {
+      localStorage.setItem('grc-tpl-overrides', JSON.stringify(tplOverrides));
+    } catch {}
   };
 
   document.getElementById('grc-cust-family')?.addEventListener('click', e => {
@@ -2717,21 +3004,22 @@
   // Save / Cancel — routes by whichever flow is active.
   document.getElementById('grc-cust-save')?.addEventListener('click', () => {
     if (activeTplName) {
-      try { localStorage.setItem('grc-tpl-overrides', JSON.stringify(tplOverrides)); } catch {}
+      try {
+        localStorage.setItem('grc-tpl-overrides', JSON.stringify(tplOverrides));
+      } catch {}
       renderTplOverridesCSS();
       window.__praiaAutosave?.();
       return;
     }
-    const comp = getActiveComponent(); if (!comp) return;
+    const comp = getActiveComponent();
+    if (!comp) return;
     const name = comp.dataset.componentName;
-    const targets = name
-      ? Array.from(document.querySelectorAll('.praia-component')).filter(c => c.dataset.componentName === name)
-      : [comp];
+    const targets = name ? Array.from(document.querySelectorAll('.praia-component')).filter(c => c.dataset.componentName === name) : [comp];
     targets.forEach(el => {
       el.style.fontFamily = custPending.fontFamily;
-      el.style.fontSize   = custPending.fontSize;
+      el.style.fontSize = custPending.fontSize;
       el.style.fontWeight = custPending.fontWeight;
-      el.style.color      = custPending.color;
+      el.style.color = custPending.color;
     });
     custSnapshot = null;
     syncComponentPanel(comp);
@@ -2741,7 +3029,9 @@
     if (activeTplName) {
       try {
         tplOverrides = JSON.parse(localStorage.getItem('grc-tpl-overrides') || '{}');
-      } catch { tplOverrides = {}; }
+      } catch {
+        tplOverrides = {};
+      }
       tplDraft = { fontFamily: '', fontSize: '', fontWeight: '', color: '', anchor: '', ...(tplOverrides[activeTplName] || {}) };
       renderTplOverridesCSS();
       setCustLabels(tplDraft);
@@ -2750,9 +3040,9 @@
     if (!custSnapshot) return;
     custSnapshot.items.forEach(({ el, fontFamily, fontSize, fontWeight, color }) => {
       el.style.fontFamily = fontFamily || '';
-      el.style.fontSize   = fontSize   || '';
+      el.style.fontSize = fontSize || '';
       el.style.fontWeight = fontWeight || '';
-      el.style.color      = color      || '';
+      el.style.color = color || '';
     });
     custSnapshot = null;
     const comp = getActiveComponent();

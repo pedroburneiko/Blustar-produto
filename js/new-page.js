@@ -13,12 +13,11 @@
   function nextPageId() {
     // Check BOTH .guide-page and .guide-side-item to avoid collisions when
     // autosave restored an out-of-sync DOM.
-    const taken = new Set([
-      ...[...document.querySelectorAll('.guide-page')].map(p => p.dataset.page),
-      ...[...document.querySelectorAll('.guide-side-item')].map(i => i.dataset.page),
-    ].filter(Boolean));
+    const taken = new Set([...[...document.querySelectorAll('.guide-page')].map(p => p.dataset.page), ...[...document.querySelectorAll('.guide-side-item')].map(i => i.dataset.page)].filter(Boolean));
     let id;
-    do { id = 'p-' + Math.random().toString(36).slice(2, 9); } while (taken.has(id));
+    do {
+      id = 'p-' + Math.random().toString(36).slice(2, 9);
+    } while (taken.has(id));
     return id;
   }
   function nextPageName() {
@@ -43,8 +42,9 @@
     return { item, id, name };
   }
 
-  btn.addEventListener('click', (e) => {
-    e.preventDefault(); e.stopPropagation();
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
     const { item, id, name } = createPage();
     // Page body — only the title; everything else added via "+ Add module".
     const page = document.createElement('div');
@@ -62,7 +62,8 @@
     const sel = window.getSelection();
     const range = document.createRange();
     range.selectNodeContents(label);
-    sel.removeAllRanges(); sel.addRange(range);
+    sel.removeAllRanges();
+    sel.addRange(range);
     const commit = () => {
       label.removeAttribute('contenteditable');
       const txt = (label.textContent || '').trim() || name;
@@ -74,8 +75,14 @@
     };
     label.addEventListener('blur', commit, { once: true });
     label.addEventListener('keydown', e => {
-      if (e.key === 'Enter') { e.preventDefault(); label.blur(); }
-      if (e.key === 'Escape') { label.textContent = name; label.blur(); }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        label.blur();
+      }
+      if (e.key === 'Escape') {
+        label.textContent = name;
+        label.blur();
+      }
     });
     label.addEventListener('paste', e => {
       e.preventDefault();

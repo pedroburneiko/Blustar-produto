@@ -11,11 +11,11 @@
   document.body.appendChild(tools);
 
   const ICN = {
-    dup:  '<span class="bs-icon" style="--bs-icon-size:16px">content_copy</span>',
-    del:  '<span class="bs-icon" style="--bs-icon-size:16px">delete</span>',
-    rep:  '<span class="bs-icon" style="--bs-icon-size:16px">refresh</span>',
-    spc:  '<span class="bs-icon" style="--bs-icon-size:16px">height</span>',
-    mov:  '<span class="bs-icon" style="--bs-icon-size:16px">drag_indicator</span>',
+    dup: '<span class="bs-icon" style="--bs-icon-size:16px">content_copy</span>',
+    del: '<span class="bs-icon" style="--bs-icon-size:16px">delete</span>',
+    rep: '<span class="bs-icon" style="--bs-icon-size:16px">refresh</span>',
+    spc: '<span class="bs-icon" style="--bs-icon-size:16px">height</span>',
+    mov: '<span class="bs-icon" style="--bs-icon-size:16px">drag_indicator</span>',
   };
 
   function pickGroup(el) {
@@ -36,16 +36,19 @@
 
   let current = null;
   function place() {
-    if (!current || !current.isConnected) { hide(); return; }
+    if (!current || !current.isConnected) {
+      hide();
+      return;
+    }
     // For a full-bleed block (e.g. cover 05) the visible element is the bled-out
     // frame, which is wider than the content-width group wrapper. Outline the
     // frame so the selection ring matches what the user actually sees.
     const fb = current.querySelector?.('.praia-frame[data-praia-fullbleed="1"]');
     const r = (fb || current).getBoundingClientRect();
-    ring.style.left = (r.left - 4) + 'px';
-    ring.style.top = (r.top - 4) + 'px';
-    ring.style.width = (r.width + 8) + 'px';
-    ring.style.height = (r.height + 8) + 'px';
+    ring.style.left = r.left - 4 + 'px';
+    ring.style.top = r.top - 4 + 'px';
+    ring.style.width = r.width + 8 + 'px';
+    ring.style.height = r.height + 8 + 'px';
     ring.classList.add('open');
     // Toolbar centered horizontally and vertically over the group
     tools.classList.add('open');
@@ -61,12 +64,11 @@
     current = el;
     const isImg = el.classList.contains('tpl-img');
     const isVid = el.classList.contains('video-mod');
-    tools.innerHTML = `<button type="button" data-act="move" aria-label="Mover (arraste)" title="Mover · arraste" style="cursor:grab">${ICN.mov}</button>`
-      + ((isImg || isVid)
-        ? `<button type="button" data-act="replace" aria-label="Substituir" title="Substituir">${ICN.rep}</button>`
-        : `<button type="button" data-act="duplicate" aria-label="Duplicar" title="Duplicar">${ICN.dup}</button>`)
-      + `<button type="button" data-act="spacing" aria-label="Ajustar respiro (arraste)" title="Ajustar respiro · arraste">${ICN.spc}</button>`
-      + `<button type="button" data-act="delete" aria-label="Deletar" title="Deletar">${ICN.del}</button>`;
+    tools.innerHTML =
+      `<button type="button" data-act="move" aria-label="Mover (arraste)" title="Mover · arraste" style="cursor:grab">${ICN.mov}</button>` +
+      (isImg || isVid ? `<button type="button" data-act="replace" aria-label="Substituir" title="Substituir">${ICN.rep}</button>` : `<button type="button" data-act="duplicate" aria-label="Duplicar" title="Duplicar">${ICN.dup}</button>`) +
+      `<button type="button" data-act="spacing" aria-label="Ajustar respiro (arraste)" title="Ajustar respiro · arraste">${ICN.spc}</button>` +
+      `<button type="button" data-act="delete" aria-label="Deletar" title="Deletar">${ICN.del}</button>`;
     place();
   }
   function hide() {
@@ -79,7 +81,10 @@
     if (document.body.classList.contains('preview-mode') || document.body.classList.contains('ds-mode')) return;
     if (e.target.closest('.canvas-hover-tools, .canvas-ctx, .guide-right, .guide-side, #topnav, #sidebar, .add-module-slot, .am-overlay')) return;
     const g = pickGroup(e.target);
-    if (!g) { hide(); return; }
+    if (!g) {
+      hide();
+      return;
+    }
     show(g);
   });
   window.addEventListener('scroll', place, true);
@@ -123,7 +128,8 @@
   tools.addEventListener('mousedown', e => {
     const b = e.target.closest('button[data-act="spacing"]');
     if (!b || !current) return;
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
     drag = {
       target: current,
       startY: e.clientY,
@@ -140,8 +146,8 @@
     drag.target.style.marginBottom = next + 'px';
     measurement.textContent = Math.round(next) + 'px';
     const r = drag.target.getBoundingClientRect();
-    measurement.style.left = (r.left + r.width / 2 - 20) + 'px';
-    measurement.style.top  = (r.bottom + 6) + 'px';
+    measurement.style.left = r.left + r.width / 2 - 20 + 'px';
+    measurement.style.top = r.bottom + 6 + 'px';
     place();
   });
 
@@ -167,7 +173,8 @@
   tools.addEventListener('mousedown', e => {
     const b = e.target.closest('button[data-act="move"]');
     if (!b || !current) return;
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
     moveDrag = { target: current, parent: current.parentNode };
     document.body.style.cursor = 'grabbing';
     b.style.cursor = 'grabbing';
@@ -184,7 +191,11 @@
     for (const s of siblings) {
       const r = s.getBoundingClientRect();
       const mid = r.top + r.height / 2;
-      if (e.clientY < mid) { dropBefore = s; dropY = r.top; break; }
+      if (e.clientY < mid) {
+        dropBefore = s;
+        dropY = r.top;
+        break;
+      }
     }
     if (!dropBefore && siblings.length) {
       const last = siblings[siblings.length - 1];
@@ -192,7 +203,7 @@
     }
     if (dropY !== null) {
       dropLine.style.display = 'block';
-      dropLine.style.top = (dropY - 1) + 'px';
+      dropLine.style.top = dropY - 1 + 'px';
       const parentR = moveDrag.parent.getBoundingClientRect();
       dropLine.style.left = parentR.left + 'px';
       dropLine.style.width = parentR.width + 'px';
