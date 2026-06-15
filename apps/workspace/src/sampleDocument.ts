@@ -151,41 +151,49 @@ function cardSlot(doc: BrandDocument, name: string): string {
 }
 
 /**
- * Cena de demo do pitch: 6 instâncias do master `Card` num grid 3×2 (frame
- * 900×560). Quatro herdam puro; duas carregam override (título/cor) — assim
- * editar o master propaga aos herdados, mas o override vence nas customizadas.
+ * Cena de demo do pitch: 6 instâncias do master `Card` assentadas num grid de
+ * 12 colunas (referência Figma): margem 60, gutter 30. Cada card ocupa 4 das 12
+ * colunas → 3 por linha, 2 linhas. Quatro herdam puro; duas carregam override
+ * (título/cor) — assim editar o master propaga aos herdados, mas o override vence.
+ *
+ * A composição é DESENHADA pelo grid, não ajustada no olho, e é FLUIDA: os cards
+ * vivem num grupo-grid (3 colunas iguais = 4 de 12 cada), então reflowam com a
+ * largura do artboard sem cortar — sem coordenadas absolutas. Margem/gutter
+ * (60/30) são valores da grade de layout do Figma, fora da escala de 4px dos
+ * tokens, por isso entram como literais no box.
  */
 function seedVitrine(doc: BrandDocument, page: Page): void {
   const pid = page.id;
   const titleSlot = cardSlot(doc, 'Título');
   const mediaSlot = cardSlot(doc, 'Mídia');
 
-  const W = 260;
-  const H = 230;
-  const xs = [35, 320, 605];
-  const ys = [38, 292];
+  // Grupo-raiz = grade de 12 colunas (3 cards/linha = 4 colunas cada).
+  // cols:3 + gap 30 (gutter) + padding 60 (margem) → grid CSS fluido.
+  const grid = attach(doc, createLayer('group', pid, {
+    name: 'Grid 12 colunas',
+    box: {
+      cols: 3,
+      gap: { row: '30px', col: '30px' },
+      padding: { top: '60px', right: '60px', bottom: '60px', left: '60px' },
+    },
+  }));
 
-  let i = 0;
-  for (const y of ys) {
-    for (const x of xs) {
-      i += 1;
-      const overrides: Record<string, LayerOverride> = {};
-      if (i === 2) {
-        // instância customizada: título próprio + mídia navy (override vence)
-        overrides[titleSlot] = { text: 'Plano Pro' };
-        overrides[mediaSlot] = { style: { background: 'var(--bs-azul-profundo)' } };
-      }
-      if (i === 5) {
-        overrides[titleSlot] = { text: 'Plano Free' };
-      }
-      attach(doc, createLayer('component', pid, {
-        name: `Card ${i}`,
-        templateName: 'Card',
-        category: 'Layout',
-        rect: { x, y, w: W, h: H },
-        overrides,
-      }));
+  for (let i = 1; i <= 6; i += 1) {
+    const overrides: Record<string, LayerOverride> = {};
+    if (i === 2) {
+      // instância customizada: título próprio + mídia navy (override vence)
+      overrides[titleSlot] = { text: 'Plano Pro' };
+      overrides[mediaSlot] = { style: { background: 'var(--bs-azul-profundo)' } };
     }
+    if (i === 5) {
+      overrides[titleSlot] = { text: 'Plano Free' };
+    }
+    attach(doc, createLayer('component', pid, {
+      name: `Card ${i}`,
+      templateName: 'Card',
+      category: 'Layout',
+      overrides,
+    }), grid);
   }
 }
 
