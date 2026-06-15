@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 2200" font-family="'Versos', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif">
+  <!-- ============================================================
+       BluStar Design System — board único
+       Tokens espelham ds-tokens.css (fonte única do DS)
+       ============================================================ -->
+
+  <defs>
+    <style>
+      .label    { fill: rgba(255,255,255,0.48); font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
+      .h-title  { fill: #FFFFFF; font-size: 13px; font-weight: 700; letter-spacing: 0; }
+      .meta     { fill: rgba(255,255,255,0.72); font-size: 12px; font-weight: 500; }
+      .meta-sm  { fill: rgba(255,255,255,0.48); font-size: 10px; font-weight: 500; letter-spacing: 0.04em; }
+      .swatch-name { fill: #FFFFFF; font-size: 12px; font-weight: 500; }
+      .swatch-hex  { fill: rgba(255,255,255,0.48); font-size: 10px; font-weight: 500; letter-spacing: 0.04em; }
+      .section-title { fill: #FFFFFF; font-size: 24px; font-weight: 500; letter-spacing: -0.01em; }
+    </style>
+  </defs>
+
+  <!-- Background (canvas) -->
+  <rect width="1600" height="2200" fill="#040910"/>
+
+  <!-- ============================================================
+       HEADER
+       ============================================================ -->
+  <g transform="translate(48,48)">
+    <text x="0" y="14" class="label">BluStar® · PRAIA Brand System</text>
+    <text x="0" y="60" fill="#FFFFFF" font-size="40" font-weight="500" letter-spacing="-0.02em">Design System — board</text>
+    <text x="0" y="86" class="meta">Fonte única: ds-tokens.css · Reflete o estado atual dos tokens · 2026-06-08</text>
+    <line x1="0" y1="110" x2="1504" y2="110" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+  </g>
+
+  <!-- ============================================================
+       BRAND COLORS
+       ============================================================ -->
+  <g transform="translate(48,200)">
+    <text x="0" y="0" class="section-title">Brand colors</text>
+    <text x="0" y="22" class="meta-sm">--bs-*</text>
+
+    <!-- row -->
+    <g transform="translate(0,46)">
+      <!-- Navy -->
+      <g transform="translate(0,0)">
+        <rect width="160" height="120" rx="14" fill="#061833" stroke="rgba(255,255,255,0.10)"/>
+        <text x="0" y="146" class="swatch-name">BluStar Navy</text>
+        <text x="0" y="162" class="swatch-hex">#061833 · --bs-navy</text>
+      </g>
+      <!-- Navy Deep -->
+      <g transform="translate(180,0)">
+        <rect width="160" height="120" rx="14" fill="#04001E" stroke="rgba(255,255,255,0.10)"/>
+        <text x="0" y="146" class="swatch-name">Navy Deep</text>
+        <text x="0" y="162" class="swatch-hex">#04001E · --bs-navy-deep</text>
+      </g>
+      <!-- Cyan -->
+      <g transform="translate(360,0)">
+        <rect width="160" height="120" rx="14" fill="#0FC4D5"/>
+        <text x="0" y="146" class="swatch-name">BluStar Cyan</text>
+        <text x="0" y="162" class="swatch-hex">#0FC4D5 · --bs-cyan</text>
+      </g>
+      <!-- Cyan 200 -->
+      <g transform="translate(540,0)">
+        <rect width="160" height="120" rx="14" fill="#A6D9DE"/>
+        <text x="0" y="146" class="swatch-name">Cyan 200</text>
+        <text x="0" y="162" class="swatch-hex">#A6D9DE · --bs-cyan-200</text>
+      </g>
+      <!-- Cyan 100 -->
+      <g transform="translate(720,0)">
+        <rect width="160" height="120" rx="14" fill="#BFFAFF"/>
+        <text x="0" y="146" class="swatch-name">Cyan 100</text>
+        <text x="0" y="162" class="swatch-hex">#BFFAFF · --bs-cyan-100</text>
+      </g>
+      <!-- Cyan 50 -->
+      <g transform="translate(900,0)">
+        <rect width="160" height="120" rx="14" fill="#DFFCFF"/>
+        <text x="0" y="146" class="swatch-name">Cyan 50</text>
+        <text x="0" y="162" class="swatch-hex">#DFFCFF · --bs-cyan-50</text>
+      </g>
+      <!-- Royal Blue -->
+      <g transform="translate(1080,0)">
+        <rect width="160" height="120" rx="14" fill="#3259FF"/>
+        <text x="0" y="146" class="swatch-name">Royal Blue</text>
+        <text x="0" y="162" class="swatch-hex">#3259FF · --bs-blue</text>
+      </g>
+      <!-- White -->
+      <g transform="translate(1260,0)">
+        <rect width="160" height="120" rx="14" fill="#FFFFFF"/>
+        <text x="0" y="146" class="swatch-name">White</text>
+        <text x="0" y="162" class="swatch-hex">#FFFFFF · --bs-white</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============================================================
+       SEMANTIC + STATUS + INK
+       ============================================================ -->
+  <g transform="translate(48,440)">
+    <text x="0" y="0" class="section-title">Semânticas · status · texto</text>
+    <text x="0" y="22" class="meta-sm">surface · text · status · semantic</text>
+
+    <g transform="translate(0,46)">
+      <!-- Ink -->
+      <g transform="translate(0,0)">
+        <rect width="160" height="80" rx="14" fill="#0a1018" stroke="rgba(255,255,255,0.10)"/>
+        <text x="0" y="106" class="swatch-name">Ink</text>
+        <text x="0" y="122" class="swatch-hex">#0a1018 · --bs-ink</text>
+      </g>
+      <!-- bg -->
+      <g transform="translate(180,0)">
+        <rect width="160" height="80" rx="14" fill="#040910" stroke="rgba(255,255,255,0.10)"/>
+        <text x="0" y="106" class="swatch-name">Canvas</text>
+        <text x="0" y="122" class="swatch-hex">#040910 · --bg</text>
+      </g>
+      <!-- Surface (on bg) -->
+      <g transform="translate(360,0)">
+        <rect width="160" height="80" rx="14" fill="#040910" stroke="rgba(255,255,255,0.10)"/>
+        <rect width="160" height="80" rx="14" fill="rgba(126,126,126,0.10)"/>
+        <text x="0" y="106" class="swatch-name">Surface</text>
+        <text x="0" y="122" class="swatch-hex">rgba(126,126,126,.10)</text>
+      </g>
+      <!-- Surface-2 -->
+      <g transform="translate(540,0)">
+        <rect width="160" height="80" rx="14" fill="#040910" stroke="rgba(255,255,255,0.10)"/>
+        <rect width="160" height="80" rx="14" fill="rgba(126,126,126,0.18)"/>
+        <text x="0" y="106" class="swatch-name">Surface 2</text>
+        <text x="0" y="122" class="swatch-hex">rgba(126,126,126,.18)</text>
+      </g>
+      <!-- Surface-3 -->
+      <g transform="translate(720,0)">
+        <rect width="160" height="80" rx="14" fill="#040910" stroke="rgba(255,255,255,0.10)"/>
+        <rect width="160" height="80" rx="14" fill="rgba(126,126,126,0.26)"/>
+        <text x="0" y="106" class="swatch-name">Surface 3</text>
+        <text x="0" y="122" class="swatch-hex">rgba(126,126,126,.26)</text>
+      </g>
+      <!-- Status active -->
+      <g transform="translate(900,0)">
+        <rect width="160" height="80" rx="14" fill="#70FF82"/>
+        <text x="0" y="106" class="swatch-name">Status Active</text>
+        <text x="0" y="122" class="swatch-hex">#70FF82 · --status-active</text>
+      </g>
+      <!-- Status alert -->
+      <g transform="translate(1080,0)">
+        <rect width="160" height="80" rx="14" fill="#FF7300"/>
+        <text x="0" y="106" class="swatch-name">Status Alert</text>
+        <text x="0" y="122" class="swatch-hex">#FF7300 · --status-alert</text>
+      </g>
+      <!-- Danger -->
+      <g transform="translate(1260,0)">
+        <rect width="160" height="80" rx="14" fill="#ff6b6b"/>
+        <text x="0" y="106" class="swatch-name">Danger</text>
+        <text x="0" y="122" class="swatch-hex">#ff6b6b · --danger</text>
+      </g>
+    </g>
+
+    <!-- text + accent row -->
+    <g transform="translate(0,170)">
+      <g transform="translate(0,0)">
+        <rect width="160" height="80" rx="14" fill="#040910" stroke="rgba(255,255,255,0.10)"/>
+        <text x="80" y="48" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="500">Text</text>
+        <text x="0" y="106" class="swatch-name">Text</text>
+        <text x="0" y="122" class="swatch-hex">#FFFFFF · --text</text>
+      </g>
+      <g transform="translate(180,0)">
+        <rect width="160" height="80" rx="14" fill="#040910" stroke="rgba(255,255,255,0.10)"/>
+        <text x="80" y="48" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="14" font-weight="500">Text 2</text>
+        <text x="0" y="106" class="swatch-name">Text 2</text>
+        <text x="0" y="122" class="swatch-hex">rgba(#fff,.72) · --text-2</text>
+      </g>
+      <g transform="translate(360,0)">
+        <rect width="160" height="80" rx="14" fill="#040910" stroke="rgba(255,255,255,0.10)"/>
+        <text x="80" y="48" text-anchor="middle" fill="rgba(255,255,255,0.48)" font-size="14" font-weight="500">Text 3</text>
+        <text x="0" y="106" class="swatch-name">Text 3</text>
+        <text x="0" y="122" class="swatch-hex">rgba(#fff,.48) · --text-3</text>
+      </g>
+      <g transform="translate(540,0)">
+        <rect width="160" height="80" rx="14" fill="#0d1421" stroke="rgba(255,255,255,0.10)"/>
+        <text x="0" y="106" class="swatch-name">Popover</text>
+        <text x="0" y="122" class="swatch-hex">#0d1421 · --popover</text>
+      </g>
+      <g transform="translate(720,0)">
+        <rect width="160" height="80" rx="14" fill="#a259ff"/>
+        <text x="0" y="106" class="swatch-name">Accent Select</text>
+        <text x="0" y="122" class="swatch-hex">#a259ff · --accent-select</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============================================================
+       TYPE SCALE
+       ============================================================ -->
+  <g transform="translate(48,890)">
+    <text x="0" y="0" class="section-title">Tipografia · Versos</text>
+    <text x="0" y="22" class="meta-sm">--type-* · família display + texto</text>
+
+    <g transform="translate(0,52)">
+      <!-- Editorial scale (rendered shrunk so caps fit; rotulado com tamanho real) -->
+      <g transform="translate(0,0)">
+        <text x="0" y="0" class="meta-sm">H0 · 220 / 0.92 / -0.03em · 500</text>
+        <text x="0" y="58" fill="#FFFFFF" font-size="72" font-weight="500" letter-spacing="-0.03em">Aa Brand System</text>
+      </g>
+      <g transform="translate(0,100)">
+        <text x="0" y="0" class="meta-sm">Super · 96 / 1 / -0.02em · 500</text>
+        <text x="0" y="48" fill="#FFFFFF" font-size="56" font-weight="500" letter-spacing="-0.02em">Aa Super headline</text>
+      </g>
+      <g transform="translate(0,182)">
+        <text x="0" y="0" class="meta-sm">XL · 40 / 1.05 / -0.02em</text>
+        <text x="0" y="38" fill="#FFFFFF" font-size="40" font-weight="500" letter-spacing="-0.02em">Aa XL display</text>
+      </g>
+      <g transform="translate(0,250)">
+        <text x="0" y="0" class="meta-sm">L · 32 / 1.15 / -0.01em</text>
+        <text x="0" y="34" fill="#FFFFFF" font-size="32" font-weight="500" letter-spacing="-0.01em">Aa Large heading</text>
+      </g>
+      <g transform="translate(0,312)">
+        <text x="0" y="0" class="meta-sm">MB · 24 / 1.2 / -0.01em</text>
+        <text x="0" y="28" fill="#FFFFFF" font-size="24" font-weight="500" letter-spacing="-0.01em">Aa Medium bold</text>
+      </g>
+      <g transform="translate(0,368)">
+        <text x="0" y="0" class="meta-sm">M · 16 / 1.5 / 0</text>
+        <text x="0" y="22" fill="#FFFFFF" font-size="16" font-weight="500">Aa Medium · body copy padrão para parágrafos correntes.</text>
+      </g>
+      <g transform="translate(0,408)">
+        <text x="0" y="0" class="meta-sm">SB · 13 / 1.4 / 0 · 700</text>
+        <text x="0" y="18" fill="#FFFFFF" font-size="13" font-weight="700">Aa Small bold · usado em UI chrome e botões.</text>
+      </g>
+      <g transform="translate(0,442)">
+        <text x="0" y="0" class="meta-sm">S · 12 / 1.4 / 0.04em</text>
+        <text x="0" y="16" fill="#FFFFFF" font-size="12" font-weight="500" letter-spacing="0.04em">Aa Small · captions e metadados.</text>
+      </g>
+      <g transform="translate(0,476)">
+        <text x="0" y="0" class="meta-sm">XS · 10 / 1.55 / 0.04em</text>
+        <text x="0" y="14" fill="#FFFFFF" font-size="10" font-weight="500" letter-spacing="0.04em">AA XS · LABEL / BADGE / OVERLINE</text>
+      </g>
+    </g>
+
+    <!-- UI Type (right column) -->
+    <g transform="translate(820,52)">
+      <text x="0" y="0" class="h-title">UI Type · chrome / labels / badges</text>
+      <g transform="translate(0,28)">
+        <text x="0" y="0" class="meta-sm">--type-ui · 13 / 1.4 / -0.01em</text>
+        <text x="0" y="20" fill="#FFFFFF" font-size="13" font-weight="500" letter-spacing="-0.01em">Botão · Item de menu · Label primário</text>
+      </g>
+      <g transform="translate(0,68)">
+        <text x="0" y="0" class="meta-sm">--type-ui-sm · 12 / 1.4 / 0</text>
+        <text x="0" y="20" fill="#FFFFFF" font-size="12" font-weight="500">Label secundário · Tabela · Tooltip</text>
+      </g>
+      <g transform="translate(0,108)">
+        <text x="0" y="0" class="meta-sm">--type-ui-xs · 10 / 1.4 / 0.04em</text>
+        <text x="0" y="20" fill="#FFFFFF" font-size="10" font-weight="500" letter-spacing="0.04em">BADGE · OVERLINE · CAPTION CAPS</text>
+      </g>
+
+      <!-- Família -->
+      <g transform="translate(0,170)">
+        <text x="0" y="0" class="h-title">Família</text>
+        <text x="0" y="22" fill="#FFFFFF" font-size="14">Versos · 400/500 Regular · 600 SemiBold · 700 Bold</text>
+        <text x="0" y="40" class="meta-sm">--font · --font-display</text>
+      </g>
+
+      <!-- Radii -->
+      <g transform="translate(0,250)">
+        <text x="0" y="0" class="h-title">Radii</text>
+        <g transform="translate(0,16)">
+          <rect width="56" height="56" rx="8"    fill="rgba(126,126,126,0.18)"/>
+          <text x="28" y="76" text-anchor="middle" class="swatch-hex">8 · sm</text>
+        </g>
+        <g transform="translate(80,16)">
+          <rect width="56" height="56" rx="14"   fill="rgba(126,126,126,0.18)"/>
+          <text x="28" y="76" text-anchor="middle" class="swatch-hex">14 · md</text>
+        </g>
+        <g transform="translate(160,16)">
+          <rect width="56" height="56" rx="24"   fill="rgba(126,126,126,0.18)"/>
+          <text x="28" y="76" text-anchor="middle" class="swatch-hex">24 · lg</text>
+        </g>
+        <g transform="translate(240,16)">
+          <rect width="56" height="56" rx="9999" fill="rgba(126,126,126,0.18)"/>
+          <text x="28" y="76" text-anchor="middle" class="swatch-hex">full</text>
+        </g>
+      </g>
+
+      <!-- Spacing -->
+      <g transform="translate(0,360)">
+        <text x="0" y="0" class="h-title">Spacing scale</text>
+        <g transform="translate(0,20)">
+          <rect x="0"   y="0" width="4"  height="14" fill="#0FC4D5"/>
+          <rect x="20"  y="0" width="8"  height="14" fill="#0FC4D5"/>
+          <rect x="40"  y="0" width="12" height="14" fill="#0FC4D5"/>
+          <rect x="68"  y="0" width="16" height="14" fill="#0FC4D5"/>
+          <rect x="100" y="0" width="20" height="14" fill="#0FC4D5"/>
+          <rect x="136" y="0" width="24" height="14" fill="#0FC4D5"/>
+          <rect x="176" y="0" width="32" height="14" fill="#0FC4D5"/>
+          <text x="0"   y="30" class="swatch-hex">4</text>
+          <text x="20"  y="30" class="swatch-hex">8</text>
+          <text x="40"  y="30" class="swatch-hex">12</text>
+          <text x="68"  y="30" class="swatch-hex">16</text>
+          <text x="100" y="30" class="swatch-hex">20</text>
+          <text x="136" y="30" class="swatch-hex">24</text>
+          <text x="176" y="30" class="swatch-hex">32</text>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============================================================
+       BUTTONS
+       ============================================================ -->
+  <g transform="translate(48,1500)">
+    <text x="0" y="0" class="section-title">Botões</text>
+    <text x="0" y="22" class="meta-sm">primary (cyan) · secondary (surface) · ghost · danger</text>
+
+    <g transform="translate(0,46)">
+      <!-- Primary -->
+      <g transform="translate(0,0)">
+        <rect width="200" height="44" rx="9999" fill="#0FC4D5"/>
+        <text x="100" y="28" text-anchor="middle" fill="#0a1018" font-size="13" font-weight="700">Continuar</text>
+      </g>
+      <!-- Secondary -->
+      <g transform="translate(220,0)">
+        <rect width="200" height="44" rx="9999" fill="rgba(126,126,126,0.18)" stroke="rgba(255,255,255,0.10)"/>
+        <text x="100" y="28" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">Secondary</text>
+      </g>
+      <!-- Ghost -->
+      <g transform="translate(440,0)">
+        <rect width="200" height="44" rx="9999" fill="none" stroke="rgba(255,255,255,0.18)"/>
+        <text x="100" y="28" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">Ghost</text>
+      </g>
+      <!-- Danger -->
+      <g transform="translate(660,0)">
+        <rect width="200" height="44" rx="9999" fill="#ff6b6b"/>
+        <text x="100" y="28" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">Danger</text>
+      </g>
+      <!-- Royal blue accent -->
+      <g transform="translate(880,0)">
+        <rect width="200" height="44" rx="9999" fill="#3259FF"/>
+        <text x="100" y="28" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">Blue CTA</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============================================================
+       ICONS (Material Symbols — referência, não embute a fonte)
+       ============================================================ -->
+  <g transform="translate(48,1650)">
+    <text x="0" y="0" class="section-title">Ícones</text>
+    <text x="0" y="22" class="meta-sm">Google Material Symbols · classe .bs-icon · size por --bs-icon-size · cor herda currentColor</text>
+
+    <g transform="translate(0,46)">
+      <rect width="1504" height="120" rx="14" fill="rgba(126,126,126,0.10)" stroke="rgba(255,255,255,0.10)"/>
+      <text x="24" y="36" fill="#FFFFFF" font-size="13" font-weight="700">Como funciona</text>
+      <text x="24" y="58" fill="rgba(255,255,255,0.72)" font-size="12">— Glyph único definido pelo nome (ex.: <tspan font-family="monospace">home</tspan>, <tspan font-family="monospace">play_arrow</tspan>, <tspan font-family="monospace">edit</tspan>, <tspan font-family="monospace">delete</tspan>).</text>
+      <text x="24" y="76" fill="rgba(255,255,255,0.72)" font-size="12">— Cor segue <tspan font-family="monospace">currentColor</tspan>, tamanho segue <tspan font-family="monospace">font-size</tspan>; FILL=0 outline, FILL=1 cheio.</text>
+      <text x="24" y="94" fill="rgba(255,255,255,0.48)" font-size="12">SVG não embute fonte de ícone — para visualizar glifos reais, ver o painel de Ícones na ferramenta.</text>
+    </g>
+  </g>
+
+  <!-- ============================================================
+       LAYOUT TOKENS
+       ============================================================ -->
+  <g transform="translate(48,1840)">
+    <text x="0" y="0" class="section-title">Layout · grid · z-index · motion</text>
+    <text x="0" y="22" class="meta-sm">topnav · sidebar · z-index scale · easing</text>
+
+    <g transform="translate(0,46)">
+      <!-- Grid card -->
+      <g transform="translate(0,0)">
+        <rect width="480" height="180" rx="14" fill="rgba(126,126,126,0.10)" stroke="rgba(255,255,255,0.10)"/>
+        <text x="20" y="30" class="h-title">Grid universal</text>
+        <text x="20" y="50" class="meta-sm">12 cols · gutter 16 · margin 24</text>
+        <!-- mini grid -->
+        <g transform="translate(20,72)">
+          <rect width="440" height="80" rx="8" fill="rgba(255,255,255,0.04)"/>
+          <g fill="#0FC4D5" opacity="0.45">
+            <rect x="0"   y="6" width="32" height="68"/>
+            <rect x="36"  y="6" width="32" height="68"/>
+            <rect x="72"  y="6" width="32" height="68"/>
+            <rect x="108" y="6" width="32" height="68"/>
+            <rect x="144" y="6" width="32" height="68"/>
+            <rect x="180" y="6" width="32" height="68"/>
+            <rect x="216" y="6" width="32" height="68"/>
+            <rect x="252" y="6" width="32" height="68"/>
+            <rect x="288" y="6" width="32" height="68"/>
+            <rect x="324" y="6" width="32" height="68"/>
+            <rect x="360" y="6" width="32" height="68"/>
+            <rect x="396" y="6" width="32" height="68"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- Layout sizes -->
+      <g transform="translate(500,0)">
+        <rect width="480" height="180" rx="14" fill="rgba(126,126,126,0.10)" stroke="rgba(255,255,255,0.10)"/>
+        <text x="20" y="30" class="h-title">Layout sizes</text>
+        <text x="20" y="56" fill="#FFFFFF" font-size="13" font-weight="500">--topnav-h <tspan fill="rgba(255,255,255,0.48)">· 56px</tspan></text>
+        <text x="20" y="80" fill="#FFFFFF" font-size="13" font-weight="500">--sidebar-w <tspan fill="rgba(255,255,255,0.48)">· 260px</tspan></text>
+        <text x="20" y="104" fill="#FFFFFF" font-size="13" font-weight="500">--sidebar-collapsed-w <tspan fill="rgba(255,255,255,0.48)">· 64px</tspan></text>
+        <text x="20" y="140" class="meta-sm">Focus ring</text>
+        <text x="20" y="158" fill="#FFFFFF" font-size="13" font-weight="500">1.5px solid <tspan fill="#3259FF">--bs-blue</tspan></text>
+      </g>
+
+      <!-- Z-index + motion -->
+      <g transform="translate(1000,0)">
+        <rect width="504" height="180" rx="14" fill="rgba(126,126,126,0.10)" stroke="rgba(255,255,255,0.10)"/>
+        <text x="20" y="30" class="h-title">Z-index · Motion</text>
+        <text x="20" y="56" fill="#FFFFFF" font-size="12">base 1 · sticky 50 · nav 100 · overlay 200</text>
+        <text x="20" y="76" fill="#FFFFFF" font-size="12">dropdown 400 · modal 500 · toast 600</text>
+        <text x="20" y="112" class="meta-sm">Easing</text>
+        <text x="20" y="130" fill="#FFFFFF" font-size="13" font-weight="500" font-family="monospace">cubic-bezier(0.22, 1, 0.36, 1)</text>
+        <text x="20" y="158" class="meta-sm">--ease</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <g transform="translate(48,2120)">
+    <line x1="0" y1="0" x2="1504" y2="0" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+    <text x="0" y="28" class="meta-sm">Fonte única: ds-tokens.css · Toda tela do Gen Studio AI consome estes tokens — nada de hardcode</text>
+  </g>
+</svg>

@@ -1,0 +1,7 @@
+name = "blustar-clean"
+compatibility_date = "2026-06-09"
+
+# Worker separado (sem Brand OS / Gen Studio AI) — link próprio *.workers.dev.
+# Serve os HTMLs/estáticos do repo como Workers Static Assets.
+[assets]
+directory = "./"

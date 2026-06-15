@@ -1,0 +1,30 @@
+# Dependências
+node_modules/
+.pnpm-store/
+
+# Builds
+dist/
+storybook-static/
+
+# Segredos / ambiente — NUNCA commitar
+.env
+.env.local
+.env.*.local
+server/.env
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Caches / temporários de ferramentas
+.vite/
+*.tsbuildinfo
+
+# Backups locais (não versionar)
+*.bak
+
+# SO / editor
+.DS_Store
+.idea/
+.vscode/
