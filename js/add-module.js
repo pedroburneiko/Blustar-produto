@@ -19,17 +19,18 @@
 
   const previews = {
     'Text & Image': '<svg viewBox="0 0 220 130" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M10 30h90M10 50h90M10 70h90M10 90h60"/><rect x="120" y="20" width="90" height="80"/><path d="M132 80l16-16 12 12 8-6 18 16"/><circle cx="142" cy="44" r="6"/></svg>',
-    'Heading': '<svg viewBox="0 0 220 130" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M30 90V40M30 60h50M80 90V40" stroke-width="3"/></svg>',
-    'Text': '<svg viewBox="0 0 220 130" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M30 40h160M30 60h160M30 80h160M30 100h100"/></svg>',
-    'Colors': '<svg viewBox="0 0 220 130" fill="none"><rect x="20" y="30" width="40" height="70" fill="currentColor" opacity="0.3"/><rect x="70" y="30" width="40" height="70" fill="currentColor" opacity="0.5"/><rect x="120" y="30" width="40" height="70" fill="currentColor" opacity="0.7"/><rect x="170" y="30" width="30" height="70" fill="currentColor" opacity="0.9"/></svg>',
+    Heading: '<svg viewBox="0 0 220 130" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M30 90V40M30 60h50M80 90V40" stroke-width="3"/></svg>',
+    Text: '<svg viewBox="0 0 220 130" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M30 40h160M30 60h160M30 80h160M30 100h100"/></svg>',
+    Colors:
+      '<svg viewBox="0 0 220 130" fill="none"><rect x="20" y="30" width="40" height="70" fill="currentColor" opacity="0.3"/><rect x="70" y="30" width="40" height="70" fill="currentColor" opacity="0.5"/><rect x="120" y="30" width="40" height="70" fill="currentColor" opacity="0.7"/><rect x="170" y="30" width="30" height="70" fill="currentColor" opacity="0.9"/></svg>',
     'Empty grid': '<svg viewBox="0 0 220 130" fill="none" stroke="currentColor"><rect x="20" y="25" width="80" height="80"/><rect x="115" y="25" width="80" height="80"/></svg>',
     'Text cards': '<svg viewBox="0 0 220 130" fill="none" stroke="currentColor" stroke-linecap="round"><rect x="20" y="20" width="80" height="90"/><rect x="115" y="20" width="80" height="90"/><path d="M32 40h56M32 56h56M32 72h36M127 40h56M127 56h56M127 72h36"/></svg>',
   };
   const descs = {
-    'Heading': { sub: '1 column', desc: 'Standalone heading. Use for new sections or page anchors.' },
-    'Text': { sub: '1 column', desc: 'Long-form body text block. Inherits the active text style.' },
+    Heading: { sub: '1 column', desc: 'Standalone heading. Use for new sections or page anchors.' },
+    Text: { sub: '1 column', desc: 'Long-form body text block. Inherits the active text style.' },
     'Text & Image': { sub: '2 - 4 column', desc: 'This is a mixed grid module, for text and image combination, which can be splitted up to 4 columns.' },
-    'Colors': { sub: 'Token grid', desc: 'Swatches grid using global color tokens. Updates automatically.' },
+    Colors: { sub: 'Token grid', desc: 'Swatches grid using global color tokens. Updates automatically.' },
     'Empty grid': { sub: '2 column', desc: 'Empty placeholder grid. Drop in anything later.' },
     'Text cards': { sub: '2 - 3 column', desc: 'Card grid with title and short description per item.' },
   };
@@ -39,9 +40,13 @@
   // herdam o background Moto.png de .tpl-block.
   const __photoThumb = (cols, count, ar) =>
     '<div class="am-tpl-thumb" style="display:flex;align-items:center;justify-content:center;padding:0;background:#000">' +
-      '<div style="width:100%;display:grid;grid-template-columns:repeat(' + cols + ',1fr);gap:4px">' +
-        Array(count).fill('<div class="tpl-block" style="aspect-ratio:' + ar + '"></div>').join('') +
-      '</div>' +
+    '<div style="width:100%;display:grid;grid-template-columns:repeat(' +
+    cols +
+    ',1fr);gap:4px">' +
+    Array(count)
+      .fill('<div class="tpl-block" style="aspect-ratio:' + ar + '"></div>')
+      .join('') +
+    '</div>' +
     '</div>';
 
   const templates = [
@@ -50,28 +55,26 @@
     // Thumb realista: a grade real (mesmas proporções de célula do template
     // aplicado) é centralizada na caixa 16:9 do preview, com letterbox — assim
     // 1:1 fica quadrada, 4:5 retrato, 9:16 alta, igual ao template inserido.
-    { id: 'photo-grid-4x2', name: 'Grade de fotos 4×2 (1:1)', size: 'lg',
-      thumb: __photoThumb(4, 8, '1') },
-    { id: 'photo-grid-4x2-45', name: 'Grade de fotos 4×2 (4:5)', size: 'lg',
-      thumb: __photoThumb(4, 8, '4/5') },
-    { id: 'photo-full-169', name: 'Foto full screen (16:9)', size: 'lg',
-      thumb: __photoThumb(1, 1, '16/9') },
-    { id: 'photo-grid-3x2-169', name: 'Grade de fotos 3×2 (16:9)', size: 'lg',
-      thumb: __photoThumb(3, 6, '16/9') },
-    { id: 'photo-grid-4x1-916', name: 'Grade de fotos 4× (9:16)', size: 'lg',
-      thumb: __photoThumb(4, 4, '9/16') },
-    { id: 'photo-grid-2x1-45', name: 'Grade de fotos 2× (4:5)', size: 'lg',
-      thumb: __photoThumb(2, 2, '4/5') },
-    { id: 'photo-2-wide', name: '2 fotos panorâmicas (21:9)', size: 'lg',
-      thumb: __photoThumb(1, 2, '21/9') },
-    { id: 'photo-bento-916', name: 'Bento (9:16 + 2×16:9)', size: 'lg',
-      thumb: '<div class="am-tpl-thumb" style="display:flex;align-items:center;justify-content:center;padding:0;background:#000">' +
+    { id: 'photo-grid-4x2', name: 'Grade de fotos 4×2 (1:1)', size: 'lg', thumb: __photoThumb(4, 8, '1') },
+    { id: 'photo-grid-4x2-45', name: 'Grade de fotos 4×2 (4:5)', size: 'lg', thumb: __photoThumb(4, 8, '4/5') },
+    { id: 'photo-full-169', name: 'Foto full screen (16:9)', size: 'lg', thumb: __photoThumb(1, 1, '16/9') },
+    { id: 'photo-grid-3x2-169', name: 'Grade de fotos 3×2 (16:9)', size: 'lg', thumb: __photoThumb(3, 6, '16/9') },
+    { id: 'photo-grid-4x1-916', name: 'Grade de fotos 4× (9:16)', size: 'lg', thumb: __photoThumb(4, 4, '9/16') },
+    { id: 'photo-grid-2x1-45', name: 'Grade de fotos 2× (4:5)', size: 'lg', thumb: __photoThumb(2, 2, '4/5') },
+    { id: 'photo-2-wide', name: '2 fotos panorâmicas (21:9)', size: 'lg', thumb: __photoThumb(1, 2, '21/9') },
+    {
+      id: 'photo-bento-916',
+      name: 'Bento (9:16 + 2×16:9)',
+      size: 'lg',
+      thumb:
+        '<div class="am-tpl-thumb" style="display:flex;align-items:center;justify-content:center;padding:0;background:#000">' +
         '<div style="width:100%;display:grid;grid-template-columns:5fr 7fr;gap:4px;align-items:stretch">' +
-          '<div class="tpl-block" style="grid-column:1;grid-row:1/3"></div>' +
-          '<div class="tpl-block" style="grid-column:2;grid-row:1;aspect-ratio:16/9"></div>' +
-          '<div class="tpl-block" style="grid-column:2;grid-row:2;aspect-ratio:16/9"></div>' +
+        '<div class="tpl-block" style="grid-column:1;grid-row:1/3"></div>' +
+        '<div class="tpl-block" style="grid-column:2;grid-row:1;aspect-ratio:16/9"></div>' +
+        '<div class="tpl-block" style="grid-column:2;grid-row:2;aspect-ratio:16/9"></div>' +
         '</div>' +
-      '</div>' },
+        '</div>',
+    },
     // Cleared 2026-05-28 — will rebuild new templates from scratch.
     // Backup: index_v27_templates_backup_20260528_193013.html
     /* { id: 'hero-img', name: 'Hero image', size: 'md',
@@ -103,14 +106,14 @@
     // 2026-05-28: novo template #1 — eyebrow lateral + statement de tipografia.
     // Thumb e inserção compartilham o mesmo markup via override registrado abaixo.
     { id: 'txt-craft-cover', name: 'Cover', size: 'lg' },
-  { id: 'txt-photo-statement', name: '01', size: 'lg' },
-  { id: 'txt-shaping-worlds', name: '02', size: 'lg' },
-  { id: 'txt-in-use', name: '03', size: 'lg' },
-  { id: 'txt-type-voice', name: '04', size: 'lg' },
-  { id: 'txt-page-header', name: '05', size: 'lg' },
-  { id: 'txt-further-reading', name: '06', size: 'lg' },
-  { id: 'txt-made-by', name: '07', size: 'lg' },
-  { id: 'txt-button', name: '08', size: 'lg' },
+    { id: 'txt-photo-statement', name: '01', size: 'lg' },
+    { id: 'txt-shaping-worlds', name: '02', size: 'lg' },
+    { id: 'txt-in-use', name: '03', size: 'lg' },
+    { id: 'txt-type-voice', name: '04', size: 'lg' },
+    { id: 'txt-page-header', name: '05', size: 'lg' },
+    { id: 'txt-further-reading', name: '06', size: 'lg' },
+    { id: 'txt-made-by', name: '07', size: 'lg' },
+    { id: 'txt-button', name: '08', size: 'lg' },
     // Cleared 2026-05-28 — see backup index_v27_templates_backup_20260528_193013.html
     /* { id: 'txt-cover', name: 'Cover', size: 'lg',
       thumb: '<div class="am-tpl-thumb" style="aspect-ratio:16/10;background:var(--bs-navy);padding:14px 16px;grid-template-rows:auto 1fr auto;align-content:stretch;gap:0"><div style="font:500 5.5px/1.4 var(--font);color:var(--bs-white);letter-spacing:0.04em">02.CRAFT</div><div style="display:flex;align-items:flex-end;justify-content:flex-start"><div style="font:600 19px/1 var(--font);color:var(--bs-white);letter-spacing:-0.02em">Craft in an age<br/>of infinite output</div></div><div style="display:flex;justify-content:flex-end"><div style="font:500 5.5px/1.4 var(--font);color:rgba(255,255,255,0.55);letter-spacing:0.04em">Reading time: 30 min</div></div></div>' },
@@ -147,41 +150,43 @@
   ];
 
   const textTplDescs = {
-    'Display heading':     { sub: 'Display',       desc: 'Título display em duas linhas, alinhado à esquerda. Use em aberturas de capítulo.' },
-    'Eyebrow + heading':   { sub: 'Header',        desc: 'Eyebrow curto seguido de heading e um subtítulo. Estrutura padrão de seção.' },
-    'Pull quote':          { sub: 'Centered',      desc: 'Pull-quote centrado para destacar uma frase-manifesto da marca.' },
-    'Two columns':         { sub: '2 column',      desc: 'Dois blocos de texto paralelos com sub-título. Ideal para princípios ou comparações.' },
-    'Heading + paragraph': { sub: '1 column',      desc: 'Heading curto seguido de parágrafo. O bloco editorial básico.' },
-    'Three principles':    { sub: '3 column',      desc: 'Três princípios lado a lado, cada um com título + parágrafo curto.' },
-    "Do / Don't":          { sub: '2 column',      desc: 'Do em cyan + Don\'t em escala neutra. Use em guidelines de comportamento.' },
-    'Numbered steps':      { sub: 'List',          desc: 'Lista de passos numerados em círculo escuro. Use em how-to ou fluxos.' },
-    'Page header':         { sub: 'Full bleed',    desc: 'Capa escura com labels superiores e título monumental ao pé — abre capítulo.' },
-    'Statement':           { sub: 'Editorial',     desc: 'Bloco de declaração em texto médio sobre fundo claro, com borda lateral de destaque.' },
-    'Term + definition':   { sub: '2 column',      desc: 'Termo curto à esquerda, definição à direita. Separadas por filete superior.' },
-    'Beliefs grid 2×2':    { sub: '2 × 2',         desc: 'Quatro blocos título + parágrafo em grade 2×2. Use para crenças, valores, princípios.' },
-    'Next chapter':        { sub: 'Footer',        desc: 'Rodapé de capítulo com label "Next" e o nome do próximo capítulo em escala display.' },
-    'Hero + CTA':          { sub: 'Centered',      desc: 'Eyebrow cyan, título display, subtítulo e CTA pill cyan. Capa de landing/intro.' },
-    'Manifesto line':      { sub: 'Centered',      desc: 'Frase-manifesto centrada em texto médio com destaque inline em cyan.' },
-    'Section intro + CTA': { sub: '1 column',      desc: 'Eyebrow, título, subtítulo e CTA pill. Estrutura editorial de seção.' },
-    'Big testimonial':     { sub: 'Centered',      desc: 'Depoimento em display + avatar cyan, nome e cargo. Use para social proof.' },
-    'Demo CTA':            { sub: 'Centered',      desc: 'Ícone cyan, headline, subtítulo e CTA pill. Bloco de conversão.' },
-    'Feature grid 3×2':    { sub: '3 column',      desc: 'Título + grid de três features (título curto + descrição). Use em "what you get".' },
-    'FAQ':                 { sub: '2 column',      desc: 'Título à esquerda, lista de perguntas à direita com filete e marcador cyan.' },
-    'Compliance row':      { sub: '3 column',      desc: 'Rodapé escuro com 3 selos de compliance (SOC2/CCPA/GDPR) em mono cyan.' },
-    'Numbered guides':     { sub: '2 column',      desc: 'Título à esquerda, lista numerada cyan à direita com título + descrição.' },
-    'Work with us':        { sub: 'Editorial',     desc: 'Eyebrow, parágrafo display longo e CTA pill. Bloco de carreira/convite.' },
+    'Display heading': { sub: 'Display', desc: 'Título display em duas linhas, alinhado à esquerda. Use em aberturas de capítulo.' },
+    'Eyebrow + heading': { sub: 'Header', desc: 'Eyebrow curto seguido de heading e um subtítulo. Estrutura padrão de seção.' },
+    'Pull quote': { sub: 'Centered', desc: 'Pull-quote centrado para destacar uma frase-manifesto da marca.' },
+    'Two columns': { sub: '2 column', desc: 'Dois blocos de texto paralelos com sub-título. Ideal para princípios ou comparações.' },
+    'Heading + paragraph': { sub: '1 column', desc: 'Heading curto seguido de parágrafo. O bloco editorial básico.' },
+    'Three principles': { sub: '3 column', desc: 'Três princípios lado a lado, cada um com título + parágrafo curto.' },
+    "Do / Don't": { sub: '2 column', desc: "Do em cyan + Don't em escala neutra. Use em guidelines de comportamento." },
+    'Numbered steps': { sub: 'List', desc: 'Lista de passos numerados em círculo escuro. Use em how-to ou fluxos.' },
+    'Page header': { sub: 'Full bleed', desc: 'Capa escura com labels superiores e título monumental ao pé — abre capítulo.' },
+    Statement: { sub: 'Editorial', desc: 'Bloco de declaração em texto médio sobre fundo claro, com borda lateral de destaque.' },
+    'Term + definition': { sub: '2 column', desc: 'Termo curto à esquerda, definição à direita. Separadas por filete superior.' },
+    'Beliefs grid 2×2': { sub: '2 × 2', desc: 'Quatro blocos título + parágrafo em grade 2×2. Use para crenças, valores, princípios.' },
+    'Next chapter': { sub: 'Footer', desc: 'Rodapé de capítulo com label "Next" e o nome do próximo capítulo em escala display.' },
+    'Hero + CTA': { sub: 'Centered', desc: 'Eyebrow cyan, título display, subtítulo e CTA pill cyan. Capa de landing/intro.' },
+    'Manifesto line': { sub: 'Centered', desc: 'Frase-manifesto centrada em texto médio com destaque inline em cyan.' },
+    'Section intro + CTA': { sub: '1 column', desc: 'Eyebrow, título, subtítulo e CTA pill. Estrutura editorial de seção.' },
+    'Big testimonial': { sub: 'Centered', desc: 'Depoimento em display + avatar cyan, nome e cargo. Use para social proof.' },
+    'Demo CTA': { sub: 'Centered', desc: 'Ícone cyan, headline, subtítulo e CTA pill. Bloco de conversão.' },
+    'Feature grid 3×2': { sub: '3 column', desc: 'Título + grid de três features (título curto + descrição). Use em "what you get".' },
+    FAQ: { sub: '2 column', desc: 'Título à esquerda, lista de perguntas à direita com filete e marcador cyan.' },
+    'Compliance row': { sub: '3 column', desc: 'Rodapé escuro com 3 selos de compliance (SOC2/CCPA/GDPR) em mono cyan.' },
+    'Numbered guides': { sub: '2 column', desc: 'Título à esquerda, lista numerada cyan à direita com título + descrição.' },
+    'Work with us': { sub: 'Editorial', desc: 'Eyebrow, parágrafo display longo e CTA pill. Bloco de carreira/convite.' },
   };
 
   // 2026-05-28: text/images cleared (rebuilding from scratch); base/colors/video restored from archive.
   const __modules_archive = {
     colors: [
-      { name: 'Colors', size: 'md',
+      {
+        name: 'Colors',
+        size: 'md',
         thumb: (() => {
           const swatches = [
-            { bg: 'var(--bs-navy)',  ink: 'var(--bs-white)', name: 'BluStar Navy', hex: '#061833' },
-            { bg: 'var(--bs-cyan)',  ink: 'var(--bs-navy)',  name: 'BluStar Cyan', hex: '#0FC4D5' },
-            { bg: 'var(--bs-blue)',  ink: 'var(--bs-white)', name: 'Royal Blue',   hex: '#3259FF' },
-            { bg: 'var(--bs-white)', ink: 'var(--bs-navy)',  name: 'White',        hex: '#FFFFFF' },
+            { bg: 'var(--bs-navy)', ink: 'var(--bs-white)', name: 'BluStar Navy', hex: '#061833' },
+            { bg: 'var(--bs-cyan)', ink: 'var(--bs-navy)', name: 'BluStar Cyan', hex: '#0FC4D5' },
+            { bg: 'var(--bs-blue)', ink: 'var(--bs-white)', name: 'Royal Blue', hex: '#3259FF' },
+            { bg: 'var(--bs-white)', ink: 'var(--bs-navy)', name: 'White', hex: '#FFFFFF' },
           ];
           return `<div class="am-tpl-thumb" style="padding:16px 18px;display:flex;flex-direction:column;gap:10px;align-content:start">
             <div style="display:flex;align-items:baseline;justify-content:space-between">
@@ -189,14 +194,21 @@
               <div style="font:500 6px/1 var(--font);color:rgba(255,255,255,0.5);letter-spacing:0.06em;text-transform:uppercase">Primary · 4</div>
             </div>
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:1">
-              ${swatches.map(s => `<div style="border-radius:5px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);display:flex;flex-direction:column">
+              ${swatches
+                .map(
+                  s => `<div style="border-radius:5px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);display:flex;flex-direction:column">
                 <div style="flex:1;min-height:48px;background:${s.bg};padding:6px 8px;display:flex;align-items:flex-end"><span style="font:700 5.5px/1 ui-monospace,monospace;color:${s.ink};letter-spacing:0.04em;opacity:0.75">${s.hex}</span></div>
                 <div style="padding:6px 8px;background:rgba(255,255,255,0.04);font:600 6.5px/1.1 var(--font);color:var(--bs-white)">${s.name}</div>
-              </div>`).join('')}
+              </div>`
+                )
+                .join('')}
             </div>
           </div>`;
-        })() },
-      { name: 'Color card', size: 'md',
+        })(),
+      },
+      {
+        name: 'Color card',
+        size: 'md',
         thumb: `<div class="am-tpl-thumb" style="padding:14px"><div style="height:100%;border-radius:6px;background:var(--bs-cyan);padding:16px 18px;color:var(--bs-navy);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden">
           <div style="display:flex;flex-direction:column;gap:3px">
             <div style="font:700 5.5px/1 var(--font);letter-spacing:0.14em;text-transform:uppercase;opacity:0.6">Primary · 02</div>
@@ -208,49 +220,60 @@
             <span style="opacity:0.6">CMYK</span><span>75 · 0 · 20 · 0</span>
             <span style="opacity:0.6">PMS</span><span>312 C</span>
           </div>
-        </div></div>` },
-      { name: 'Color cards', size: 'lg',
+        </div></div>`,
+      },
+      {
+        name: 'Color cards',
+        size: 'lg',
         thumb: (() => {
           const cards = [
-            { bg: 'var(--bs-navy)',  n: 'BluStar\nNavy',  num: '01', hex: '#061833', rgb: '6 · 24 · 51',    cmyk: '100 · 53 · 0 · 80',  pms: '4280 C' },
-            { bg: 'var(--bs-cyan)',  n: 'BluStar\nCyan',  num: '02', hex: '#0FC4D5', rgb: '15 · 196 · 213', cmyk: '75 · 0 · 20 · 0',    pms: '312 C',  dark: true },
-            { bg: 'var(--bs-blue)',  n: 'Royal\nBlue',    num: '03', hex: '#3259FF', rgb: '50 · 89 · 255',  cmyk: '80 · 65 · 0 · 0',    pms: '2728 C' },
+            { bg: 'var(--bs-navy)', n: 'BluStar\nNavy', num: '01', hex: '#061833', rgb: '6 · 24 · 51', cmyk: '100 · 53 · 0 · 80', pms: '4280 C' },
+            { bg: 'var(--bs-cyan)', n: 'BluStar\nCyan', num: '02', hex: '#0FC4D5', rgb: '15 · 196 · 213', cmyk: '75 · 0 · 20 · 0', pms: '312 C', dark: true },
+            { bg: 'var(--bs-blue)', n: 'Royal\nBlue', num: '03', hex: '#3259FF', rgb: '50 · 89 · 255', cmyk: '80 · 65 · 0 · 0', pms: '2728 C' },
           ];
-          const row = (l, v, dark) => `<div style="display:grid;grid-template-columns:auto 1fr;column-gap:6px"><span style="opacity:${dark?0.55:0.6}">${l}</span><span style="opacity:${dark?0.9:0.85}">${v}</span></div>`;
+          const row = (l, v, dark) => `<div style="display:grid;grid-template-columns:auto 1fr;column-gap:6px"><span style="opacity:${dark ? 0.55 : 0.6}">${l}</span><span style="opacity:${dark ? 0.9 : 0.85}">${v}</span></div>`;
           return `<div class="am-tpl-thumb" style="padding:14px 16px;display:flex;flex-direction:column;gap:10px;align-content:start">
             <div style="display:flex;align-items:baseline;justify-content:space-between">
               <div style="font:600 9px/1 var(--font);color:var(--bs-white);letter-spacing:-0.01em">Primary palette</div>
               <div style="font:500 6px/1 var(--font);color:rgba(255,255,255,0.5);letter-spacing:0.06em;text-transform:uppercase">3 colors</div>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:1">${cards.map(c=>{
-              const ink = c.dark ? 'var(--bs-navy)' : 'var(--bs-white)';
-              return `<div style="aspect-ratio:3/4;border-radius:5px;background:${c.bg};border:1px solid rgba(255,255,255,0.12);padding:10px 11px;color:${ink};display:flex;flex-direction:column;justify-content:space-between">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:1">${cards
+              .map(c => {
+                const ink = c.dark ? 'var(--bs-navy)' : 'var(--bs-white)';
+                return `<div style="aspect-ratio:3/4;border-radius:5px;background:${c.bg};border:1px solid rgba(255,255,255,0.12);padding:10px 11px;color:${ink};display:flex;flex-direction:column;justify-content:space-between">
                 <div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="font:600 8px/1.05 var(--font);letter-spacing:-0.01em;white-space:pre-line">${c.n}</div><div style="font:700 5.5px/1 ui-monospace,monospace;opacity:0.55">${c.num}</div></div>
-                <div style="font:4.8px/1.55 ui-monospace,monospace;display:flex;flex-direction:column;gap:1px">${row('HEX',c.hex,c.dark)}${row('RGB',c.rgb,c.dark)}${row('CMYK',c.cmyk,c.dark)}${row('PMS',c.pms,c.dark)}</div>
+                <div style="font:4.8px/1.55 ui-monospace,monospace;display:flex;flex-direction:column;gap:1px">${row('HEX', c.hex, c.dark)}${row('RGB', c.rgb, c.dark)}${row('CMYK', c.cmyk, c.dark)}${row('PMS', c.pms, c.dark)}</div>
               </div>`;
-            }).join('')}</div>
+              })
+              .join('')}</div>
           </div>`;
-        })() },
-      { name: 'Color palette', size: 'md',
+        })(),
+      },
+      {
+        name: 'Color palette',
+        size: 'md',
         thumb: (() => {
           const cols = [
-            { hex: '#0FC4D5', ink: 'var(--bs-navy)',  name: 'Cyan',    code: 'C-500' },
-            { hex: '#235789', ink: 'var(--bs-white)', name: 'Steel',   code: 'B-600' },
-            { hex: '#0A1F3B', ink: 'var(--bs-white)', name: 'Navy',    code: 'B-900' },
-            { hex: '#F5B888', ink: 'var(--bs-navy)',  name: 'Sand',    code: 'O-200' },
-            { hex: '#ED5A1F', ink: 'var(--bs-white)', name: 'Ember',   code: 'O-500' },
-            { hex: '#A23A1A', ink: 'var(--bs-white)', name: 'Rust',    code: 'O-700' },
-            { hex: '#7CE56F', ink: 'var(--bs-navy)',  name: 'Lime',    code: 'G-400' },
+            { hex: '#0FC4D5', ink: 'var(--bs-navy)', name: 'Cyan', code: 'C-500' },
+            { hex: '#235789', ink: 'var(--bs-white)', name: 'Steel', code: 'B-600' },
+            { hex: '#0A1F3B', ink: 'var(--bs-white)', name: 'Navy', code: 'B-900' },
+            { hex: '#F5B888', ink: 'var(--bs-navy)', name: 'Sand', code: 'O-200' },
+            { hex: '#ED5A1F', ink: 'var(--bs-white)', name: 'Ember', code: 'O-500' },
+            { hex: '#A23A1A', ink: 'var(--bs-white)', name: 'Rust', code: 'O-700' },
+            { hex: '#7CE56F', ink: 'var(--bs-navy)', name: 'Lime', code: 'G-400' },
           ];
           return `<div class="am-tpl-thumb" style="padding:14px 16px;display:flex;flex-direction:column;gap:9px;align-content:start">
             <div style="display:flex;align-items:baseline;justify-content:space-between">
               <div style="font:600 9px/1 var(--font);color:var(--bs-white);letter-spacing:-0.01em">Color palette</div>
               <div style="font:500 6px/1 var(--font);color:rgba(255,255,255,0.5);letter-spacing:0.06em;text-transform:uppercase">${cols.length} tokens</div>
             </div>
-            <div style="aspect-ratio:16/9;border-radius:6px;overflow:hidden;display:grid;grid-template-columns:repeat(${cols.length},1fr);flex:1">${cols.map(c=>`<div style="background:${c.hex};padding:8px 7px;color:${c.ink};display:flex;flex-direction:column;justify-content:space-between"><div style="display:flex;flex-direction:column;gap:1px"><span style="font:600 6.5px/1 var(--font);letter-spacing:-0.01em">${c.name}</span><span style="font:500 4.5px/1 ui-monospace,monospace;opacity:0.55;letter-spacing:0.04em">${c.code}</span></div><span style="font:500 4.5px/1 ui-monospace,monospace;opacity:0.65">${c.hex.toUpperCase()}</span></div>`).join('')}</div>
+            <div style="aspect-ratio:16/9;border-radius:6px;overflow:hidden;display:grid;grid-template-columns:repeat(${cols.length},1fr);flex:1">${cols.map(c => `<div style="background:${c.hex};padding:8px 7px;color:${c.ink};display:flex;flex-direction:column;justify-content:space-between"><div style="display:flex;flex-direction:column;gap:1px"><span style="font:600 6.5px/1 var(--font);letter-spacing:-0.01em">${c.name}</span><span style="font:500 4.5px/1 ui-monospace,monospace;opacity:0.55;letter-spacing:0.04em">${c.code}</span></div><span style="font:500 4.5px/1 ui-monospace,monospace;opacity:0.65">${c.hex.toUpperCase()}</span></div>`).join('')}</div>
           </div>`;
-        })() },
-      { name: 'Color pairing', size: 'lg',
+        })(),
+      },
+      {
+        name: 'Color pairing',
+        size: 'lg',
         thumb: (() => {
           const swatches = [
             { hex: '#061833', name: 'Azul Asfalto' },
@@ -262,10 +285,11 @@
             { hex: '#BFFAFF', name: 'Azul Aberto' },
             { hex: '#DFFCFF', name: 'Azul Nuvem' },
           ];
-          const tab = (l, active) => `<span style="font:${active?'600':'500'} 5.5px/1 var(--font);color:${active?'var(--bs-white)':'rgba(255,255,255,0.5)'};padding:4px 6px;border-bottom:1.5px solid ${active?'var(--bs-cyan)':'transparent'}">${l}</span>`;
-          const row = (s) => `<div style="display:flex;align-items:center;gap:5px;padding:2.5px 0"><span style="width:7px;height:7px;border-radius:50%;background:${s.hex};box-shadow:inset 0 0 0 0.5px rgba(255,255,255,0.25);${s.selected?'outline:1px solid var(--bs-cyan);outline-offset:1px;':''}"></span><span style="font:${s.selected?'600':'500'} 5px/1 var(--font);color:${s.selected?'var(--bs-white)':'rgba(255,255,255,0.65)'}">${s.name}</span></div>`;
+          const tab = (l, active) => `<span style="font:${active ? '600' : '500'} 5.5px/1 var(--font);color:${active ? 'var(--bs-white)' : 'rgba(255,255,255,0.5)'};padding:4px 6px;border-bottom:1.5px solid ${active ? 'var(--bs-cyan)' : 'transparent'}">${l}</span>`;
+          const row = s =>
+            `<div style="display:flex;align-items:center;gap:5px;padding:2.5px 0"><span style="width:7px;height:7px;border-radius:50%;background:${s.hex};box-shadow:inset 0 0 0 0.5px rgba(255,255,255,0.25);${s.selected ? 'outline:1px solid var(--bs-cyan);outline-offset:1px;' : ''}"></span><span style="font:${s.selected ? '600' : '500'} 5px/1 var(--font);color:${s.selected ? 'var(--bs-white)' : 'rgba(255,255,255,0.65)'}">${s.name}</span></div>`;
           return `<div class="am-tpl-thumb" style="padding:12px 14px;align-content:start;display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;gap:2px;border-bottom:1px solid rgba(255,255,255,0.14)">${tab('Brand',true)}${tab('Marketing')}${tab('APP')}${tab('Ilustração')}</div>
+            <div style="display:flex;gap:2px;border-bottom:1px solid rgba(255,255,255,0.14)">${tab('Brand', true)}${tab('Marketing')}${tab('APP')}${tab('Ilustração')}</div>
             <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:10px;flex:1">
               <div style="display:flex;flex-direction:column">
                 <div style="display:flex;flex-direction:column">${swatches.map(row).join('')}</div>
@@ -279,50 +303,84 @@
               </div>
             </div>
           </div>`;
-        })() },
-      { name: 'Paleta de cores', size: 'lg',
+        })(),
+      },
+      {
+        name: 'Paleta de cores',
+        size: 'lg',
         thumb: (() => {
-          const palette = ['#000000','#04001E','#0A1F3B','#3259FF','#0FC4D5','#A6D9DE','#BFFAFF','#DFFCFF','#FFFFFF','#F3F4F6','#D1D5DB','#9CA3AF','#6B7280','#4B5563','#374151','#1F2937','#0A1018','#1B8FA8','#235789','#0A1F3B','#F5B888','#ED5A1F','#7CE56F'];
+          const palette = ['#000000', '#04001E', '#0A1F3B', '#3259FF', '#0FC4D5', '#A6D9DE', '#BFFAFF', '#DFFCFF', '#FFFFFF', '#F3F4F6', '#D1D5DB', '#9CA3AF', '#6B7280', '#4B5563', '#374151', '#1F2937', '#0A1018', '#1B8FA8', '#235789', '#0A1F3B', '#F5B888', '#ED5A1F', '#7CE56F'];
           const selected = new Set([4, 5, 6, 17, 20, 22]);
           const cols = 17;
-          const tab = (l, active) => `<span style="font:${active?'600':'500'} 5.5px/1 var(--font);color:${active?'var(--bs-white)':'rgba(255,255,255,0.5)'};padding:4px 6px;border-bottom:1.5px solid ${active?'var(--bs-cyan)':'transparent'}">${l}</span>`;
+          const tab = (l, active) => `<span style="font:${active ? '600' : '500'} 5.5px/1 var(--font);color:${active ? 'var(--bs-white)' : 'rgba(255,255,255,0.5)'};padding:4px 6px;border-bottom:1.5px solid ${active ? 'var(--bs-cyan)' : 'transparent'}">${l}</span>`;
           return `<div class="am-tpl-thumb" style="padding:14px 16px;align-content:start;display:flex;flex-direction:column;gap:9px">
             <div style="display:flex;align-items:baseline;justify-content:space-between">
               <div style="font:600 9px/1 var(--font);color:var(--bs-white);letter-spacing:-0.01em">Color reference</div>
               <div style="font:500 6px/1 var(--font);color:rgba(255,255,255,0.5);letter-spacing:0.06em;text-transform:uppercase">${selected.size} active · ${palette.length} total</div>
             </div>
-            <div style="display:flex;gap:2px;border-bottom:1px solid rgba(255,255,255,0.14)">${tab('Illustration',true)}${tab('Marketing')}${tab('Product')}${tab('Brand')}</div>
-            <div style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:2px;flex:1;align-content:start">${palette.map((c,i)=>`<div style="aspect-ratio:1;background:${c};border-radius:2px;box-shadow:inset 0 0 0 0.5px rgba(255,255,255,0.16);opacity:${selected.has(i)?1:0.18}"></div>`).join('')}</div>
+            <div style="display:flex;gap:2px;border-bottom:1px solid rgba(255,255,255,0.14)">${tab('Illustration', true)}${tab('Marketing')}${tab('Product')}${tab('Brand')}</div>
+            <div style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:2px;flex:1;align-content:start">${palette.map((c, i) => `<div style="aspect-ratio:1;background:${c};border-radius:2px;box-shadow:inset 0 0 0 0.5px rgba(255,255,255,0.16);opacity:${selected.has(i) ? 1 : 0.18}"></div>`).join('')}</div>
           </div>`;
-        })() },
-      { name: 'Color specs', size: 'lg',
+        })(),
+      },
+      {
+        name: 'Color specs',
+        size: 'lg',
         thumb: `<div class="am-tpl-thumb" style="background:#fff;padding:8px;display:flex;gap:5px;align-items:stretch;border-radius:6px">
           <div style="flex:1;background:#0FC4D5;border-radius:5px;padding:8px;display:flex;flex-direction:column;gap:5px"><div style="font:500 7px/1.15 var(--font);color:#061833">Azul Turquesa</div><div style="font:500 5px/1.5 var(--font);color:#061833;opacity:.8">HEX #0FC4D5<br>R15 G196 B213</div></div>
-          <div style="flex:1;display:flex;flex-direction:column;gap:5px">${[['#061833','#fff'],['#3259FF','#fff'],['#FFFFFF','#061833',1]].map(([b,k,l])=>`<div style="flex:1;background:${b};border-radius:5px;padding:7px;${l?'box-shadow:inset 0 0 0 0.6px #D9D9D9':''}"><div style="font:500 5.5px/1.15 var(--font);color:${k}">Royal Blue</div></div>`).join('')}</div>
-          <div style="flex:1;display:flex;flex-direction:column;gap:5px">${[['#000','#fff'],['#04001E','#fff'],['#3259FF','#fff'],['#A6D9DE','#061833'],['#BFFAFF','#061833'],['#DFFCFF','#061833']].map(([b,k])=>`<div style="flex:1;background:${b};border-radius:4px;padding:5px;min-height:0"><div style="font:500 4.5px/1.1 var(--font);color:${k}">Cyan 200</div></div>`).join('')}</div>
-        </div>` },
-      { name: 'Color contrast', size: 'lg',
+          <div style="flex:1;display:flex;flex-direction:column;gap:5px">${[
+            ['#061833', '#fff'],
+            ['#3259FF', '#fff'],
+            ['#FFFFFF', '#061833', 1],
+          ]
+            .map(([b, k, l]) => `<div style="flex:1;background:${b};border-radius:5px;padding:7px;${l ? 'box-shadow:inset 0 0 0 0.6px #D9D9D9' : ''}"><div style="font:500 5.5px/1.15 var(--font);color:${k}">Royal Blue</div></div>`)
+            .join('')}</div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:5px">${[
+            ['#000', '#fff'],
+            ['#04001E', '#fff'],
+            ['#3259FF', '#fff'],
+            ['#A6D9DE', '#061833'],
+            ['#BFFAFF', '#061833'],
+            ['#DFFCFF', '#061833'],
+          ]
+            .map(([b, k]) => `<div style="flex:1;background:${b};border-radius:4px;padding:5px;min-height:0"><div style="font:500 4.5px/1.1 var(--font);color:${k}">Cyan 200</div></div>`)
+            .join('')}</div>
+        </div>`,
+      },
+      {
+        name: 'Color contrast',
+        size: 'lg',
         thumb: (() => {
-          const bgs = ['#FFFFFF','#DFFCFF','#BFFAFF','#A6D9DE','#0FC4D5','#4D8BFE','#3259FF','#061833','#04001E','#000000'];
-          const fgs = ['#0FC4D5','#3259FF','#000000','#FFFFFF'];
-          return `<div class="am-tpl-thumb" style="background:#fff;padding:7px;display:grid;grid-template-rows:repeat(4,1fr);gap:3px;border-radius:6px">${fgs.map(fg=>`<div style="display:grid;grid-template-columns:repeat(10,1fr);gap:3px">${bgs.map(bg=>`<div style="background:${bg};border-radius:2px;display:flex;align-items:center;justify-content:center;${bg==='#FFFFFF'?'box-shadow:inset 0 0 0 0.6px #D9D9D9':''}"><span style="font:800 5px/1 var(--font);color:${fg}">Aa</span></div>`).join('')}</div>`).join('')}</div>`;
-        })() },
-      { name: 'Color accents', size: 'lg',
+          const bgs = ['#FFFFFF', '#DFFCFF', '#BFFAFF', '#A6D9DE', '#0FC4D5', '#4D8BFE', '#3259FF', '#061833', '#04001E', '#000000'];
+          const fgs = ['#0FC4D5', '#3259FF', '#000000', '#FFFFFF'];
+          return `<div class="am-tpl-thumb" style="background:#fff;padding:7px;display:grid;grid-template-rows:repeat(4,1fr);gap:3px;border-radius:6px">${fgs.map(fg => `<div style="display:grid;grid-template-columns:repeat(10,1fr);gap:3px">${bgs.map(bg => `<div style="background:${bg};border-radius:2px;display:flex;align-items:center;justify-content:center;${bg === '#FFFFFF' ? 'box-shadow:inset 0 0 0 0.6px #D9D9D9' : ''}"><span style="font:800 5px/1 var(--font);color:${fg}">Aa</span></div>`).join('')}</div>`).join('')}</div>`;
+        })(),
+      },
+      {
+        name: 'Color accents',
+        size: 'lg',
         thumb: (() => {
-          const L=['#0A1726','#A6A6A6','#7CE56F','#F5DB87','#F5B888','#F58C82'];
-          const R=['#1C2430','#ED5A1F','#1E3A1B','#6E6E12','#7A3A12','#4A1410'];
-          const ink=(h)=>{const n=parseInt(h.replace('#',''),16);const L=(0.299*((n>>16)&255)+0.587*((n>>8)&255)+0.114*(n&255))/255;return L>0.6?'#061833':'#FFFFFF';};
-          const bar=(c)=>`<div style="flex:1;background:${c};border-radius:4px;min-height:0;padding:5px 6px"><div style="font:500 4.5px/1.1 var(--font);color:${ink(c)}">Orange</div></div>`;
+          const L = ['#0A1726', '#A6A6A6', '#7CE56F', '#F5DB87', '#F5B888', '#F58C82'];
+          const R = ['#1C2430', '#ED5A1F', '#1E3A1B', '#6E6E12', '#7A3A12', '#4A1410'];
+          const ink = h => {
+            const n = parseInt(h.replace('#', ''), 16);
+            const L = (0.299 * ((n >> 16) & 255) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255;
+            return L > 0.6 ? '#061833' : '#FFFFFF';
+          };
+          const bar = c => `<div style="flex:1;background:${c};border-radius:4px;min-height:0;padding:5px 6px"><div style="font:500 4.5px/1.1 var(--font);color:${ink(c)}">Orange</div></div>`;
           return `<div class="am-tpl-thumb" style="background:#fff;padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px;border-radius:6px"><div style="display:flex;flex-direction:column;gap:5px">${L.map(bar).join('')}</div><div style="display:flex;flex-direction:column;gap:5px">${R.map(bar).join('')}</div></div>`;
-        })() },
+        })(),
+      },
     ],
     basic: [
       // Resources & Prev / Next removidos 2026-05-28 a pedido do usuário.
-      { name: 'Spacing', size: 'md',
+      {
+        name: 'Spacing',
+        size: 'md',
         thumb: (() => {
           const steps = [
-            { token: '4',  name: 'xs' },
-            { token: '8',  name: 'sm' },
+            { token: '4', name: 'xs' },
+            { token: '8', name: 'sm' },
             { token: '12', name: 'md' },
             { token: '16', name: 'lg' },
             { token: '24', name: 'xl' },
@@ -336,27 +394,37 @@
               <div style="font:500 6px/1 var(--font);color:rgba(255,255,255,0.5);letter-spacing:0.06em;text-transform:uppercase">px · token</div>
             </div>
             <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:8px;flex:1">
-              ${steps.map(s => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:flex-end;height:100%">
-                <div style="width:100%;background:linear-gradient(180deg,var(--bs-cyan) 0%,rgba(15,196,213,0.45) 100%);border-radius:2px;height:${Math.round((s.token/max)*70)}%;min-height:6%"></div>
+              ${steps
+                .map(
+                  s => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:flex-end;height:100%">
+                <div style="width:100%;background:linear-gradient(180deg,var(--bs-cyan) 0%,rgba(15,196,213,0.45) 100%);border-radius:2px;height:${Math.round((s.token / max) * 70)}%;min-height:6%"></div>
                 <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
                   <span style="font:700 6.5px/1 var(--font);color:var(--bs-white)">${s.token}</span>
                   <span style="font:500 5px/1 ui-monospace,monospace;color:rgba(255,255,255,0.5);letter-spacing:0.04em">${s.name}</span>
                 </div>
-              </div>`).join('')}
+              </div>`
+                )
+                .join('')}
             </div>
           </div>`;
-        })() },
-      { name: 'Divider', size: 'sm',
-        thumb: '<div class="am-tpl-thumb" style="padding:20px;display:flex;align-items:center"><div style="width:100%;height:1px;background:rgba(255,255,255,0.18)"></div></div>' },
-      { name: 'On this page', size: 'lg',
+        })(),
+      },
+      { name: 'Divider', size: 'sm', thumb: '<div class="am-tpl-thumb" style="padding:20px;display:flex;align-items:center"><div style="width:100%;height:1px;background:rgba(255,255,255,0.18)"></div></div>' },
+      {
+        name: 'On this page',
+        size: 'lg',
         thumb: (() => {
-          const links = ['Our color palettes','Color with our logo','Color pairing tool','Color with typography','Our color strategy','Color with illustration','Color with images','Neutral backgrounds'];
-          const row = (t) => `<div style="display:flex;align-items:center;justify-content:space-between;gap:4px;padding:4px 2px;border-top:1px solid rgba(255,255,255,0.14)"><span style="font:500 5.5px/1.1 system-ui;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t}</span><span style="font:6px/1 system-ui;color:#0FC4D5">→</span></div>`;
+          const links = ['Our color palettes', 'Color with our logo', 'Color pairing tool', 'Color with typography', 'Our color strategy', 'Color with illustration', 'Color with images', 'Neutral backgrounds'];
+          const row = t =>
+            `<div style="display:flex;align-items:center;justify-content:space-between;gap:4px;padding:4px 2px;border-top:1px solid rgba(255,255,255,0.14)"><span style="font:500 5.5px/1.1 system-ui;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t}</span><span style="font:6px/1 system-ui;color:#0FC4D5">→</span></div>`;
           return `<div class="am-tpl-thumb" style="padding:14px 16px;grid-template-columns:1fr 1.3fr;gap:12px;align-items:start;align-content:center"><div style="font:600 14px/1 system-ui;color:#fff;letter-spacing:-0.02em">On this<br/>page</div><div style="display:grid;grid-template-columns:1fr 1fr;column-gap:6px">${links.map(row).join('')}</div></div>`;
-        })() },
+        })(),
+      },
     ],
     video: [
-      { name: 'Video full screen 16:9', size: 'lg',
+      {
+        name: 'Video full screen 16:9',
+        size: 'lg',
         thumb: `<div class="am-tpl-thumb" style="aspect-ratio:16/9;padding:0;background:#000;overflow:hidden;position:relative;display:block">
           <div style="position:absolute;inset:0;background:url('https://res.cloudinary.com/dq0tnoaye/video/upload/q_auto/f_auto/v1780335241/16_09_fjzgdc.jpg') center/cover no-repeat"></div>
           <div style="position:absolute;inset:0;display:grid;place-items:center">
@@ -364,34 +432,53 @@
               <span class="bs-icon" data-fill="1" style="--bs-icon-size:18px">play_arrow</span>
             </div>
           </div>
-        </div>` },
-      { name: 'Video 4× 9:16', size: 'lg',
-        thumb: `<div class="am-tpl-thumb" style="aspect-ratio:16/9;padding:8px;background:#000;overflow:hidden;display:grid;grid-template-columns:repeat(4,1fr);gap:5px">${Array(4).fill(`<div style="background:url('https://res.cloudinary.com/dq0tnoaye/video/upload/q_auto/f_auto/v1780335253/9_16_ukmboo.jpg') center/cover no-repeat;border-radius:3px"></div>`).join('')}</div>` },
-      { name: 'Video 16:9 + 9:16', size: 'lg',
+        </div>`,
+      },
+      {
+        name: 'Video 4× 9:16',
+        size: 'lg',
+        thumb: `<div class="am-tpl-thumb" style="aspect-ratio:16/9;padding:8px;background:#000;overflow:hidden;display:grid;grid-template-columns:repeat(4,1fr);gap:5px">${Array(4).fill(`<div style="background:url('https://res.cloudinary.com/dq0tnoaye/video/upload/q_auto/f_auto/v1780335253/9_16_ukmboo.jpg') center/cover no-repeat;border-radius:3px"></div>`).join('')}</div>`,
+      },
+      {
+        name: 'Video 16:9 + 9:16',
+        size: 'lg',
         thumb: `<div class="am-tpl-thumb" style="aspect-ratio:16/9;padding:8px;background:#000;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:start">
           <div><div style="aspect-ratio:16/9;background:url('https://res.cloudinary.com/dq0tnoaye/video/upload/w_300,c_limit,q_auto,f_auto/v1780335241/16_09_fjzgdc.jpg') center/cover no-repeat;border-radius:3px"></div><div style="height:3px;width:72%;margin-top:4px;background:rgba(255,255,255,0.32);border-radius:2px"></div></div>
           <div><div style="aspect-ratio:9/16;background:url('https://res.cloudinary.com/dq0tnoaye/video/upload/w_240,c_limit,q_auto,f_auto/v1780335253/9_16_ukmboo.jpg') center/cover no-repeat;border-radius:3px"></div><div style="height:3px;width:72%;margin-top:4px;background:rgba(255,255,255,0.32);border-radius:2px"></div></div>
-        </div>` },
-      { name: 'Video editorial 4:3 + 9:16', size: 'lg',
+        </div>`,
+      },
+      {
+        name: 'Video editorial 4:3 + 9:16',
+        size: 'lg',
         thumb: `<div class="am-tpl-thumb" style="aspect-ratio:16/9;padding:8px;background:#000;overflow:hidden;display:grid;grid-template-columns:repeat(12,1fr);gap:3px;align-items:start">
           <div style="grid-column:1 / 6;margin-top:14%"><div style="aspect-ratio:4/3;background:url('https://res.cloudinary.com/dq0tnoaye/video/upload/w_300,c_limit,q_auto,f_auto/v1780335241/16_09_fjzgdc.jpg') center/cover no-repeat;border-radius:3px"></div><div style="height:3px;width:60%;margin-top:3px;background:rgba(255,255,255,0.32);border-radius:2px"></div></div>
           <div style="grid-column:9 / 13"><div style="aspect-ratio:9/16;background:url('https://res.cloudinary.com/dq0tnoaye/video/upload/w_240,c_limit,q_auto,f_auto/v1780335253/9_16_ukmboo.jpg') center/cover no-repeat;border-radius:3px"></div><div style="height:3px;width:80%;margin-top:3px;background:rgba(255,255,255,0.32);border-radius:2px"></div></div>
-        </div>` },
-      { name: 'Video editorial 9:16 + 16:9', size: 'lg',
+        </div>`,
+      },
+      {
+        name: 'Video editorial 9:16 + 16:9',
+        size: 'lg',
         thumb: `<div class="am-tpl-thumb" style="aspect-ratio:16/9;padding:8px;background:#000;overflow:hidden;display:grid;grid-template-columns:repeat(12,1fr);gap:3px;align-items:start">
           <div style="grid-column:1 / 6"><div style="aspect-ratio:9/16;background:url('https://res.cloudinary.com/dq0tnoaye/video/upload/w_240,c_limit,q_auto,f_auto/v1780335253/9_16_ukmboo.jpg') center/cover no-repeat;border-radius:3px"></div><div style="height:3px;width:80%;margin-top:3px;background:rgba(255,255,255,0.32);border-radius:2px"></div></div>
           <div style="grid-column:7 / 13;margin-top:18%"><div style="aspect-ratio:16/9;background:url('https://res.cloudinary.com/dq0tnoaye/video/upload/w_300,c_limit,q_auto,f_auto/v1780335241/16_09_fjzgdc.jpg') center/cover no-repeat;border-radius:3px"></div><div style="height:3px;width:60%;margin-top:3px;background:rgba(255,255,255,0.32);border-radius:2px"></div></div>
-        </div>` },
-      { name: 'Video duo 16:9 (diagonal)', size: 'lg',
+        </div>`,
+      },
+      {
+        name: 'Video duo 16:9 (diagonal)',
+        size: 'lg',
         thumb: `<div class="am-tpl-thumb" style="aspect-ratio:16/9;padding:8px;background:#000;overflow:hidden;display:grid;grid-template-columns:repeat(12,1fr);gap:3px;align-items:start">
           <div style="grid-column:1 / 6"><div style="aspect-ratio:16/9;background:url('https://res.cloudinary.com/dq0tnoaye/video/upload/w_300,c_limit,q_auto,f_auto/v1780335241/16_09_fjzgdc.jpg') center/cover no-repeat;border-radius:3px"></div><div style="height:3px;width:65%;margin-top:3px;background:rgba(255,255,255,0.32);border-radius:2px"></div></div>
           <div style="grid-column:8 / 13;margin-top:22%"><div style="aspect-ratio:16/9;background:url('https://res.cloudinary.com/dq0tnoaye/video/upload/w_300,c_limit,q_auto,f_auto/v1780335241/16_09_fjzgdc.jpg') center/cover no-repeat;border-radius:3px"></div><div style="height:3px;width:65%;margin-top:3px;background:rgba(255,255,255,0.32);border-radius:2px"></div></div>
-        </div>` },
-      { name: 'Video 9:16 + 16:9 (alto)', size: 'lg',
+        </div>`,
+      },
+      {
+        name: 'Video 9:16 + 16:9 (alto)',
+        size: 'lg',
         thumb: `<div class="am-tpl-thumb" style="aspect-ratio:16/9;padding:8px;background:#000;overflow:hidden;display:grid;grid-template-columns:repeat(12,1fr);gap:3px;align-items:start">
           <div style="grid-column:1 / 6"><div style="aspect-ratio:9/16;background:url('https://res.cloudinary.com/dq0tnoaye/video/upload/w_240,c_limit,q_auto,f_auto/v1780335253/9_16_ukmboo.jpg') center/cover no-repeat;border-radius:3px"></div><div style="height:3px;width:80%;margin-top:3px;background:rgba(255,255,255,0.32);border-radius:2px"></div></div>
           <div style="grid-column:7 / 13;margin-top:6%"><div style="aspect-ratio:16/9;background:url('https://res.cloudinary.com/dq0tnoaye/video/upload/w_300,c_limit,q_auto,f_auto/v1780335241/16_09_fjzgdc.jpg') center/cover no-repeat;border-radius:3px"></div><div style="height:3px;width:60%;margin-top:3px;background:rgba(255,255,255,0.32);border-radius:2px"></div></div>
-        </div>` },
+        </div>`,
+      },
     ],
   };
   const modules = {
@@ -418,10 +505,13 @@
     // user touched a template inside DS, the Add Module card must reflect that
     // same look (single source of truth). overrides keyed by template name.
     if (!window.__praiaTplOverrides) {
-      try { window.__praiaTplOverrides = JSON.parse(localStorage.getItem('praia.tpl.overrides') || '{}'); }
-      catch { window.__praiaTplOverrides = {}; }
+      try {
+        window.__praiaTplOverrides = JSON.parse(localStorage.getItem('praia.tpl.overrides') || '{}');
+      } catch {
+        window.__praiaTplOverrides = {};
+      }
     }
-    const overrideFor = (name) => name && window.__praiaTplOverrides && window.__praiaTplOverrides[name];
+    const overrideFor = name => name && window.__praiaTplOverrides && window.__praiaTplOverrides[name];
     // Unified Templates view (matches the DS Templates section). Mixes text +
     // image + video templates in a single grid, same source of truth.
     if (cat === 'templates') {
@@ -433,8 +523,13 @@
         if (t.id) c.dataset.tplId = t.id;
         c.innerHTML = `<div class="am-tpl-thumb-frame">${overrideFor(t.name) || t.thumb}</div><div class="am-tpl-label"><span>${t.name}</span></div>`;
         c.addEventListener('click', () => {
-          if (kind === 'module') { selectedModuleName = t.name; selectedTplId = null; }
-          else { selectedTplId = t.id; selectedModuleName = null; }
+          if (kind === 'module') {
+            selectedModuleName = t.name;
+            selectedTplId = null;
+          } else {
+            selectedTplId = t.id;
+            selectedModuleName = null;
+          }
           selectedName = t.name;
           document.querySelectorAll('.am-tpl-card').forEach(x => x.classList.toggle('active', x === c));
           if (kind === 'image') updatePreview(t);
@@ -458,12 +553,19 @@
         c.dataset.name = t.name;
         c.dataset.tplId = t.id;
         c.innerHTML = `<div class="am-tpl-thumb-frame">${overrideFor(t.name) || t.thumb}</div><div class="am-tpl-label"><span>${t.name}</span></div>`;
-        c.addEventListener('click', () => { selectedTplId = t.id; selectedName = t.name; document.querySelectorAll('.am-tpl-card').forEach(x => x.classList.toggle('active', x === c)); });
+        c.addEventListener('click', () => {
+          selectedTplId = t.id;
+          selectedName = t.name;
+          document.querySelectorAll('.am-tpl-card').forEach(x => x.classList.toggle('active', x === c));
+        });
         c.addEventListener('dblclick', () => insertTemplate(t.id));
         grid.appendChild(c);
       });
       const current = textTemplates.find(t => t.id === selectedTplId) || textTemplates[0];
-      if (current) { selectedName = current.name; selectedTplId = current.id; }
+      if (current) {
+        selectedName = current.name;
+        selectedTplId = current.id;
+      }
       return;
     }
     if (cat === 'images') {
@@ -476,12 +578,21 @@
         c.dataset.name = t.name;
         c.dataset.tplId = t.id;
         c.innerHTML = `<div class="am-tpl-thumb-frame">${overrideFor(t.name) || t.thumb}</div><div class="am-tpl-label"><span>${t.name}</span></div>`;
-        c.addEventListener('click', () => { selectedTplId = t.id; selectedName = t.name; updatePreview(t); document.querySelectorAll('.am-tpl-card').forEach(x => x.classList.toggle('active', x === c)); });
+        c.addEventListener('click', () => {
+          selectedTplId = t.id;
+          selectedName = t.name;
+          updatePreview(t);
+          document.querySelectorAll('.am-tpl-card').forEach(x => x.classList.toggle('active', x === c));
+        });
         c.addEventListener('dblclick', () => insertTemplate(t.id));
         grid.appendChild(c);
       });
       const current = templates.find(t => t.id === selectedTplId) || templates[0];
-      if (current) { selectedName = current.name; selectedTplId = current.id; updatePreview(current); }
+      if (current) {
+        selectedName = current.name;
+        selectedTplId = current.id;
+        updatePreview(current);
+      }
       return;
     }
     (modules[cat] || []).forEach(m => {
@@ -491,17 +602,27 @@
       if (m.thumb) {
         // Cores uses a uniform card height for consistency; other thumb-bearing
         // categories (basic / video) keep the per-template size hint.
-        const sizeClass = cat === 'colors' ? 'tpl-h-md' : (tplSpanByName[m.size] || 'tpl-h-md');
+        const sizeClass = cat === 'colors' ? 'tpl-h-md' : tplSpanByName[m.size] || 'tpl-h-md';
         c.className = 'am-tpl-card ' + sizeClass + (m.name === selectedModuleName ? ' active' : '');
         c.dataset.name = m.name;
         c.innerHTML = `<div class="am-tpl-thumb-frame">${overrideFor(m.name) || m.thumb}</div><div class="am-tpl-label"><span>${m.name}</span></div>`;
-        c.addEventListener('click', () => { selectedModuleName = m.name; selectedName = m.name; selectedTplId = null; document.querySelectorAll('.am-tpl-card').forEach(x => x.classList.toggle('active', x === c)); });
+        c.addEventListener('click', () => {
+          selectedModuleName = m.name;
+          selectedName = m.name;
+          selectedTplId = null;
+          document.querySelectorAll('.am-tpl-card').forEach(x => x.classList.toggle('active', x === c));
+        });
         c.addEventListener('dblclick', () => insertModule(m.name));
       } else {
         c.className = 'am-card' + (m.name === selectedModuleName ? ' active' : '');
         c.dataset.name = m.name;
         c.innerHTML = `<span class="am-card-icon">${m.icon}</span><span>${m.name}</span>`;
-        c.addEventListener('click', () => { selectedModuleName = m.name; selectedName = m.name; updatePreview(); document.querySelectorAll('.am-card').forEach(x => x.classList.toggle('active', x === c)); });
+        c.addEventListener('click', () => {
+          selectedModuleName = m.name;
+          selectedName = m.name;
+          updatePreview();
+          document.querySelectorAll('.am-card').forEach(x => x.classList.toggle('active', x === c));
+        });
         c.addEventListener('dblclick', () => insertModule(m.name));
       }
       grid.appendChild(c);
@@ -509,16 +630,18 @@
   }
 
   const tplDescs = {
-    'Hero image':         { sub: 'Full-width media',   desc: 'A single hero photograph spanning the full content width. Use for chapter openers.' },
-    'Image gallery 4×3':  { sub: '4 × 3 grid',         desc: 'A 12-image grid for moodboards, photo series or component showcases.' },
-    'Image collage':      { sub: 'Overlap composition',desc: 'Three images arranged in an overlapping, asymmetric composition for editorial moments.' },
-    'Image + text':       { sub: '2 column',           desc: 'Image on the left, paragraph on the right. Standard editorial layout.' },
-    'Text + image':       { sub: '2 column',           desc: 'Paragraph on the left, image on the right. Mirror of the standard editorial.' },
-    'Two columns text':   { sub: '2 column',           desc: 'Two parallel text columns for principles, do/don\'t or pros/cons.' },
-    'Quote callout':      { sub: 'Pull quote',         desc: 'A centered pull-quote callout. Use sparingly to highlight a brand statement.' },
-    'Two images':         { sub: '2 column',           desc: 'Two images side-by-side. Good for before/after or product pairs.' },
+    'Hero image': { sub: 'Full-width media', desc: 'A single hero photograph spanning the full content width. Use for chapter openers.' },
+    'Image gallery 4×3': { sub: '4 × 3 grid', desc: 'A 12-image grid for moodboards, photo series or component showcases.' },
+    'Image collage': { sub: 'Overlap composition', desc: 'Three images arranged in an overlapping, asymmetric composition for editorial moments.' },
+    'Image + text': { sub: '2 column', desc: 'Image on the left, paragraph on the right. Standard editorial layout.' },
+    'Text + image': { sub: '2 column', desc: 'Paragraph on the left, image on the right. Mirror of the standard editorial.' },
+    'Two columns text': { sub: '2 column', desc: "Two parallel text columns for principles, do/don't or pros/cons." },
+    'Quote callout': { sub: 'Pull quote', desc: 'A centered pull-quote callout. Use sparingly to highlight a brand statement.' },
+    'Two images': { sub: '2 column', desc: 'Two images side-by-side. Good for before/after or product pairs.' },
   };
-  function updatePreview() { /* preview pane removed in white layout */ }
+  function updatePreview() {
+    /* preview pane removed in white layout */
+  }
 
   // Expose so other features (DS canvas, etc.) can render live templates
   window.__praiaBuildTemplate = buildTemplate;
@@ -536,7 +659,7 @@
   // Full-bleed templates break out of the page's content padding (edge-to-edge),
   // unlike the 12-col grid templates. They carry their own background.
   const FULLBLEED_TPL_NAMES = new Set(['Cover']);
-  window.__praiaIsTextTpl = (name) => TEXT_TPL_NAMES.has(name);
+  window.__praiaIsTextTpl = name => TEXT_TPL_NAMES.has(name);
   function wrapMasterInMirror(html, { transparentBg = false, autoHeight = false } = {}) {
     const tmp = document.createElement('div');
     tmp.innerHTML = html;
@@ -633,7 +756,7 @@
             // A chrome panel counts as "shown" when it's actually painted on
             // screen (not display:none, not translated off, has width). The
             // inspector is position:fixed, so offsetParent can't be trusted.
-            const shown = (el) => {
+            const shown = el => {
               if (!el) return false;
               const s = getComputedStyle(el);
               if (s.display === 'none' || s.visibility === 'hidden' || parseFloat(s.opacity) < 0.05) return false;
@@ -678,8 +801,8 @@
         // 1280 canvas) scaled to the column width. This makes the block grow as
         // text is typed and shrink as it's deleted.
         if (frame.dataset.praiaAutoheight === '1') {
-          const contentH = m.offsetHeight || (parseFloat(m.dataset.editH) || 0);
-          const fh = (contentH * (fw / ew)) + 'px';
+          const contentH = m.offsetHeight || parseFloat(m.dataset.editH) || 0;
+          const fh = contentH * (fw / ew) + 'px';
           if (frame.style.height !== fh) frame.style.height = fh;
           return;
         }
@@ -742,14 +865,17 @@
   // so the block grows/shrinks live as content is typed or deleted. Also flag the
   // instance as user-edited so its per-instance text survives reload and isn't
   // clobbered by master→instance propagation (it stays the source of truth).
-  document.addEventListener('input', (e) => {
+  document.addEventListener('input', e => {
     const inst = e.target.closest?.('[data-tpl-instance]');
-    if (inst) { inst.dataset.tplEdited = '1'; window.__praiaAutosave?.(); }
+    if (inst) {
+      inst.dataset.tplEdited = '1';
+      window.__praiaAutosave?.();
+    }
     if (e.target.closest?.('.praia-frame[data-praia-autoheight="1"]')) applyMirrorScale();
   });
   // Replace every inserted instance of `name` with the latest master thumb.
   // Called live during edit (MutationObserver) and on commitEditAndExit.
-  window.__praiaPropagateTemplate = function(name, thumbOuterHtml) {
+  window.__praiaPropagateTemplate = function (name, thumbOuterHtml) {
     if (!name || !thumbOuterHtml) return;
     const innerHtml = sanitizeOverrideForInstance(thumbOuterHtml, name);
     // If the user is interacting with an instance (typed in contenteditable,
@@ -775,8 +901,11 @@
     // in the Templates editor.
     const name = (templates.find(t => t.id === id) || textTemplates.find(t => t.id === id) || {}).name;
     if (!window.__praiaTplOverrides) {
-      try { window.__praiaTplOverrides = JSON.parse(localStorage.getItem('praia.tpl.overrides') || '{}'); }
-      catch { window.__praiaTplOverrides = {}; }
+      try {
+        window.__praiaTplOverrides = JSON.parse(localStorage.getItem('praia.tpl.overrides') || '{}');
+      } catch {
+        window.__praiaTplOverrides = {};
+      }
     }
     const overrideHtml = name && window.__praiaTplOverrides[name];
 
@@ -827,7 +956,10 @@
       // trocada individualmente pela barra da direita (Arquivo). Duas variantes:
       // fotos 1:1 (photo-grid-4x2) e fotos 4:5 (photo-grid-4x2-45).
       const ar = id === 'photo-grid-4x2-45' ? '4/5' : '1';
-      w.innerHTML = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--ds-gap, 16px)">${Array(8).fill(0).map(() => tplImg('aspect-ratio:' + ar)).join('')}</div>`;
+      w.innerHTML = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--ds-gap, 16px)">${Array(8)
+        .fill(0)
+        .map(() => tplImg('aspect-ratio:' + ar))
+        .join('')}</div>`;
     } else if (id === 'photo-2-wide') {
       // Foto — 2 imagens bem horizontais (21:9), full-width (fora a fora),
       // empilhadas com o gutter padrão do sistema (var(--ds-gap)) entre elas.
@@ -842,11 +974,17 @@
     } else if (id === 'photo-grid-2x1-45') {
       // Foto — 2 fotos 4:5 em 2 colunas (nosso grid; 2 col = 6 colunas DS cada).
       // Cada célula é um .tpl-img trocável pela barra da direita.
-      w.innerHTML = `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--ds-gap, 16px)">${Array(2).fill(0).map(() => tplImg('aspect-ratio:4/5')).join('')}</div>`;
+      w.innerHTML = `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--ds-gap, 16px)">${Array(2)
+        .fill(0)
+        .map(() => tplImg('aspect-ratio:4/5'))
+        .join('')}</div>`;
     } else if (id === 'photo-grid-3x2-169') {
       // Foto — grade 3 colunas × 2 linhas, 6 fotos 16:9 (nosso grid; 3 col = 4
       // colunas DS cada). Cada célula é um .tpl-img trocável pela barra da direita.
-      w.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--ds-gap, 16px)">${Array(6).fill(0).map(() => tplImg('aspect-ratio:16/9')).join('')}</div>`;
+      w.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--ds-gap, 16px)">${Array(6)
+        .fill(0)
+        .map(() => tplImg('aspect-ratio:16/9'))
+        .join('')}</div>`;
     } else if (id === 'photo-full-169') {
       // Foto — full screen: 1 imagem 16:9 ocupando toda a largura do conteúdo.
       // É um .tpl-img trocável pela barra da direita (Arquivo).
@@ -854,7 +992,10 @@
     } else if (id === 'photo-grid-4x1-916') {
       // Foto — 4 imagens 9:16 em uma linha (4 colunas, nosso grid). Cada célula
       // é um .tpl-img trocável individualmente pela barra da direita (Arquivo).
-      w.innerHTML = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--ds-gap, 16px)">${Array(4).fill(0).map(() => tplImg('aspect-ratio:9/16')).join('')}</div>`;
+      w.innerHTML = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--ds-gap, 16px)">${Array(4)
+        .fill(0)
+        .map(() => tplImg('aspect-ratio:9/16'))
+        .join('')}</div>`;
     } else if (id === 'hero-img') {
       w.innerHTML = `<div>${tplImg('aspect-ratio:16/9')}</div>`;
     } else if (id === 'split-circle') {
@@ -876,16 +1017,26 @@
     } else if (id === 'img-hero-pair') {
       w.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center"><div><h2 class="tk-xl" style="margin:0;color:var(--bs-white)">Enterprise-grade security for your brand intelligence</h2><p class="tk-m" style="margin:24px 0 0;color:var(--text-2);max-width:440px">Your brand is your most valuable asset. We protect it like it is.</p></div>${tplImg('aspect-ratio:1;height:100%')}</div>`;
     } else if (id === 'img-compliance') {
-      const badge = (label,bg,color)=>`<div style="position:relative"><div style="aspect-ratio:1;width:120px;background:${bg};color:${color};border-radius:24px;display:grid;place-items:center;font-family:var(--type-mb-family);font-weight:var(--type-mb-weight);font-size:var(--type-mb-size);letter-spacing:-0.01em">${label}</div><div class="tk-xs" style="position:absolute;top:-6px;right:-6px;width:22px;height:22px;background:var(--bs-white);border-radius:50%;display:grid;place-items:center;color:var(--bs-cyan)">✓</div></div>`;
-      w.innerHTML = `<div style="display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:center"><div><div class="world-eyebrow" style="margin:0 0 18px;color:var(--text-3)">Certified & compliant</div><h2 class="tk-xl" style="margin:0;color:var(--bs-white);max-width:560px">We maintain compliance with the most rigorous international security standards</h2><a class="tk-sb" href="#" style="display:inline-flex;background:var(--bs-white);color:var(--bs-navy);padding:12px 22px;border-radius:var(--r-full);text-decoration:none;margin-top:32px">Visit trust portal</a></div><div style="display:flex;gap:14px;align-items:center;justify-content:flex-end">${badge('SOC2 I & II','var(--bs-white)','var(--bs-navy)')}${badge('CCPA','var(--bs-white)','var(--bs-navy)')}${badge('GDPR','var(--bs-blue)','var(--bs-white)')}</div></div>`;
+      const badge = (label, bg, color) =>
+        `<div style="position:relative"><div style="aspect-ratio:1;width:120px;background:${bg};color:${color};border-radius:24px;display:grid;place-items:center;font-family:var(--type-mb-family);font-weight:var(--type-mb-weight);font-size:var(--type-mb-size);letter-spacing:-0.01em">${label}</div><div class="tk-xs" style="position:absolute;top:-6px;right:-6px;width:22px;height:22px;background:var(--bs-white);border-radius:50%;display:grid;place-items:center;color:var(--bs-cyan)">✓</div></div>`;
+      w.innerHTML = `<div style="display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:center"><div><div class="world-eyebrow" style="margin:0 0 18px;color:var(--text-3)">Certified & compliant</div><h2 class="tk-xl" style="margin:0;color:var(--bs-white);max-width:560px">We maintain compliance with the most rigorous international security standards</h2><a class="tk-sb" href="#" style="display:inline-flex;background:var(--bs-white);color:var(--bs-navy);padding:12px 22px;border-radius:var(--r-full);text-decoration:none;margin-top:32px">Visit trust portal</a></div><div style="display:flex;gap:14px;align-items:center;justify-content:flex-end">${badge('SOC2 I & II', 'var(--bs-white)', 'var(--bs-navy)')}${badge('CCPA', 'var(--bs-white)', 'var(--bs-navy)')}${badge('GDPR', 'var(--bs-blue)', 'var(--bs-white)')}</div></div>`;
     } else if (id === 'img-features-list') {
-      const items=[['SSO integration','Support for all common Single Sign-On protocols. You control user authentication and access.'],['Data retention policies','Set and manage retention periods to align with your internal policies and regulatory requirements.'],['Audit logging','Complete visibility into who accesses your data and when. Real-time governance and compliance tracking.'],['BYOK option','Bring Your Own Key. Manage your own encryption keys to keep sensitive brand data protected at your discretion.']];
-      w.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start">${tplImg('aspect-ratio:1;height:100%')}<div style="display:flex;flex-direction:column;gap:32px">${items.map(([t,d])=>`<div><h4 class="tk-mb" style="margin:0;color:var(--bs-white)">${t}</h4><p class="tk-m" style="margin:8px 0 0;color:var(--text-2);max-width:440px">${d}</p></div>`).join('')}</div></div>`;
+      const items = [
+        ['SSO integration', 'Support for all common Single Sign-On protocols. You control user authentication and access.'],
+        ['Data retention policies', 'Set and manage retention periods to align with your internal policies and regulatory requirements.'],
+        ['Audit logging', 'Complete visibility into who accesses your data and when. Real-time governance and compliance tracking.'],
+        ['BYOK option', 'Bring Your Own Key. Manage your own encryption keys to keep sensitive brand data protected at your discretion.'],
+      ];
+      w.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start">${tplImg('aspect-ratio:1;height:100%')}<div style="display:flex;flex-direction:column;gap:32px">${items.map(([t, d]) => `<div><h4 class="tk-mb" style="margin:0;color:var(--bs-white)">${t}</h4><p class="tk-m" style="margin:8px 0 0;color:var(--text-2);max-width:440px">${d}</p></div>`).join('')}</div></div>`;
     } else if (id === 'img-caption-below') {
       w.innerHTML = `<div>${tplImg('aspect-ratio:16/9')}<div style="margin-top:18px;max-width:560px"><h4 class="tk-mb" style="margin:0;color:var(--bs-white)">Find exactly what you want</h4><p class="tk-m" style="margin:8px 0 0;color:var(--text-2)">Get specific with your search. You can ask for a year, color, campaign, product, lighting style, photographer, and more.</p></div></div>`;
     } else if (id === 'img-three-features') {
-      const items=[['Keep everyone aligned','One living foundation for marketing, sales, product, and partners. No version chaos, no briefing calls. Just the same truth, every time.'],['Reduce swirl and confusion','Instant answers about your brand based on your standards, strategy, voice, and positioning. No more endless questions about "on brand."'],['Update once, sync everywhere','Your Brand OS grows with you. If you make a change, every team, tool, and output adapts automatically to stay current.']];
-      w.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">${items.map(([t,d])=>`<div>${tplImg('aspect-ratio:4/5')}<h4 class="tk-mb" style="margin:18px 0 0;color:var(--bs-white)">${t}</h4><p class="tk-m" style="margin:10px 0 0;color:var(--text-2)">${d}</p></div>`).join('')}</div>`;
+      const items = [
+        ['Keep everyone aligned', 'One living foundation for marketing, sales, product, and partners. No version chaos, no briefing calls. Just the same truth, every time.'],
+        ['Reduce swirl and confusion', 'Instant answers about your brand based on your standards, strategy, voice, and positioning. No more endless questions about "on brand."'],
+        ['Update once, sync everywhere', 'Your Brand OS grows with you. If you make a change, every team, tool, and output adapts automatically to stay current.'],
+      ];
+      w.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">${items.map(([t, d]) => `<div>${tplImg('aspect-ratio:4/5')}<h4 class="tk-mb" style="margin:18px 0 0;color:var(--bs-white)">${t}</h4><p class="tk-m" style="margin:10px 0 0;color:var(--text-2)">${d}</p></div>`).join('')}</div>`;
     } else if (id === 'portrait-text') {
       w.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:stretch">${tplImg('aspect-ratio:4/5;height:100%')}<div style="display:flex;flex-direction:column;justify-content:center"><div class="tk-l" style="color:var(--text)">Integrity, creativity, and empathy shape the way we work.</div><div class="tk-m" style="margin-top:12px;color:var(--text-2)">Não são apenas palavras — são a base de tudo que construímos. Acreditamos em fazer um ótimo trabalho e em criar relações reais.</div></div></div>`;
     } else if (id === 'caption-img') {
@@ -895,7 +1046,8 @@
     } else if (id === 'empty-grid') {
       w.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="card" style="aspect-ratio:4/3"></div><div class="card" style="aspect-ratio:4/3"></div></div>';
     } else if (id === 'text-image-mix') {
-      w.innerHTML = '<div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center"><div><div class="tile-title">Title here</div><div class="tile-desc" style="margin-top:8px">Short description for this module.</div></div><div style="background:var(--surface-2);border-radius:var(--r-md);aspect-ratio:4/3"></div></div>';
+      w.innerHTML =
+        '<div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center"><div><div class="tile-title">Title here</div><div class="tile-desc" style="margin-top:8px">Short description for this module.</div></div><div style="background:var(--surface-2);border-radius:var(--r-md);aspect-ratio:4/3"></div></div>';
     } else if (id === 'txt-text-cards') {
       const cell = `<div><div class="tk-l" style="color:var(--bs-white)">Card title</div><p class="tk-m" style="margin:12px 0 0;color:var(--text-2)">Short description for this card with one or two supporting lines.</p></div>`;
       w.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:48px">${cell}${cell}</div>`;
@@ -917,8 +1069,8 @@
     } else if (id === 'txt-headline-para') {
       w.innerHTML = `<div style="max-width:760px"><h2 class="tk-xl" style="margin:0 0 16px;color:var(--bs-white)">Um título que estabelece a ideia da seção</h2><p class="tk-m" style="color:var(--text-2);margin:0">Parágrafo de apoio com o contexto necessário. Mantenha entre 2 e 4 linhas — quem lê deve sair sabendo do que se trata sem precisar continuar.</p></div>`;
     } else if (id === 'txt-list-3') {
-      const item = (n,t,d)=>`<div><div class="world-eyebrow" style="margin-bottom:10px">${n}</div><h4 class="tk-mb" style="margin:0;color:var(--bs-white)">${t}</h4><p class="tk-m" style="color:var(--text-2);margin:12px 0 0">${d}</p></div>`;
-      w.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:48px">${item('01','Direto','Frases curtas, voz declarativa, sentence case sempre.')}${item('02','Reassegurador','Reforça confiança e continuidade — nunca grita, nunca apela.')}${item('03','Prático','Cada palavra carrega uma promessa concreta de produto ou serviço.')}</div>`;
+      const item = (n, t, d) => `<div><div class="world-eyebrow" style="margin-bottom:10px">${n}</div><h4 class="tk-mb" style="margin:0;color:var(--bs-white)">${t}</h4><p class="tk-m" style="color:var(--text-2);margin:12px 0 0">${d}</p></div>`;
+      w.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:48px">${item('01', 'Direto', 'Frases curtas, voz declarativa, sentence case sempre.')}${item('02', 'Reassegurador', 'Reforça confiança e continuidade — nunca grita, nunca apela.')}${item('03', 'Prático', 'Cada palavra carrega uma promessa concreta de produto ou serviço.')}</div>`;
     } else if (id === 'txt-do-dont') {
       w.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:48px"><div><h4 class="tk-mb" style="margin:0;color:var(--bs-cyan)">Do</h4><p class="tk-m" style="color:var(--text-2);margin:12px 0 0">Frases curtas. Sentence case. Voz direta. Cyan apenas sobre navy. Tracking -2% em headings.</p></div><div><h4 class="tk-mb" style="margin:0;color:var(--bs-white)">Don't</h4><p class="tk-m" style="color:var(--text-2);margin:12px 0 0">Sem emojis. Sem itálico. Sem grito. Sem cyan sobre branco em texto corrido.</p></div></div>`;
     } else if (id === 'txt-cover') {
@@ -940,8 +1092,9 @@
     } else if (id === 'txt-next-chapter') {
       w.innerHTML = `<div style="padding:0 48px"><div style="border-top:1px solid rgba(255,255,255,0.18);padding-top:12px;margin-bottom:64px"><span class="tk-s" style="color:var(--bs-cyan)">Next chapter</span></div><h1 class="tk-super" style="margin:0;line-height:1;color:var(--text)">Logo</h1></div>`;
     } else if (id === 'txt-steps') {
-      const step = (n,t,d)=>`<div style="display:grid;grid-template-columns:36px 1fr;gap:18px;align-items:start"><span style="width:32px;height:32px;border-radius:50%;background:var(--bs-cyan);color:var(--bs-navy);display:flex;align-items:center;justify-content:center;font-family:var(--type-mb-family);font-weight:var(--type-mb-weight);font-size:var(--type-mb-size)">${n}</span><div><h4 class="tk-mb" style="margin:0;color:var(--bs-white)">${t}</h4><p class="tk-m" style="color:var(--text-2);margin:6px 0 0">${d}</p></div></div>`;
-      w.innerHTML = `<div style="display:flex;flex-direction:column;gap:24px;max-width:680px">${step(1,'Defina o tom','Antes de qualquer copy, decida o que a frase precisa fazer sentir.')}${step(2,'Reduza pela metade','Se sobreviver com metade das palavras, é porque está melhor.')}${step(3,'Leia em voz alta','Se tropeçou, reescreva. Voz é ritmo, não só vocabulário.')}</div>`;
+      const step = (n, t, d) =>
+        `<div style="display:grid;grid-template-columns:36px 1fr;gap:18px;align-items:start"><span style="width:32px;height:32px;border-radius:50%;background:var(--bs-cyan);color:var(--bs-navy);display:flex;align-items:center;justify-content:center;font-family:var(--type-mb-family);font-weight:var(--type-mb-weight);font-size:var(--type-mb-size)">${n}</span><div><h4 class="tk-mb" style="margin:0;color:var(--bs-white)">${t}</h4><p class="tk-m" style="color:var(--text-2);margin:6px 0 0">${d}</p></div></div>`;
+      w.innerHTML = `<div style="display:flex;flex-direction:column;gap:24px;max-width:680px">${step(1, 'Defina o tom', 'Antes de qualquer copy, decida o que a frase precisa fazer sentir.')}${step(2, 'Reduza pela metade', 'Se sobreviver com metade das palavras, é porque está melhor.')}${step(3, 'Leia em voz alta', 'Se tropeçou, reescreva. Voz é ritmo, não só vocabulário.')}</div>`;
     } else if (id === 'txt-hero-cta') {
       w.innerHTML = `<div style="padding:0;text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px"><div class="world-eyebrow" style="margin:0">Brand OS</div><h1 class="tk-super" style="margin:0;color:var(--bs-white);max-width:960px">The operating system<br/>for modern brand work</h1><p class="tk-m" style="margin:0;color:var(--text-2);max-width:560px">Turn guidelines, strategy, and signals into structured intelligence that powers every team, tool, and agent.</p><a class="tk-sb" href="#" style="display:inline-flex;background:var(--bs-cyan);color:var(--bs-navy);padding:12px 22px;border-radius:var(--r-full);text-decoration:none;margin-top:8px">Book a demo</a></div>`;
     } else if (id === 'txt-manifesto') {
@@ -953,17 +1106,50 @@
     } else if (id === 'txt-cta-panel') {
       w.innerHTML = `<div style="padding:0;text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px"><div style="width:64px;height:64px;background:var(--bs-cyan);border-radius:14px;display:grid;place-items:center;color:var(--bs-navy);font:500 32px/1 var(--font-display)">★</div><h2 class="tk-xl" style="margin:8px 0 0;color:var(--bs-white);max-width:680px">Get a personalized demo<br/>for your brand</h2><p class="tk-m" style="margin:0;color:var(--text-2);max-width:480px">See how BluStar helps you get time back for high-impact work.</p><a class="tk-sb" href="#" style="display:inline-flex;background:var(--bs-cyan);color:var(--bs-navy);padding:12px 22px;border-radius:var(--r-full);text-decoration:none;margin-top:8px">Book a demo</a></div>`;
     } else if (id === 'txt-feature-grid') {
-      const features = [['60% faster','Launches with on-brand briefs, copy, and creative. No endless alignment or approval bottlenecks.'],['One foundation','Every team member works from the same truth. Marketing, product, creative, and sales stay aligned.'],['Ship with confidence','Brand Check catches issues before launch. Quality control without slowing down your velocity.'],['2-day onboarding','Quick setup and immediate value. Activate your team without implementations that take months.'],['Grow without breaking','Add team members, scale output, and maintain consistency. Built to grow from 5 to 50 people.'],['Security included','Enterprise-grade security with end-to-end encryption, SSO, and role-based permissions.']];
-      w.innerHTML = `<div style="padding:0;display:flex;flex-direction:column;gap:48px"><h2 class="tk-xl" style="margin:0;color:var(--bs-white)">What you get</h2><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:48px 56px">` + features.map(([t,d])=>`<div><h4 class="tk-mb" style="margin:0;color:var(--bs-white)">${t}</h4><p class="tk-m" style="margin:14px 0 0;color:var(--text-2)">${d}</p></div>`).join('') + `</div></div>`;
+      const features = [
+        ['60% faster', 'Launches with on-brand briefs, copy, and creative. No endless alignment or approval bottlenecks.'],
+        ['One foundation', 'Every team member works from the same truth. Marketing, product, creative, and sales stay aligned.'],
+        ['Ship with confidence', 'Brand Check catches issues before launch. Quality control without slowing down your velocity.'],
+        ['2-day onboarding', 'Quick setup and immediate value. Activate your team without implementations that take months.'],
+        ['Grow without breaking', 'Add team members, scale output, and maintain consistency. Built to grow from 5 to 50 people.'],
+        ['Security included', 'Enterprise-grade security with end-to-end encryption, SSO, and role-based permissions.'],
+      ];
+      w.innerHTML =
+        `<div style="padding:0;display:flex;flex-direction:column;gap:48px"><h2 class="tk-xl" style="margin:0;color:var(--bs-white)">What you get</h2><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:48px 56px">` +
+        features.map(([t, d]) => `<div><h4 class="tk-mb" style="margin:0;color:var(--bs-white)">${t}</h4><p class="tk-m" style="margin:14px 0 0;color:var(--text-2)">${d}</p></div>`).join('') +
+        `</div></div>`;
     } else if (id === 'txt-faq') {
-      const qs = ['What is Brand Assistant?','What is Canvas?','What is Brand Check?','Will AI replace our creative team?'];
-      w.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1.6fr;gap:64px;align-items:start"><div><div class="world-eyebrow" style="margin-bottom:18px">FAQ</div><h2 class="tk-xl" style="margin:0;color:var(--bs-white)">Have questions?<br/>Ask us.</h2></div><div>` + qs.map(q=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:24px 0;border-top:1px solid rgba(255,255,255,0.14)"><span class="tk-m" style="color:var(--bs-white)">${q}</span><span style="color:var(--bs-cyan);font:300 24px/1 var(--font)">+</span></div>`).join('') + `<div style="border-top:1px solid rgba(255,255,255,0.14)"></div></div></div>`;
+      const qs = ['What is Brand Assistant?', 'What is Canvas?', 'What is Brand Check?', 'Will AI replace our creative team?'];
+      w.innerHTML =
+        `<div style="display:grid;grid-template-columns:1fr 1.6fr;gap:64px;align-items:start"><div><div class="world-eyebrow" style="margin-bottom:18px">FAQ</div><h2 class="tk-xl" style="margin:0;color:var(--bs-white)">Have questions?<br/>Ask us.</h2></div><div>` +
+        qs.map(q => `<div style="display:flex;justify-content:space-between;align-items:center;padding:24px 0;border-top:1px solid rgba(255,255,255,0.14)"><span class="tk-m" style="color:var(--bs-white)">${q}</span><span style="color:var(--bs-cyan);font:300 24px/1 var(--font)">+</span></div>`).join('') +
+        `<div style="border-top:1px solid rgba(255,255,255,0.14)"></div></div></div>`;
     } else if (id === 'txt-compliance') {
-      const items = [['SOC 2 Type II certified','We meet SOC 2 Type II requirements to ensure secure and compliant management of your brand data across all systems.'],['CCPA','We strictly follow the California Consumer Privacy Act (CCPA) and give users full rights over their personal information.'],['GDPR','GDPR-compliant data handling. We operate under the world\'s strictest standard for data privacy.']];
-      w.innerHTML = `<div style="padding:0"><div style="border-top:1px solid rgba(255,255,255,0.16);padding-top:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:56px">` + items.map(([t,d])=>`<div><div class="tk-sb" style="color:var(--bs-white);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;margin-bottom:18px">${t}</div><p class="tk-m" style="margin:0;color:var(--text-2)">${d}</p></div>`).join('') + `</div></div>`;
+      const items = [
+        ['SOC 2 Type II certified', 'We meet SOC 2 Type II requirements to ensure secure and compliant management of your brand data across all systems.'],
+        ['CCPA', 'We strictly follow the California Consumer Privacy Act (CCPA) and give users full rights over their personal information.'],
+        ['GDPR', "GDPR-compliant data handling. We operate under the world's strictest standard for data privacy."],
+      ];
+      w.innerHTML =
+        `<div style="padding:0"><div style="border-top:1px solid rgba(255,255,255,0.16);padding-top:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:56px">` +
+        items.map(([t, d]) => `<div><div class="tk-sb" style="color:var(--bs-white);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;margin-bottom:18px">${t}</div><p class="tk-m" style="margin:0;color:var(--text-2)">${d}</p></div>`).join('') +
+        `</div></div>`;
     } else if (id === 'txt-guide-list') {
-      const items = [['1','Agency','We build tools to amplify human intent, not replace it. The machine suggests, and the creative person decides.'],['2','MAYA','Most Advanced Yet Acceptable. We push the edges of technology and stay grounded in utility, not science fiction.'],['3','Context','Generic models average the world. Ours learn your brand, strategy, and history to ensure ongoing relevance.'],['4','Truth','A brand can\'t afford to hallucinate. We prioritize citation, accuracy, and source material over generative guesswork.']];
-      w.innerHTML = `<div style="padding:0;display:grid;grid-template-columns:1fr 1.6fr;gap:64px;align-items:start"><h2 class="tk-xl" style="margin:0;color:var(--bs-white)">What guides us</h2><div style="display:flex;flex-direction:column;gap:48px">` + items.map(([n,t,d])=>`<div style="display:grid;grid-template-columns:56px 1fr;gap:24px;align-items:start"><div style="font-family:var(--type-super-family);font-weight:var(--type-super-weight);font-size:var(--type-xl-size);line-height:1;color:var(--bs-cyan)">${n}</div><div><h4 class="tk-mb" style="margin:0;color:var(--bs-white)">${t}</h4><p class="tk-m" style="margin:12px 0 0;color:var(--text-2);max-width:520px">${d}</p></div></div>`).join('') + `</div></div>`;
+      const items = [
+        ['1', 'Agency', 'We build tools to amplify human intent, not replace it. The machine suggests, and the creative person decides.'],
+        ['2', 'MAYA', 'Most Advanced Yet Acceptable. We push the edges of technology and stay grounded in utility, not science fiction.'],
+        ['3', 'Context', 'Generic models average the world. Ours learn your brand, strategy, and history to ensure ongoing relevance.'],
+        ['4', 'Truth', "A brand can't afford to hallucinate. We prioritize citation, accuracy, and source material over generative guesswork."],
+      ];
+      w.innerHTML =
+        `<div style="padding:0;display:grid;grid-template-columns:1fr 1.6fr;gap:64px;align-items:start"><h2 class="tk-xl" style="margin:0;color:var(--bs-white)">What guides us</h2><div style="display:flex;flex-direction:column;gap:48px">` +
+        items
+          .map(
+            ([n, t, d]) =>
+              `<div style="display:grid;grid-template-columns:56px 1fr;gap:24px;align-items:start"><div style="font-family:var(--type-super-family);font-weight:var(--type-super-weight);font-size:var(--type-xl-size);line-height:1;color:var(--bs-cyan)">${n}</div><div><h4 class="tk-mb" style="margin:0;color:var(--bs-white)">${t}</h4><p class="tk-m" style="margin:12px 0 0;color:var(--text-2);max-width:520px">${d}</p></div></div>`
+          )
+          .join('') +
+        `</div></div>`;
     } else if (id === 'txt-work-with-us') {
       w.innerHTML = `<div style="padding:0;display:flex;flex-direction:column;align-items:flex-start;gap:20px"><div class="world-eyebrow" style="margin:0">Work with us</div><p class="tk-xl" style="margin:0;color:var(--bs-white);max-width:880px">We believe in a collision of disciplines. Strategists who code. Engineers who love typography. Our tools compound creativity. If you respect the craft, we should talk.</p><a class="tk-sb" href="#" style="display:inline-flex;background:var(--bs-cyan);color:var(--bs-navy);padding:12px 22px;border-radius:var(--r-full);text-decoration:none;margin-top:8px">View open roles</a></div>`;
     } else {
@@ -992,46 +1178,85 @@
   // Color-module helpers exposed for the right-side color inspector.
   // Delegation is required because autosave persists DOM via innerHTML,
   // which drops directly-attached listeners on restore.
-  const __copyToClipboard = (text) => {
+  const __copyToClipboard = text => {
     const fallback = () => {
       const ta = document.createElement('textarea');
       ta.value = text;
       ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
       document.body.appendChild(ta);
-      ta.focus(); ta.select();
-      try { document.execCommand('copy'); } catch {}
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+      } catch {}
       ta.remove();
     };
     try {
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(text).catch(fallback);
-      } else { fallback(); }
-    } catch { fallback(); }
+      } else {
+        fallback();
+      }
+    } catch {
+      fallback();
+    }
   };
   window.__praiaCopy = __copyToClipboard;
-  window.__praiaToast = (t) => __showCopyToast(t);
+  window.__praiaToast = t => __showCopyToast(t);
   // Single source of truth for right-panel "mode" classes. Any open*Editor
   // calls this first so we never end up with two inspectors stacked.
-  const __PRAIA_RIGHT_MODES = ['text-mode','layout-mode','editing','editing-color','component-mode','color-mode','video-mode','photo-mode','spacing-mode','themepal-mode','history-mode','icon-mode','client-mode','button-mode'];
+  const __PRAIA_RIGHT_MODES = ['text-mode', 'layout-mode', 'editing', 'editing-color', 'component-mode', 'color-mode', 'video-mode', 'photo-mode', 'spacing-mode', 'themepal-mode', 'history-mode', 'icon-mode', 'client-mode', 'button-mode'];
   window.__praiaCloseRightModes = () => {
     document.querySelector('.guide-right')?.classList.remove(...__PRAIA_RIGHT_MODES);
   };
-  const __showCopyToast = (text) => {
+  const __showCopyToast = text => {
     let t = document.getElementById('__cl_copy_toast');
-    if (!t) { t = document.createElement('div'); t.id = '__cl_copy_toast'; t.style.cssText = 'position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:var(--bs-white);color:var(--bs-navy);padding:10px 18px;border-radius:999px;font:var(--type-sb-weight) var(--type-sb-size)/1 var(--font);letter-spacing:0;z-index:var(--z-toast);pointer-events:none;opacity:0;transition:opacity .18s var(--ease);box-shadow:0 8px 24px rgba(0,0,0,0.35)'; document.body.appendChild(t); }
-    t.textContent = text; requestAnimationFrame(() => { t.style.opacity = '1'; });
-    clearTimeout(t.__hideT); t.__hideT = setTimeout(() => { t.style.opacity = '0'; }, 1200);
+    if (!t) {
+      t = document.createElement('div');
+      t.id = '__cl_copy_toast';
+      t.style.cssText =
+        'position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:var(--bs-white);color:var(--bs-navy);padding:10px 18px;border-radius:999px;font:var(--type-sb-weight) var(--type-sb-size)/1 var(--font);letter-spacing:0;z-index:var(--z-toast);pointer-events:none;opacity:0;transition:opacity .18s var(--ease);box-shadow:0 8px 24px rgba(0,0,0,0.35)';
+      document.body.appendChild(t);
+    }
+    t.textContent = text;
+    requestAnimationFrame(() => {
+      t.style.opacity = '1';
+    });
+    clearTimeout(t.__hideT);
+    t.__hideT = setTimeout(() => {
+      t.style.opacity = '0';
+    }, 1200);
   };
 
   // Color math helpers
-  const __clHexToRgb = (h) => { const x = h.replace('#',''); return [parseInt(x.slice(0,2),16), parseInt(x.slice(2,4),16), parseInt(x.slice(4,6),16)]; };
-  const __clRgbToCmyk = (r,g,b) => { const R=r/255,G=g/255,B=b/255; const k=1-Math.max(R,G,B); if(k===1)return[0,0,0,100]; const c=(1-R-k)/(1-k), m=(1-G-k)/(1-k), y=(1-B-k)/(1-k); return [Math.round(c*100),Math.round(m*100),Math.round(y*100),Math.round(k*100)]; };
-  const __clLuma = (h) => { const [r,g,b]=__clHexToRgb(h); return (0.2126*r+0.7152*g+0.0722*b)/255; };
-  const __clInk = (h) => __clLuma(h) > 0.55 ? '#061833' : '#ffffff';
-  const __clMetaHtml = (hex) => { const [r,g,b]=__clHexToRgb(hex); const [c,m,y,k]=__clRgbToCmyk(r,g,b); return `<div class="meta-hex">HEX ${hex.toUpperCase()}</div><div class="meta-rgb">R${r} G${g} B${b}</div><div class="meta-cmyk">C${c} M${m} Y${y} K${k}</div><div class="meta-pms">PMS 4280 C</div>`; };
+  const __clHexToRgb = h => {
+    const x = h.replace('#', '');
+    return [parseInt(x.slice(0, 2), 16), parseInt(x.slice(2, 4), 16), parseInt(x.slice(4, 6), 16)];
+  };
+  const __clRgbToCmyk = (r, g, b) => {
+    const R = r / 255,
+      G = g / 255,
+      B = b / 255;
+    const k = 1 - Math.max(R, G, B);
+    if (k === 1) return [0, 0, 0, 100];
+    const c = (1 - R - k) / (1 - k),
+      m = (1 - G - k) / (1 - k),
+      y = (1 - B - k) / (1 - k);
+    return [Math.round(c * 100), Math.round(m * 100), Math.round(y * 100), Math.round(k * 100)];
+  };
+  const __clLuma = h => {
+    const [r, g, b] = __clHexToRgb(h);
+    return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  };
+  const __clInk = h => (__clLuma(h) > 0.55 ? '#061833' : '#ffffff');
+  const __clMetaHtml = hex => {
+    const [r, g, b] = __clHexToRgb(hex);
+    const [c, m, y, k] = __clRgbToCmyk(r, g, b);
+    return `<div class="meta-hex">HEX ${hex.toUpperCase()}</div><div class="meta-rgb">R${r} G${g} B${b}</div><div class="meta-cmyk">C${c} M${m} Y${y} K${k}</div><div class="meta-pms">PMS 4280 C</div>`;
+  };
 
   // Module info: max items per template
-  const __clInfo = (el) => {
+  const __clInfo = el => {
     if (!el) return null;
     if (el.classList.contains('cover-block')) return { kind: 'cover', module: el, items: [el], max: 1, hasStroke: false };
     if (el.classList.contains('cl-hero')) return { kind: 'hero', module: el, items: [el], max: 1, hasStroke: false };
@@ -1040,7 +1265,7 @@
     return null;
   };
 
-  const __clRefresh = (el) => {
+  const __clRefresh = el => {
     const hex = el.dataset.color || '#0FC4D5';
     el.style.background = hex;
     el.style.color = __clInk(hex);
@@ -1050,25 +1275,25 @@
 
   // Brand color tokens for the Cover picker (Cover follows the DS, not arbitrary HEX)
   const __clTokens = [
-    { name: 'BluStar Navy',  varName: '--bs-navy' },
-    { name: 'Navy Deep',     varName: '--bs-navy-deep' },
-    { name: 'BluStar Cyan',  varName: '--bs-cyan' },
-    { name: 'Royal Blue',    varName: '--bs-blue' },
-    { name: 'Cyan 200',      varName: '--bs-cyan-200' },
-    { name: 'Cyan 100',      varName: '--bs-cyan-100' },
-    { name: 'Cyan 50',       varName: '--bs-cyan-50' },
-    { name: 'White',         varName: '--bs-white' },
+    { name: 'BluStar Navy', varName: '--bs-navy' },
+    { name: 'Navy Deep', varName: '--bs-navy-deep' },
+    { name: 'BluStar Cyan', varName: '--bs-cyan' },
+    { name: 'Royal Blue', varName: '--bs-blue' },
+    { name: 'Cyan 200', varName: '--bs-cyan-200' },
+    { name: 'Cyan 100', varName: '--bs-cyan-100' },
+    { name: 'Cyan 50', varName: '--bs-cyan-50' },
+    { name: 'White', varName: '--bs-white' },
   ];
-  const __resolveVar = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-  const __normHex = (s) => {
+  const __resolveVar = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const __normHex = s => {
     const h = (s || '').trim().toLowerCase();
-    if (h.startsWith('#')) return h.length === 4 ? '#' + [...h.slice(1)].map(c => c+c).join('') : h;
+    if (h.startsWith('#')) return h.length === 4 ? '#' + [...h.slice(1)].map(c => c + c).join('') : h;
     return h;
   };
 
   // Right panel binding
   let __clSelected = null;
-  const __clOpenPanel = (el) => {
+  const __clOpenPanel = el => {
     const info = __clInfo(el);
     if (!info) return;
     __clSelected = el;
@@ -1087,7 +1312,7 @@
     right.classList.add('color-mode');
     // Title
     const title = document.getElementById('grc-color-title');
-    if (title) title.textContent = ({ cover: 'Cover', hero: 'Color card', card: 'Color cards', strip: 'Color palette' })[info.kind];
+    if (title) title.textContent = { cover: 'Cover', hero: 'Color card', card: 'Color cards', strip: 'Color palette' }[info.kind];
     // Fill: Cover uses DS tokens (no arbitrary HEX); others use native picker + Copy HEX
     const hex = el.dataset.color || '#0FC4D5';
     const isCover = info.kind === 'cover';
@@ -1122,7 +1347,10 @@
     const dot = document.getElementById('grc-fill-dot');
     const hexText = document.getElementById('grc-hex-text');
     if (fill) fill.value = hex;
-    if (dot) { dot.style.background = hex; dot.style.borderStyle = 'solid'; }
+    if (dot) {
+      dot.style.background = hex;
+      dot.style.borderStyle = 'solid';
+    }
     if (hexText) hexText.textContent = hex.toUpperCase();
     // Stroke
     const strokeSec = document.getElementById('grc-stroke-section');
@@ -1169,7 +1397,7 @@
       __copyToClipboard(hex);
       __showCopyToast('Copiado ' + hex);
     });
-    const strokeStep = (delta) => () => {
+    const strokeStep = delta => () => {
       if (!__clSelected) return;
       const cur = parseInt(__clSelected.style.getPropertyValue('--cl-stroke'), 10) || 1;
       const nv = Math.min(8, Math.max(0, cur + delta));
@@ -1191,7 +1419,10 @@
       const nm = clone.querySelector('.cl-name');
       if (nm) nm.textContent = 'New\nColor';
       const mt = clone.querySelector('.cl-meta');
-      if (mt) { delete mt.dataset.userEdited; mt.innerHTML = __clMetaHtml('#3259FF'); }
+      if (mt) {
+        delete mt.dataset.userEdited;
+        mt.innerHTML = __clMetaHtml('#3259FF');
+      }
       info.module.appendChild(clone);
       info.module.style.setProperty('--cl-cols', info.items.length + 1);
       __clOpenPanel(__clSelected);
@@ -1214,12 +1445,14 @@
   };
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', wirePanel);
-  } else { wirePanel(); }
+  } else {
+    wirePanel();
+  }
 
   // Spacing inspector wiring (.spacer-block) — DS spacing tokens
   const __spaceTokens = [20, 40, 60, 80, 120, 220];
   let __spaceSelected = null;
-  const __spaceNormalize = (el) => {
+  const __spaceNormalize = el => {
     // Legacy spacer-blocks were rendered with a <select>; replace with a label span.
     const oldSel = el.querySelector('select.spacer-select, select');
     if (oldSel) oldSel.remove();
@@ -1245,29 +1478,40 @@
     const lbl = el.querySelector('.spacer-label');
     if (lbl) lbl.textContent = size + 'px';
   };
-  const __spaceRenderTokens = (current) => {
-    const wrap = document.getElementById('grs-tokens'); if (!wrap) return;
+  const __spaceRenderTokens = current => {
+    const wrap = document.getElementById('grs-tokens');
+    if (!wrap) return;
     const max = __spaceTokens[__spaceTokens.length - 1];
-    wrap.innerHTML = __spaceTokens.map(s => `
+    wrap.innerHTML = __spaceTokens
+      .map(
+        s => `
       <button type="button" class="grs-token${s === current ? ' active' : ''}" data-size="${s}">
-        <span class="grs-token-bar" style="height:${Math.max(3, Math.round((s/max)*40))}px"></span>
+        <span class="grs-token-bar" style="height:${Math.max(3, Math.round((s / max) * 40))}px"></span>
         <span class="grs-token-val">${s}px</span>
-      </button>`).join('');
-    wrap.querySelectorAll('.grs-token').forEach(b => b.addEventListener('click', () => {
-      if (!__spaceSelected) return;
-      const size = parseInt(b.dataset.size, 10);
-      __spaceApply(__spaceSelected, size);
-      wrap.querySelectorAll('.grs-token').forEach(x => x.classList.toggle('active', x === b));
-      window.__praiaAutosave?.();
-    }));
+      </button>`
+      )
+      .join('');
+    wrap.querySelectorAll('.grs-token').forEach(b =>
+      b.addEventListener('click', () => {
+        if (!__spaceSelected) return;
+        const size = parseInt(b.dataset.size, 10);
+        __spaceApply(__spaceSelected, size);
+        wrap.querySelectorAll('.grs-token').forEach(x => x.classList.toggle('active', x === b));
+        window.__praiaAutosave?.();
+      })
+    );
   };
-  const __spaceOpen = (el) => {
+  const __spaceOpen = el => {
     __spaceNormalize(el);
     __spaceSelected = el;
-    const right = document.querySelector('.guide-right'); if (!right) return;
+    const right = document.querySelector('.guide-right');
+    if (!right) return;
     document.querySelectorAll('.canvas-selected').forEach(x => {
       x.classList.remove('canvas-selected');
-      if (x.getAttribute('contenteditable') === 'true') { x.removeAttribute('contenteditable'); x.removeAttribute('spellcheck'); }
+      if (x.getAttribute('contenteditable') === 'true') {
+        x.removeAttribute('contenteditable');
+        x.removeAttribute('spellcheck');
+      }
     });
     window.__praiaCloseRightModes?.();
     right.classList.add('spacing-mode');
@@ -1280,13 +1524,18 @@
     document.querySelector('.guide-right')?.classList.remove('spacing-mode');
   };
   document.getElementById('grs-close')?.addEventListener('click', __spaceClose);
-  document.addEventListener('click', (e) => {
-    if (document.body.classList.contains('preview-mode') || document.body.classList.contains('ds-mode')) return;
-    const sp = e.target.closest('.spacer-block');
-    if (!sp) return;
-    e.preventDefault(); e.stopPropagation();
-    __spaceOpen(sp);
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      if (document.body.classList.contains('preview-mode') || document.body.classList.contains('ds-mode')) return;
+      const sp = e.target.closest('.spacer-block');
+      if (!sp) return;
+      e.preventDefault();
+      e.stopPropagation();
+      __spaceOpen(sp);
+    },
+    true
+  );
 
   // Video inspector wiring (.video-mod). Autoplay/loop/mute driven by an
   // IntersectionObserver: a video plays only while visible and pauses when
@@ -1294,27 +1543,50 @@
   // in a loop — that repeated load()+play() was what froze the renderer
   // (ERR_ABORTED cascades on the 18MB MP4's byte-range requests).
   let __vidSelected = null;
-  const __vidPlaySafe = (v) => { if (v) { try { v.play?.().catch(() => {}); } catch {} } };
+  const __vidPlaySafe = v => {
+    if (v) {
+      try {
+        v.play?.().catch(() => {});
+      } catch {}
+    }
+  };
   // Videos only PLAY in preview/published mode. While editing, they stay paused
   // on their poster frame (zero decode) so the editor never freezes on heavy
   // (18MB+) clips. The Autoplay toggle = "play when published".
   const __vidLive = () => document.body.classList.contains('preview-mode');
-  const __vidUpdateOverlay = (mod) => {
+  const __vidUpdateOverlay = mod => {
     if (!mod) return;
-    const v = mod.querySelector('video'); if (!v) return;
+    const v = mod.querySelector('video');
+    if (!v) return;
     // Show the play affordance whenever it's paused outside live mode.
-    mod.dataset.showPlay = (!__vidLive() && v.paused) ? 'true' : 'false';
+    mod.dataset.showPlay = !__vidLive() && v.paused ? 'true' : 'false';
   };
-  const __vidIO = ('IntersectionObserver' in window) ? new IntersectionObserver((ents) => {
-    ents.forEach(en => {
-      const mod = en.target;
-      const v = mod.querySelector('video'); if (!v) return;
-      if (!__vidLive() || mod.dataset.autoplay === 'false') { try { v.pause(); } catch {} return; }
-      if (en.isIntersecting) __vidPlaySafe(v);
-      else { try { v.pause(); } catch {} }
-    });
-  }, { threshold: 0.2 }) : null;
-  const __vidNormalize = (mod) => {
+  const __vidIO =
+    'IntersectionObserver' in window
+      ? new IntersectionObserver(
+          ents => {
+            ents.forEach(en => {
+              const mod = en.target;
+              const v = mod.querySelector('video');
+              if (!v) return;
+              if (!__vidLive() || mod.dataset.autoplay === 'false') {
+                try {
+                  v.pause();
+                } catch {}
+                return;
+              }
+              if (en.isIntersecting) __vidPlaySafe(v);
+              else {
+                try {
+                  v.pause();
+                } catch {}
+              }
+            });
+          },
+          { threshold: 0.2 }
+        )
+      : null;
+  const __vidNormalize = mod => {
     if (!mod) return;
     if (!mod.querySelector('.video-mod-play')) {
       const btn = document.createElement('button');
@@ -1333,7 +1605,8 @@
       mod.dataset.vidWired = '1';
       // We drive playback ourselves (via IO), so drop the HTML autoplay attr.
       v.removeAttribute('autoplay');
-      v.muted = true; v.playsInline = true;
+      v.muted = true;
+      v.playsInline = true;
       // preload="none" by default: decoding several full-res clips at once freezes
       // the page. We only load/decode when a clip actually plays (poster covers it).
       if (!v.getAttribute('preload')) v.setAttribute('preload', 'none');
@@ -1354,7 +1627,7 @@
   const __vidCapRes = (mod, v) => {
     const src = v.getAttribute('src') || '';
     if (!/res\.cloudinary\.com\/.+\/upload\/.*\/v\d+\//.test(src)) return; // Cloudinary w/ version
-    if (__vidCappedSet.has(v)) return;                                     // already handled this load
+    if (__vidCappedSet.has(v)) return; // already handled this load
     __vidCappedSet.add(v);
     // Synchronous & one-shot: runs at the TOP of __vidSync, BEFORE the play call,
     // so it never interrupts an already-playing clip. Size by measured width when
@@ -1376,12 +1649,18 @@
     if (!needs) return;
     const transform = `w_${target},c_limit,vc_h264,q_auto,f_mp4`;
     const capped = src.replace(/\/upload\/.*\/(v\d+\/)/, `/upload/${transform}/$1`);
-    if (capped !== src) { v.setAttribute('src', capped); try { v.load(); } catch {} }
+    if (capped !== src) {
+      v.setAttribute('src', capped);
+      try {
+        v.load();
+      } catch {}
+    }
   };
-  const __vidSync = (mod) => {
+  const __vidSync = mod => {
     if (!mod) return;
     __vidNormalize(mod);
-    const v = mod.querySelector('video'); if (!v) return;
+    const v = mod.querySelector('video');
+    if (!v) return;
     const ap = mod.dataset.autoplay !== 'false';
     v.loop = mod.dataset.loop !== 'false';
     v.muted = mod.dataset.muted !== 'false';
@@ -1396,20 +1675,30 @@
       const visible = r.bottom > 0 && r.top < (window.innerHeight || 9999);
       if (visible || isSelected) __vidPlaySafe(v);
     } else {
-      try { v.pause(); } catch {}
+      try {
+        v.pause();
+      } catch {}
     }
     __vidUpdateOverlay(mod);
   };
-  const __vidOpen = (mod) => {
+  const __vidOpen = mod => {
     // Selecting a different video in edit mode: pause the previously-selected one
     // so only the active module decodes/plays.
     const prev = __vidSelected;
-    if (prev && prev !== mod && !__vidLive()) { try { prev.querySelector('video')?.pause(); } catch {} }
+    if (prev && prev !== mod && !__vidLive()) {
+      try {
+        prev.querySelector('video')?.pause();
+      } catch {}
+    }
     __vidSelected = mod;
-    const right = document.querySelector('.guide-right'); if (!right) return;
+    const right = document.querySelector('.guide-right');
+    if (!right) return;
     document.querySelectorAll('.canvas-selected').forEach(x => {
       x.classList.remove('canvas-selected');
-      if (x.getAttribute('contenteditable') === 'true') { x.removeAttribute('contenteditable'); x.removeAttribute('spellcheck'); }
+      if (x.getAttribute('contenteditable') === 'true') {
+        x.removeAttribute('contenteditable');
+        x.removeAttribute('spellcheck');
+      }
     });
     window.__praiaCloseRightModes?.();
     right.classList.add('video-mode');
@@ -1434,7 +1723,11 @@
   const __vidClose = () => {
     // Pause the video we're deselecting so it stops decoding in edit mode.
     const mod = __vidSelected;
-    if (mod && !__vidLive()) { try { mod.querySelector('video')?.pause(); } catch {} }
+    if (mod && !__vidLive()) {
+      try {
+        mod.querySelector('video')?.pause();
+      } catch {}
+    }
     __vidSelected = null;
     document.querySelector('.guide-right')?.classList.remove('video-mode');
   };
@@ -1469,73 +1762,125 @@
   // Replace by URL/path — works without a native file dialog (e.g. in the
   // embedded preview). A plain URL persists via the autosaved <video src>.
   const __grvUrl = document.getElementById('grv-url');
-  const __applyUrl = (rawUrl) => {
+  const __applyUrl = rawUrl => {
     const mod = __vidSelected || document.querySelector('.guide-page.active .video-mod.canvas-selected') || document.querySelector('.video-mod.canvas-selected');
     const url = ((rawUrl != null ? rawUrl : __grvUrl?.value) || '').trim();
     if (!mod || !url) return;
-    const v = mod.querySelector('video'); if (!v) return;
-    delete mod.dataset.vidId;            // a URL source isn't an IDB blob
-    v.removeAttribute('poster');         // show the new clip, not the old poster
+    const v = mod.querySelector('video');
+    if (!v) return;
+    delete mod.dataset.vidId; // a URL source isn't an IDB blob
+    v.removeAttribute('poster'); // show the new clip, not the old poster
     v.src = url;
     v.muted = mod.dataset.muted !== 'false';
     v.loop = mod.dataset.loop !== 'false';
-    try { v.load(); } catch {}
+    try {
+      v.load();
+    } catch {}
     if (__vidLive()) {
       if (mod.dataset.autoplay !== 'false') __vidPlaySafe(v);
     } else {
       // Editing: play briefly to reveal the new clip's frame, then pause so we
       // don't keep decoding (avoids the multi-video freeze).
       __vidPlaySafe(v);
-      setTimeout(() => { try { if (!__vidLive()) v.pause(); } catch {} }, 500);
+      setTimeout(() => {
+        try {
+          if (!__vidLive()) v.pause();
+        } catch {}
+      }, 500);
     }
     if (__grvUrl) __grvUrl.value = url;
     __vidUpdateOverlay(mod);
     window.__praiaAutosave?.();
   };
-  __grvUrl?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); __applyUrl(); __grvUrl.blur(); } });
+  __grvUrl?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      __applyUrl();
+      __grvUrl.blur();
+    }
+  });
   __grvUrl?.addEventListener('change', () => __applyUrl());
 
   // Color spec cards: in PREVIEW, click copies the HEX to the clipboard (paste
   // into Figma). A tiny toast confirms. In edit mode the text stays editable.
   let __cspecToast = null;
-  document.addEventListener('click', (e) => {
-    if (!document.body.classList.contains('preview-mode')) return;
-    const card = e.target.closest('.cspec-card, .ccon-card');
-    if (!card) return;
-    const hex = card.dataset.hex; if (!hex) return;
-    e.preventDefault(); e.stopPropagation();
-    const done = () => {
-      if (!__cspecToast) {
-        __cspecToast = document.createElement('div');
-        __cspecToast.style.cssText = 'position:fixed;z-index:9999;bottom:28px;left:50%;transform:translateX(-50%);background:var(--bs-navy,#061833);color:#fff;font:600 13px/1 var(--font);padding:10px 16px;border-radius:999px;box-shadow:0 6px 24px rgba(0,0,0,0.35);pointer-events:none;opacity:0;transition:opacity .15s';
-        document.body.appendChild(__cspecToast);
+  document.addEventListener(
+    'click',
+    e => {
+      if (!document.body.classList.contains('preview-mode')) return;
+      const card = e.target.closest('.cspec-card, .ccon-card');
+      if (!card) return;
+      const hex = card.dataset.hex;
+      if (!hex) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const done = () => {
+        if (!__cspecToast) {
+          __cspecToast = document.createElement('div');
+          __cspecToast.style.cssText =
+            'position:fixed;z-index:9999;bottom:28px;left:50%;transform:translateX(-50%);background:var(--bs-navy,#061833);color:#fff;font:600 13px/1 var(--font);padding:10px 16px;border-radius:999px;box-shadow:0 6px 24px rgba(0,0,0,0.35);pointer-events:none;opacity:0;transition:opacity .15s';
+          document.body.appendChild(__cspecToast);
+        }
+        __cspecToast.textContent = hex + ' copiado';
+        __cspecToast.style.opacity = '1';
+        clearTimeout(__cspecToast._t);
+        __cspecToast._t = setTimeout(() => {
+          __cspecToast.style.opacity = '0';
+        }, 1400);
+      };
+      if (navigator.clipboard?.writeText)
+        navigator.clipboard
+          .writeText(hex)
+          .then(done)
+          .catch(() => {
+            // Fallback: legacy copy
+            const ta = document.createElement('textarea');
+            ta.value = hex;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+              document.execCommand('copy');
+            } catch {}
+            ta.remove();
+            done();
+          });
+      else {
+        const ta = document.createElement('textarea');
+        ta.value = hex;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+        } catch {}
+        ta.remove();
+        done();
       }
-      __cspecToast.textContent = hex + ' copiado';
-      __cspecToast.style.opacity = '1';
-      clearTimeout(__cspecToast._t);
-      __cspecToast._t = setTimeout(() => { __cspecToast.style.opacity = '0'; }, 1400);
-    };
-    if (navigator.clipboard?.writeText) navigator.clipboard.writeText(hex).then(done).catch(() => {
-      // Fallback: legacy copy
-      const ta = document.createElement('textarea'); ta.value = hex; ta.style.position = 'fixed'; ta.style.left = '-9999px';
-      document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch {} ta.remove(); done();
-    });
-    else { const ta = document.createElement('textarea'); ta.value = hex; ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch{} ta.remove(); done(); }
-  }, true);
+    },
+    true
+  );
 
-  document.addEventListener('click', (e) => {
-    if (document.body.classList.contains('preview-mode')) return;
-    const mod = e.target.closest('.video-mod');
-    if (!mod) return;
-    e.preventDefault(); e.stopPropagation();
-    // Play overlay → just play; don't open inspector
-    if (e.target.closest('.video-mod-play')) {
-      __vidPlaySafe(mod.querySelector('video'));
-      __vidUpdateOverlay(mod);
-      return;
-    }
-    __vidOpen(mod);
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      if (document.body.classList.contains('preview-mode')) return;
+      const mod = e.target.closest('.video-mod');
+      if (!mod) return;
+      e.preventDefault();
+      e.stopPropagation();
+      // Play overlay → just play; don't open inspector
+      if (e.target.closest('.video-mod-play')) {
+        __vidPlaySafe(mod.querySelector('video'));
+        __vidUpdateOverlay(mod);
+        return;
+      }
+      __vidOpen(mod);
+    },
+    true
+  );
 
   // Re-sync any video-mod on load (e.g. after autosave restore)
   if (document.readyState === 'loading') {
@@ -1545,27 +1890,32 @@
   }
   // Auto-sync videos added later (inserted from picker, restored by undo/redo).
   if ('MutationObserver' in window) {
-    new MutationObserver((muts) => {
-      muts.forEach(m => m.addedNodes.forEach(n => {
-        if (n.nodeType !== 1) return;
-        if (n.matches?.('.video-mod')) __vidSync(n);
-        n.querySelectorAll?.('.video-mod').forEach(__vidSync);
-      }));
+    new MutationObserver(muts => {
+      muts.forEach(m =>
+        m.addedNodes.forEach(n => {
+          if (n.nodeType !== 1) return;
+          if (n.matches?.('.video-mod')) __vidSync(n);
+          n.querySelectorAll?.('.video-mod').forEach(__vidSync);
+        })
+      );
     }).observe(document.body, { childList: true, subtree: true });
     // Entering/leaving preview-mode flips playback: play all in preview, pause
     // (back to poster) when editing. Watch the body class.
-    new MutationObserver(() => document.querySelectorAll('.video-mod').forEach(__vidSync))
-      .observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    new MutationObserver(() => document.querySelectorAll('.video-mod').forEach(__vidSync)).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   }
 
   // Theme palettes (.tp-block) — tabbed multi-theme color picker, each theme stores
   // a multi-select array of palette indices.
   let __tpSelected = null;
-  const __tpRead = (block) => {
-    try { return JSON.parse(block.dataset.themes); } catch { return []; }
+  const __tpRead = block => {
+    try {
+      return JSON.parse(block.dataset.themes);
+    } catch {
+      return [];
+    }
   };
   // Back-compat: turn legacy `selectedIdx` into `selected` array
-  const __tpSel = (t) => Array.isArray(t.selected) ? t.selected : (typeof t.selectedIdx === 'number' ? [t.selectedIdx] : []);
+  const __tpSel = t => (Array.isArray(t.selected) ? t.selected : typeof t.selectedIdx === 'number' ? [t.selectedIdx] : []);
   const __tpWrite = (block, themes) => {
     block.dataset.themes = JSON.stringify(themes);
     window.__praiaAutosave?.();
@@ -1573,7 +1923,7 @@
     // Defer to a microtask so the MO-driven render completes first.
     queueMicrotask(() => window.__praiaRecordNow?.());
   };
-  const __tpRenderBlock = (block) => {
+  const __tpRenderBlock = block => {
     const themes = __tpRead(block);
     const activeId = block.dataset.active;
     const t = themes.find(x => x.id === activeId) || themes[0];
@@ -1598,7 +1948,7 @@
     const t = themes.find(x => x.id === activeId) || themes[0];
     const sel = __tpSel(t);
     const selSet = new Set(sel);
-    const dots = (palette, idxs) => idxs.map(i => `<span class="tpi-dot tpi-dot-sm" style="--tp-bg:${(palette[i]||'').toUpperCase()}"></span>`).join('');
+    const dots = (palette, idxs) => idxs.map(i => `<span class="tpi-dot tpi-dot-sm" style="--tp-bg:${(palette[i] || '').toUpperCase()}"></span>`).join('');
     const hint = document.getElementById('grtp-active-name');
     if (hint) hint.textContent = `${t.label} · ${sel.length} ${sel.length === 1 ? 'cor' : 'cores'}`;
     const pal = document.getElementById('grtp-palette');
@@ -1611,16 +1961,17 @@
     const list = document.getElementById('grtp-themes');
     if (list) {
       const canDel = themes.length > 1;
-      list.innerHTML = themes.map(x => {
-        const xs = __tpSel(x);
-        const xsSet = new Set(xs);
-        const isActive = x.id === activeId;
-        const themePal = isActive
-          ? `<div class="tpi-theme-palette" data-theme="${x.id}">
+      list.innerHTML = themes
+        .map(x => {
+          const xs = __tpSel(x);
+          const xsSet = new Set(xs);
+          const isActive = x.id === activeId;
+          const themePal = isActive
+            ? `<div class="tpi-theme-palette" data-theme="${x.id}">
               ${x.palette.map((hex, i) => `<button type="button" class="tpi-pal-sw${xsSet.has(i) ? ' selected' : ''}" data-i="${i}" aria-label="${hex}" title="${hex}" style="--tp-bg:${hex}"></button>`).join('')}
             </div>`
-          : '';
-        return `<div class="tpi-theme-wrap${isActive ? ' active' : ''}">
+            : '';
+          return `<div class="tpi-theme-wrap${isActive ? ' active' : ''}">
           <div class="tpi-theme${isActive ? ' active' : ''}" data-theme="${x.id}">
             <button type="button" class="tpi-theme-caret" aria-label="${isActive ? 'Recolher' : 'Expandir'}" aria-expanded="${isActive}">
               <span class="bs-icon" style="--bs-icon-size:16px">chevron_right</span>
@@ -1632,22 +1983,27 @@
           </div>
           ${themePal}
         </div>`;
-      }).join('');
+        })
+        .join('');
     }
   };
   // Assign a stable id to each tp-block so we can re-resolve it after undo/redo
   // (applySnapshot destroys & rebuilds the DOM nodes).
-  const __tpEnsureId = (block) => {
+  const __tpEnsureId = block => {
     if (!block.dataset.tpId) block.dataset.tpId = 'tp-' + Math.random().toString(36).slice(2, 9);
     return block.dataset.tpId;
   };
-  const __tpOpen = (block) => {
+  const __tpOpen = block => {
     __tpEnsureId(block);
     __tpSelected = block;
-    const right = document.querySelector('.guide-right'); if (!right) return;
+    const right = document.querySelector('.guide-right');
+    if (!right) return;
     document.querySelectorAll('.canvas-selected').forEach(x => {
       x.classList.remove('canvas-selected');
-      if (x.getAttribute('contenteditable') === 'true') { x.removeAttribute('contenteditable'); x.removeAttribute('spellcheck'); }
+      if (x.getAttribute('contenteditable') === 'true') {
+        x.removeAttribute('contenteditable');
+        x.removeAttribute('spellcheck');
+      }
     });
     window.__praiaCloseRightModes?.();
     right.classList.add('themepal-mode');
@@ -1664,9 +2020,15 @@
   const __tpAfterSnapshot = () => {
     if (!__tpSelected) return;
     const id = __tpSelected.dataset.tpId;
-    if (!id) { __tpClose(); return; }
+    if (!id) {
+      __tpClose();
+      return;
+    }
     const fresh = document.querySelector(`.tp-block[data-tp-id="${id}"]`);
-    if (!fresh) { __tpClose(); return; }
+    if (!fresh) {
+      __tpClose();
+      return;
+    }
     __tpSelected = fresh;
     fresh.classList.add('canvas-selected');
     __tpRenderPanel();
@@ -1688,11 +2050,13 @@
   const __tpMutatePalette = (themes, fn) => {
     fn(themes[0].palette);
     const pal = themes[0].palette;
-    themes.forEach(t => { t.palette = pal; });
+    themes.forEach(t => {
+      t.palette = pal;
+    });
   };
   // Top palette: a single click focuses the swatch (so `−` knows what to remove)
   // AND opens the native hex picker.
-  document.getElementById('grtp-palette')?.addEventListener('click', (e) => {
+  document.getElementById('grtp-palette')?.addEventListener('click', e => {
     const sw = e.target.closest('.tpi-pal-sw');
     if (!sw || !__tpSelected) return;
     if (e.target.matches('input[type="color"]')) return;
@@ -1703,18 +2067,23 @@
     if (!input) return;
     input.style.pointerEvents = 'auto';
     input.click();
-    setTimeout(() => { input.style.pointerEvents = 'none'; }, 0);
+    setTimeout(() => {
+      input.style.pointerEvents = 'none';
+    }, 0);
   });
-  document.getElementById('grtp-palette')?.addEventListener('input', (e) => {
+  document.getElementById('grtp-palette')?.addEventListener('input', e => {
     if (!e.target.matches('input[type="color"]') || !__tpSelected) return;
     const sw = e.target.closest('.tpi-pal-sw');
     const i = parseInt(sw.dataset.i, 10) || 0;
     const themes = __tpRead(__tpSelected);
     const hex = e.target.value.toUpperCase();
-    __tpMutatePalette(themes, (pal) => { pal[i] = hex; });
+    __tpMutatePalette(themes, pal => {
+      pal[i] = hex;
+    });
     __tpWrite(__tpSelected, themes);
     sw.style.setProperty('--tp-bg', hex);
-    sw.title = hex; sw.setAttribute('aria-label', hex);
+    sw.title = hex;
+    sw.setAttribute('aria-label', hex);
     __tpRenderBlock(__tpSelected);
   });
   document.getElementById('grtp-palette')?.addEventListener('change', () => {
@@ -1723,7 +2092,9 @@
   document.getElementById('grtp-pal-add')?.addEventListener('click', () => {
     if (!__tpSelected) return;
     const themes = __tpRead(__tpSelected);
-    __tpMutatePalette(themes, (pal) => { pal.push('#3259FF'); });
+    __tpMutatePalette(themes, pal => {
+      pal.push('#3259FF');
+    });
     __tpWrite(__tpSelected, themes);
     __tpRenderBlock(__tpSelected);
     __tpRenderPanel();
@@ -1735,12 +2106,12 @@
     if (lastIdx < 1) return;
     let removeIdx = parseInt(__tpSelected.dataset.palFocus, 10);
     if (!Number.isFinite(removeIdx) || removeIdx < 0 || removeIdx > lastIdx) removeIdx = lastIdx;
-    __tpMutatePalette(themes, (pal) => { pal.splice(removeIdx, 1); });
+    __tpMutatePalette(themes, pal => {
+      pal.splice(removeIdx, 1);
+    });
     // Drop the removed index from every theme's selection and shift higher indices down.
     themes.forEach(t => {
-      t.selected = (t.selected || [])
-        .filter(i => i !== removeIdx)
-        .map(i => (i > removeIdx ? i - 1 : i));
+      t.selected = (t.selected || []).filter(i => i !== removeIdx).map(i => (i > removeIdx ? i - 1 : i));
     });
     delete __tpSelected.dataset.palFocus;
     __tpWrite(__tpSelected, themes);
@@ -1754,7 +2125,10 @@
     const taken = new Set(themes.map(t => t.label.toLowerCase()));
     let n = themes.length + 1;
     let label = 'Tema ' + n;
-    while (taken.has(label.toLowerCase())) { n++; label = 'Tema ' + n; }
+    while (taken.has(label.toLowerCase())) {
+      n++;
+      label = 'Tema ' + n;
+    }
     const id = 't-' + Math.random().toString(36).slice(2, 8);
     themes.push({ id, label, selected: [], palette: ref.palette || [] });
     __tpSelected.dataset.active = id;
@@ -1765,12 +2139,15 @@
     const nameEl = document.querySelector(`#grtp-themes .tpi-theme[data-theme="${id}"] .tpi-theme-name`);
     nameEl?.focus();
     if (nameEl) {
-      const r = document.createRange(); r.selectNodeContents(nameEl);
-      const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      const r = document.createRange();
+      r.selectNodeContents(nameEl);
+      const s = window.getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
     }
   });
   // Theme name rename + delete row + row switch + per-theme palette toggle
-  document.getElementById('grtp-themes')?.addEventListener('click', (e) => {
+  document.getElementById('grtp-themes')?.addEventListener('click', e => {
     if (!__tpSelected) return;
     // Per-theme palette swatch → toggle selection for THAT theme
     const palSw = e.target.closest('.tpi-theme-palette .tpi-pal-sw');
@@ -1782,7 +2159,8 @@
       if (!t) return;
       const i = parseInt(palSw.dataset.i, 10) || 0;
       const cur = new Set(__tpSel(t));
-      if (cur.has(i)) cur.delete(i); else cur.add(i);
+      if (cur.has(i)) cur.delete(i);
+      else cur.add(i);
       t.selected = [...cur].sort((a, b) => a - b);
       delete t.selectedIdx;
       __tpWrite(__tpSelected, themes);
@@ -1817,146 +2195,196 @@
     __tpRenderBlock(__tpSelected);
     __tpRenderPanel();
   });
-  document.getElementById('grtp-themes')?.addEventListener('keydown', (e) => {
+  document.getElementById('grtp-themes')?.addEventListener('keydown', e => {
     if (!e.target.classList.contains('tpi-theme-name')) return;
-    if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.target.blur();
+    }
   });
-  document.getElementById('grtp-themes')?.addEventListener('paste', (e) => {
+  document.getElementById('grtp-themes')?.addEventListener('paste', e => {
     if (!e.target.classList.contains('tpi-theme-name')) return;
     e.preventDefault();
     const text = (e.clipboardData || window.clipboardData).getData('text/plain');
     document.execCommand('insertText', false, text.replace(/\s+/g, ' ').trim());
   });
-  document.getElementById('grtp-themes')?.addEventListener('blur', (e) => {
-    if (!e.target.classList.contains('tpi-theme-name') || !__tpSelected) return;
-    const row = e.target.closest('.tpi-theme');
-    const themes = __tpRead(__tpSelected);
-    const t = themes.find(x => x.id === row.dataset.theme);
-    if (!t) return;
-    const newLabel = (e.target.textContent || '').trim() || t.label;
-    if (newLabel === t.label) return;
-    t.label = newLabel;
-    __tpWrite(__tpSelected, themes);
-    __tpRenderBlock(__tpSelected);
-    __tpRenderPanel();
-  }, true);
-  document.addEventListener('click', (e) => {
-    if (document.body.classList.contains('preview-mode')) return;
-    const block = e.target.closest('.tp-block');
-    if (!block) return;
-    const tab = e.target.closest('.tp-tab');
-    const sw  = e.target.closest('.tp-sw');
-    if (tab) {
-      e.stopPropagation(); e.preventDefault();
-      block.dataset.active = tab.dataset.theme;
-      __tpWrite(block, __tpRead(block));
-      __tpRenderBlock(block);
+  document.getElementById('grtp-themes')?.addEventListener(
+    'blur',
+    e => {
+      if (!e.target.classList.contains('tpi-theme-name') || !__tpSelected) return;
+      const row = e.target.closest('.tpi-theme');
+      const themes = __tpRead(__tpSelected);
+      const t = themes.find(x => x.id === row.dataset.theme);
+      if (!t) return;
+      const newLabel = (e.target.textContent || '').trim() || t.label;
+      if (newLabel === t.label) return;
+      t.label = newLabel;
+      __tpWrite(__tpSelected, themes);
+      __tpRenderBlock(__tpSelected);
+      __tpRenderPanel();
+    },
+    true
+  );
+  document.addEventListener(
+    'click',
+    e => {
+      if (document.body.classList.contains('preview-mode')) return;
+      const block = e.target.closest('.tp-block');
+      if (!block) return;
+      const tab = e.target.closest('.tp-tab');
+      const sw = e.target.closest('.tp-sw');
+      if (tab) {
+        e.stopPropagation();
+        e.preventDefault();
+        block.dataset.active = tab.dataset.theme;
+        __tpWrite(block, __tpRead(block));
+        __tpRenderBlock(block);
+        __tpOpen(block);
+        return;
+      }
+      if (sw) {
+        e.stopPropagation();
+        e.preventDefault();
+        const themes = __tpRead(block);
+        const t = themes.find(x => x.id === block.dataset.active) || themes[0];
+        const i = parseInt(sw.dataset.i, 10) || 0;
+        const cur = new Set(__tpSel(t));
+        if (cur.has(i)) cur.delete(i);
+        else cur.add(i);
+        t.selected = [...cur].sort((a, b) => a - b);
+        delete t.selectedIdx;
+        __tpWrite(block, themes);
+        __tpRenderBlock(block);
+        __tpOpen(block);
+        return;
+      }
+      e.stopPropagation();
+      e.preventDefault();
       __tpOpen(block);
-      return;
-    }
-    if (sw) {
-      e.stopPropagation(); e.preventDefault();
-      const themes = __tpRead(block);
-      const t = themes.find(x => x.id === block.dataset.active) || themes[0];
-      const i = parseInt(sw.dataset.i, 10) || 0;
-      const cur = new Set(__tpSel(t));
-      if (cur.has(i)) cur.delete(i); else cur.add(i);
-      t.selected = [...cur].sort((a, b) => a - b);
-      delete t.selectedIdx;
-      __tpWrite(block, themes);
-      __tpRenderBlock(block);
-      __tpOpen(block);
-      return;
-    }
-    e.stopPropagation(); e.preventDefault();
-    __tpOpen(block);
-  }, true);
+    },
+    true
+  );
 
   // Click on color container → open panel. Cover skips copy (not a color reference);
   // the swatch-style templates copy hex on click for convenience in Figma.
-  document.addEventListener('click', (e) => {
-    if (document.body.classList.contains('preview-mode')) return;
-    const cont = e.target.closest('.cover-block, .cl-hero, .cl-card, .cl-strip');
-    if (!cont) return;
-    // Let text-mode claim clicks on any DS-typed text or contenteditable region
-    if (e.target.closest('.cl-name, .cl-meta, [contenteditable="true"], [class*="tk-"], h1, h2, h3, h4, h5, h6, p, a, input, select, button')) return;
-    e.stopPropagation(); e.preventDefault();
-    __clOpenPanel(cont);
-    const info = __clInfo(cont);
-    if (info && info.kind !== 'cover') {
-      const hex = (cont.dataset.color || '').toUpperCase();
-      if (hex) {
-        __copyToClipboard(hex);
-        __showCopyToast('Copiado ' + hex);
+  document.addEventListener(
+    'click',
+    e => {
+      if (document.body.classList.contains('preview-mode')) return;
+      const cont = e.target.closest('.cover-block, .cl-hero, .cl-card, .cl-strip');
+      if (!cont) return;
+      // Let text-mode claim clicks on any DS-typed text or contenteditable region
+      if (e.target.closest('.cl-name, .cl-meta, [contenteditable="true"], [class*="tk-"], h1, h2, h3, h4, h5, h6, p, a, input, select, button')) return;
+      e.stopPropagation();
+      e.preventDefault();
+      __clOpenPanel(cont);
+      const info = __clInfo(cont);
+      if (info && info.kind !== 'cover') {
+        const hex = (cont.dataset.color || '').toUpperCase();
+        if (hex) {
+          __copyToClipboard(hex);
+          __showCopyToast('Copiado ' + hex);
+        }
       }
-    }
-  }, true);
+    },
+    true
+  );
 
   // Track meta edits to preserve them when color changes
-  document.addEventListener('input', (e) => {
+  document.addEventListener('input', e => {
     const m = e.target.closest('.cl-hero .cl-meta, .cl-card .cl-meta, .cl-strip .cl-meta');
-    if (m) { m.dataset.userEdited = 'true'; }
+    if (m) {
+      m.dataset.userEdited = 'true';
+    }
   });
 
   // Color pairing tool — single palette, foreground auto-computed for contrast
-  const __pairFg = (hex) => {
-    const x = hex.replace('#','');
-    const r=parseInt(x.slice(0,2),16), g=parseInt(x.slice(2,4),16), b=parseInt(x.slice(4,6),16);
-    return (0.2126*r+0.7152*g+0.0722*b)/255 > 0.55 ? '#061833' : '#ffffff';
+  const __pairFg = hex => {
+    const x = hex.replace('#', '');
+    const r = parseInt(x.slice(0, 2), 16),
+      g = parseInt(x.slice(2, 4), 16),
+      b = parseInt(x.slice(4, 6), 16);
+    return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 > 0.55 ? '#061833' : '#ffffff';
   };
-  document.addEventListener('click', (e) => {
-    const sw = e.target.closest('.cl-pair-swatch');
-    if (!sw) return;
-    e.preventDefault(); e.stopPropagation();
-    const root = sw.closest('.cl-pair');
-    if (!root) return;
-    const hex = sw.dataset.hex;
-    const nm = sw.dataset.name;
-    const fg = __pairFg(hex);
-    root.querySelectorAll('.cl-pair-swatch').forEach(s => s.classList.toggle('selected', s === sw));
-    root.dataset.bg = hex;
-    root.dataset.bgName = nm;
-    const nameEl = root.querySelector('[data-role="bg-name"]');
-    const hexEl = root.querySelector('[data-role="bg-hex"]');
-    if (nameEl) nameEl.textContent = nm;
-    if (hexEl) hexEl.textContent = hex.toUpperCase();
-    const poster = root.querySelector('.cl-pair-poster');
-    const cta = root.querySelector('.cl-pair-cta');
-    if (poster) { poster.style.background = hex; poster.style.color = fg; }
-    if (cta) { cta.style.background = fg; cta.style.color = hex; }
-    window.__praiaAutosave?.();
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      const sw = e.target.closest('.cl-pair-swatch');
+      if (!sw) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const root = sw.closest('.cl-pair');
+      if (!root) return;
+      const hex = sw.dataset.hex;
+      const nm = sw.dataset.name;
+      const fg = __pairFg(hex);
+      root.querySelectorAll('.cl-pair-swatch').forEach(s => s.classList.toggle('selected', s === sw));
+      root.dataset.bg = hex;
+      root.dataset.bgName = nm;
+      const nameEl = root.querySelector('[data-role="bg-name"]');
+      const hexEl = root.querySelector('[data-role="bg-hex"]');
+      if (nameEl) nameEl.textContent = nm;
+      if (hexEl) hexEl.textContent = hex.toUpperCase();
+      const poster = root.querySelector('.cl-pair-poster');
+      const cta = root.querySelector('.cl-pair-cta');
+      if (poster) {
+        poster.style.background = hex;
+        poster.style.color = fg;
+      }
+      if (cta) {
+        cta.style.background = fg;
+        cta.style.color = hex;
+      }
+      window.__praiaAutosave?.();
+    },
+    true
+  );
 
   // Tab switching — replaces the palette based on theme
-  document.addEventListener('click', (e) => {
-    const tab = e.target.closest('.cl-pair-tab');
-    if (!tab) return;
-    e.preventDefault(); e.stopPropagation();
-    const root = tab.closest('.cl-pair');
-    if (!root) return;
-    const tabId = tab.dataset.tab;
-    let palettes = {};
-    try { palettes = JSON.parse(root.dataset.palettes.replace(/&#39;/g, "'")); } catch {}
-    const palette = palettes[tabId];
-    if (!palette) return;
-    root.querySelectorAll('.cl-pair-tab').forEach(t => t.classList.toggle('active', t === tab));
-    root.dataset.tab = tabId;
-    // Rebuild swatches
-    const sw = root.querySelector('.cl-pair-swatches');
-    const sel = palette.find(p => p.hex.toLowerCase() === (root.dataset.bg || '').toLowerCase()) || palette[Math.min(4, palette.length - 1)];
-    const fg = __pairFg(sel.hex);
-    sw.innerHTML = palette.map(p => `<button type="button" class="cl-pair-swatch${p.hex === sel.hex ? ' selected' : ''}" data-hex="${p.hex}" data-name="${p.name}" aria-label="${p.name}"><span class="dot" style="background:${p.hex}"></span><span class="label">${p.name}</span></button>`).join('');
-    // Update selected info + poster
-    root.dataset.bg = sel.hex;
-    root.dataset.bgName = sel.name;
-    const nm = root.querySelector('[data-role="bg-name"]'); if (nm) nm.textContent = sel.name;
-    const hx = root.querySelector('[data-role="bg-hex"]'); if (hx) hx.textContent = sel.hex.toUpperCase();
-    const poster = root.querySelector('.cl-pair-poster');
-    const cta = root.querySelector('.cl-pair-cta');
-    if (poster) { poster.style.background = sel.hex; poster.style.color = fg; }
-    if (cta) { cta.style.background = fg; cta.style.color = sel.hex; }
-    window.__praiaAutosave?.();
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      const tab = e.target.closest('.cl-pair-tab');
+      if (!tab) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const root = tab.closest('.cl-pair');
+      if (!root) return;
+      const tabId = tab.dataset.tab;
+      let palettes = {};
+      try {
+        palettes = JSON.parse(root.dataset.palettes.replace(/&#39;/g, "'"));
+      } catch {}
+      const palette = palettes[tabId];
+      if (!palette) return;
+      root.querySelectorAll('.cl-pair-tab').forEach(t => t.classList.toggle('active', t === tab));
+      root.dataset.tab = tabId;
+      // Rebuild swatches
+      const sw = root.querySelector('.cl-pair-swatches');
+      const sel = palette.find(p => p.hex.toLowerCase() === (root.dataset.bg || '').toLowerCase()) || palette[Math.min(4, palette.length - 1)];
+      const fg = __pairFg(sel.hex);
+      sw.innerHTML = palette.map(p => `<button type="button" class="cl-pair-swatch${p.hex === sel.hex ? ' selected' : ''}" data-hex="${p.hex}" data-name="${p.name}" aria-label="${p.name}"><span class="dot" style="background:${p.hex}"></span><span class="label">${p.name}</span></button>`).join('');
+      // Update selected info + poster
+      root.dataset.bg = sel.hex;
+      root.dataset.bgName = sel.name;
+      const nm = root.querySelector('[data-role="bg-name"]');
+      if (nm) nm.textContent = sel.name;
+      const hx = root.querySelector('[data-role="bg-hex"]');
+      if (hx) hx.textContent = sel.hex.toUpperCase();
+      const poster = root.querySelector('.cl-pair-poster');
+      const cta = root.querySelector('.cl-pair-cta');
+      if (poster) {
+        poster.style.background = sel.hex;
+        poster.style.color = fg;
+      }
+      if (cta) {
+        cta.style.background = fg;
+        cta.style.color = sel.hex;
+      }
+      window.__praiaAutosave?.();
+    },
+    true
+  );
 
   // Copy SVG to clipboard — generates a vector snapshot of the poster for Figma,
   // mirroring the live layout pixel-for-pixel using computed positions.
@@ -1978,7 +2406,7 @@
     return __opentypePromise;
   };
   const __fontCache = {};
-  const __loadFont = async (url) => {
+  const __loadFont = async url => {
     if (__fontCache[url]) return __fontCache[url];
     const ot = await __loadOpentype();
     const buf = await (await fetch(url)).arrayBuffer();
@@ -1998,22 +2426,25 @@
         const w = Math.round(img.naturalWidth * ratio);
         const h = Math.round(img.naturalHeight * ratio);
         const c = document.createElement('canvas');
-        c.width = w; c.height = h;
+        c.width = w;
+        c.height = h;
         c.getContext('2d').drawImage(img, 0, 0, w, h);
         try {
           const data = c.toDataURL('image/jpeg', 0.85);
           __pairImgCache[url] = data;
           resolve(data);
-        } catch (e) { reject(e); }
+        } catch (e) {
+          reject(e);
+        }
       };
       img.onerror = reject;
       img.src = url;
     });
   };
 
-  const __escapeXml = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const __escapeXml = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-  const __pairBuildSvg = async (root) => {
+  const __pairBuildSvg = async root => {
     const bg = root.dataset.bg || '#0FC4D5';
     const fg = __pairFg(bg);
     const poster = root.querySelector('.cl-pair-poster');
@@ -2026,11 +2457,11 @@
     const W = 600;
     const scale = W / pr.width;
     const H = Math.round(pr.height * scale);
-    const local = (el) => {
+    const local = el => {
       const r = el.getBoundingClientRect();
       return { x: (r.left - pr.left) * scale, y: (r.top - pr.top) * scale, w: r.width * scale, h: r.height * scale };
     };
-    const cs = (el) => getComputedStyle(el);
+    const cs = el => getComputedStyle(el);
     const titleR = local(titleEl);
     const ctaR = local(ctaEl);
     const photoR = local(photoEl);
@@ -2038,7 +2469,12 @@
     const titleCs = cs(titleEl);
     const titleSize = parseFloat(titleCs.fontSize) * scale;
     const titleLh = parseFloat(titleCs.lineHeight) * scale || titleSize * 0.98;
-    const titleLines = (titleEl.innerHTML || '').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').split('\n').map(s => s.trim()).filter(Boolean);
+    const titleLines = (titleEl.innerHTML || '')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<[^>]+>/g, '')
+      .split('\n')
+      .map(s => s.trim())
+      .filter(Boolean);
     const ctaCs = cs(ctaEl);
     const ctaSize = parseFloat(ctaCs.fontSize) * scale;
     const ctaText = (ctaEl.textContent || '').trim();
@@ -2048,15 +2484,14 @@
     let titlePaths = '';
     let ctaTextPath = '';
     try {
-      const [titleFont, ctaFont] = await Promise.all([
-        __loadFont(new URL('fonts/VersosTest-SemiBold.ttf', location.href).href),
-        __loadFont(new URL('fonts/VersosTest-Bold.ttf', location.href).href),
-      ]);
+      const [titleFont, ctaFont] = await Promise.all([__loadFont(new URL('fonts/VersosTest-SemiBold.ttf', location.href).href), __loadFont(new URL('fonts/VersosTest-Bold.ttf', location.href).href)]);
       const titleBaseline0 = titleR.y + titleSize * 0.82;
-      titlePaths = titleLines.map((line, i) => {
-        const path = titleFont.getPath(line, titleR.x, titleBaseline0 + i * titleLh, titleSize, { letterSpacing: -0.02 });
-        return `<path d="${path.toPathData(2)}" fill="${fg}"/>`;
-      }).join('');
+      titlePaths = titleLines
+        .map((line, i) => {
+          const path = titleFont.getPath(line, titleR.x, titleBaseline0 + i * titleLh, titleSize, { letterSpacing: -0.02 });
+          return `<path d="${path.toPathData(2)}" fill="${fg}"/>`;
+        })
+        .join('');
       const ctaAdvance = ctaFont.getAdvanceWidth(ctaText, ctaSize);
       const ctaTextX = ctaR.x + (ctaR.w - ctaAdvance) / 2;
       const ctaTextBaseline = ctaR.y + ctaR.h / 2 + ctaSize * 0.34;
@@ -2071,7 +2506,9 @@
       ctaTextPath = `<text x="${ctaR.x + ctaR.w / 2}" y="${ctaR.y + ctaR.h / 2 + ctaSize * 0.36}" font-family="${ctaFontFam}" font-size="${ctaSize}" font-weight="500" fill="${bg}" text-anchor="middle">${__escapeXml(ctaText)}</text>`;
     }
     let photoDataUrl = '';
-    try { photoDataUrl = await __pairImgToDataUrl(new URL('assets/Moto.png', location.href).href, 1200); } catch {}
+    try {
+      photoDataUrl = await __pairImgToDataUrl(new URL('assets/Moto.png', location.href).href, 1200);
+    } catch {}
     let logoBlock = '';
     if (logoR) {
       logoBlock = `<g transform="translate(${logoR.x} ${logoR.y})"><svg width="${logoR.w}" height="${logoR.h}" viewBox="0 0 1190.75 226.38" fill="${fg}">${__pairLogoSvg}</svg></g>`;
@@ -2090,31 +2527,36 @@
 </svg>`;
   };
 
-  document.addEventListener('click', async (e) => {
-    const btn = e.target.closest('.cl-pair-copy[data-role="copy-svg"]');
-    if (!btn) return;
-    e.preventDefault(); e.stopPropagation();
-    const root = btn.closest('.cl-pair');
-    if (!root) return;
-    btn.disabled = true;
-    const orig = btn.querySelector('span')?.textContent;
-    if (orig) btn.querySelector('span').textContent = 'Gerando…';
-    try {
-      const svg = await __pairBuildSvg(root);
-      if (svg) {
-        __copyToClipboard(svg);
-        __showCopyToast('SVG copiado — cole no Figma');
+  document.addEventListener(
+    'click',
+    async e => {
+      const btn = e.target.closest('.cl-pair-copy[data-role="copy-svg"]');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const root = btn.closest('.cl-pair');
+      if (!root) return;
+      btn.disabled = true;
+      const orig = btn.querySelector('span')?.textContent;
+      if (orig) btn.querySelector('span').textContent = 'Gerando…';
+      try {
+        const svg = await __pairBuildSvg(root);
+        if (svg) {
+          __copyToClipboard(svg);
+          __showCopyToast('SVG copiado — cole no Figma');
+        }
+      } catch (err) {
+        __showCopyToast('Falha ao gerar SVG');
+      } finally {
+        btn.disabled = false;
+        if (orig) btn.querySelector('span').textContent = orig;
       }
-    } catch (err) {
-      __showCopyToast('Falha ao gerar SVG');
-    } finally {
-      btn.disabled = false;
-      if (orig) btn.querySelector('span').textContent = orig;
-    }
-  }, true);
+    },
+    true
+  );
 
   // Close color-mode when clicking elsewhere in canvas
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', e => {
     if (!document.querySelector('.guide-right.color-mode')) return;
     if (e.target.closest('.cover-block, .cl-hero, .cl-card, .cl-strip, .gr-color-insp, .guide-right')) return;
     __clClosePanel();
@@ -2130,9 +2572,13 @@
       </div>`;
       return wrap.firstChild;
     }
-    if (name === 'Text') { wrap.innerHTML = '<p class="tk-m" style="margin:0;color:var(--text-2);max-width:680px">New text block. Edit me.</p>'; return wrap.firstChild; }
+    if (name === 'Text') {
+      wrap.innerHTML = '<p class="tk-m" style="margin:0;color:var(--text-2);max-width:680px">New text block. Edit me.</p>';
+      return wrap.firstChild;
+    }
     if (name === 'Text & Image') {
-      wrap.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center"><div><h4 class="tk-mb" style="margin:0;color:#fff">Title here</h4><p class="tk-m" style="margin:12px 0 0;color:var(--text-2)">Short description for this module.</p></div><div style="background:var(--surface-2);border-radius:var(--r-md);aspect-ratio:4/3"></div></div>';
+      wrap.innerHTML =
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center"><div><h4 class="tk-mb" style="margin:0;color:#fff">Title here</h4><p class="tk-m" style="margin:12px 0 0;color:var(--text-2)">Short description for this module.</p></div><div style="background:var(--surface-2);border-radius:var(--r-md);aspect-ratio:4/3"></div></div>';
       return wrap.firstChild;
     }
     if (name === 'Video full screen 16:9') {
@@ -2172,8 +2618,9 @@
       const p169 = 'https://res.cloudinary.com/dq0tnoaye/video/upload/w_640,c_limit,q_auto,f_auto/v1780335241/16_09_fjzgdc.jpg';
       const v916 = 'https://res.cloudinary.com/dq0tnoaye/video/upload/w_640,c_limit,vc_h264,q_auto,f_mp4/v1780335253/9_16_ukmboo.mp4';
       const p916 = 'https://res.cloudinary.com/dq0tnoaye/video/upload/w_480,c_limit,q_auto,f_auto/v1780335253/9_16_ukmboo.jpg';
-      const vmod = (ar, src, poster) => `<div class="video-mod" data-ds-item-kind="video" data-autoplay="true" data-loop="true" data-muted="true" style="aspect-ratio:${ar};background:#000;border-radius:var(--r-md);overflow:hidden"><video src="${src}" poster="${poster}" loop muted playsinline preload="none" style="width:100%;height:100%;object-fit:cover;display:block"></video><button class="video-mod-play" type="button" aria-label="Play"><span class="bs-icon" data-fill="1" style="--bs-icon-size:22px">play_arrow</span></button></div>`;
-      const cap = (t) => `<div class="tk-s" contenteditable="true" style="margin-top:10px;color:var(--text-2)">${t}</div>`;
+      const vmod = (ar, src, poster) =>
+        `<div class="video-mod" data-ds-item-kind="video" data-autoplay="true" data-loop="true" data-muted="true" style="aspect-ratio:${ar};background:#000;border-radius:var(--r-md);overflow:hidden"><video src="${src}" poster="${poster}" loop muted playsinline preload="none" style="width:100%;height:100%;object-fit:cover;display:block"></video><button class="video-mod-play" type="button" aria-label="Play"><span class="bs-icon" data-fill="1" style="--bs-icon-size:22px">play_arrow</span></button></div>`;
+      const cap = t => `<div class="tk-s" contenteditable="true" style="margin-top:10px;color:var(--text-2)">${t}</div>`;
       wrap.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ds-gap, 16px);align-items:start"><div>${vmod('16/9', v169, p169)}${cap('Legenda do vídeo')}</div><div>${vmod('9/16', v916, p916)}${cap('Legenda do vídeo')}</div></div>`;
       return wrap.firstChild;
     }
@@ -2186,8 +2633,9 @@
       const p43 = 'https://res.cloudinary.com/dq0tnoaye/video/upload/w_640,c_limit,q_auto,f_auto/v1780335241/16_09_fjzgdc.jpg';
       const v916b = 'https://res.cloudinary.com/dq0tnoaye/video/upload/w_640,c_limit,vc_h264,q_auto,f_mp4/v1780335253/9_16_ukmboo.mp4';
       const p916b = 'https://res.cloudinary.com/dq0tnoaye/video/upload/w_480,c_limit,q_auto,f_auto/v1780335253/9_16_ukmboo.jpg';
-      const vmod = (ar, src, poster) => `<div class="video-mod" data-ds-item-kind="video" data-autoplay="true" data-loop="true" data-muted="true" style="aspect-ratio:${ar};background:#000;border-radius:var(--r-md);overflow:hidden"><video src="${src}" poster="${poster}" loop muted playsinline preload="none" style="width:100%;height:100%;object-fit:cover;display:block"></video><button class="video-mod-play" type="button" aria-label="Play"><span class="bs-icon" data-fill="1" style="--bs-icon-size:22px">play_arrow</span></button></div>`;
-      const cap = (t) => `<div class="tk-s" contenteditable="true" style="margin-top:12px;color:var(--text-3)">${t}</div>`;
+      const vmod = (ar, src, poster) =>
+        `<div class="video-mod" data-ds-item-kind="video" data-autoplay="true" data-loop="true" data-muted="true" style="aspect-ratio:${ar};background:#000;border-radius:var(--r-md);overflow:hidden"><video src="${src}" poster="${poster}" loop muted playsinline preload="none" style="width:100%;height:100%;object-fit:cover;display:block"></video><button class="video-mod-play" type="button" aria-label="Play"><span class="bs-icon" data-fill="1" style="--bs-icon-size:22px">play_arrow</span></button></div>`;
+      const cap = t => `<div class="tk-s" contenteditable="true" style="margin-top:12px;color:var(--text-3)">${t}</div>`;
       wrap.innerHTML = `<div style="display:grid;grid-template-columns:repeat(12,1fr);gap:var(--ds-gap, 16px);align-items:start"><div style="grid-column:1 / 6;margin-top:7%">${vmod('4/3', v43, p43)}${cap('Domains')}</div><div style="grid-column:9 / 13">${vmod('9/16', v916b, p916b)}${cap('Conversion Campaign, Social')}</div></div>`;
       return wrap.firstChild;
     }
@@ -2200,19 +2648,21 @@
       const p916c = 'https://res.cloudinary.com/dq0tnoaye/video/upload/w_480,c_limit,q_auto,f_auto/v1780335253/9_16_ukmboo.jpg';
       const v169c = 'https://res.cloudinary.com/dq0tnoaye/video/upload/w_900,c_limit,vc_h264,q_auto,f_mp4/v1780335241/16_09_fjzgdc.mp4';
       const p169c = 'https://res.cloudinary.com/dq0tnoaye/video/upload/w_640,c_limit,q_auto,f_auto/v1780335241/16_09_fjzgdc.jpg';
-      const vmod = (ar, src, poster) => `<div class="video-mod" data-ds-item-kind="video" data-autoplay="true" data-loop="true" data-muted="true" style="aspect-ratio:${ar};background:#000;border-radius:var(--r-md);overflow:hidden"><video src="${src}" poster="${poster}" loop muted playsinline preload="none" style="width:100%;height:100%;object-fit:cover;display:block"></video><button class="video-mod-play" type="button" aria-label="Play"><span class="bs-icon" data-fill="1" style="--bs-icon-size:22px">play_arrow</span></button></div>`;
-      const cap = (t) => `<div class="tk-s" contenteditable="true" style="margin-top:12px;color:var(--text-3)">${t}</div>`;
+      const vmod = (ar, src, poster) =>
+        `<div class="video-mod" data-ds-item-kind="video" data-autoplay="true" data-loop="true" data-muted="true" style="aspect-ratio:${ar};background:#000;border-radius:var(--r-md);overflow:hidden"><video src="${src}" poster="${poster}" loop muted playsinline preload="none" style="width:100%;height:100%;object-fit:cover;display:block"></video><button class="video-mod-play" type="button" aria-label="Play"><span class="bs-icon" data-fill="1" style="--bs-icon-size:22px">play_arrow</span></button></div>`;
+      const cap = t => `<div class="tk-s" contenteditable="true" style="margin-top:12px;color:var(--text-3)">${t}</div>`;
       wrap.innerHTML = `<div style="display:grid;grid-template-columns:repeat(12,1fr);gap:var(--ds-gap, 16px);align-items:start"><div style="grid-column:1 / 6">${vmod('9/16', v916c, p916c)}${cap('Design Trends, Social')}</div><div style="grid-column:7 / 13;margin-top:10%">${vmod('16/9', v169c, p169c)}${cap('Design Trends, Social')}</div></div>`;
       return wrap.firstChild;
     }
     // Shared markup helpers for the editorial video duos below.
-    const __vmodHtml = (ar, src, poster) => `<div class="video-mod" data-ds-item-kind="video" data-autoplay="true" data-loop="true" data-muted="true" style="aspect-ratio:${ar};background:#000;border-radius:var(--r-md);overflow:hidden"><video src="${src}" poster="${poster}" loop muted playsinline preload="none" style="width:100%;height:100%;object-fit:cover;display:block"></video><button class="video-mod-play" type="button" aria-label="Play"><span class="bs-icon" data-fill="1" style="--bs-icon-size:22px">play_arrow</span></button></div>`;
+    const __vmodHtml = (ar, src, poster) =>
+      `<div class="video-mod" data-ds-item-kind="video" data-autoplay="true" data-loop="true" data-muted="true" style="aspect-ratio:${ar};background:#000;border-radius:var(--r-md);overflow:hidden"><video src="${src}" poster="${poster}" loop muted playsinline preload="none" style="width:100%;height:100%;object-fit:cover;display:block"></video><button class="video-mod-play" type="button" aria-label="Play"><span class="bs-icon" data-fill="1" style="--bs-icon-size:22px">play_arrow</span></button></div>`;
     const __V169 = 'https://res.cloudinary.com/dq0tnoaye/video/upload/w_900,c_limit,vc_h264,q_auto,f_mp4/v1780335241/16_09_fjzgdc.mp4';
     const __P169 = 'https://res.cloudinary.com/dq0tnoaye/video/upload/w_640,c_limit,q_auto,f_auto/v1780335241/16_09_fjzgdc.jpg';
     const __V916 = 'https://res.cloudinary.com/dq0tnoaye/video/upload/w_640,c_limit,vc_h264,q_auto,f_mp4/v1780335253/9_16_ukmboo.mp4';
     const __P916 = 'https://res.cloudinary.com/dq0tnoaye/video/upload/w_480,c_limit,q_auto,f_auto/v1780335253/9_16_ukmboo.jpg';
-    const __capS = (t) => `<div class="tk-s" contenteditable="true" style="margin-top:12px;color:var(--text-3)">${t}</div>`;
-    const __capM = (t) => `<div class="tk-m" contenteditable="true" style="margin-top:16px;color:var(--text-2);max-width:92%">${t}</div>`;
+    const __capS = t => `<div class="tk-s" contenteditable="true" style="margin-top:12px;color:var(--text-3)">${t}</div>`;
+    const __capM = t => `<div class="tk-m" contenteditable="true" style="margin-top:16px;color:var(--text-2);max-width:92%">${t}</div>`;
     if (name === 'Video duo 16:9 (diagonal)') {
       // Diagonal (grid 12 col): dois 16:9 do MESMO tamanho (5 col cada), um pouco
       // menores, com bastante respiro no meio (col 6-7). Direita deslocada pra
@@ -2240,23 +2690,24 @@
       // its HEX to the clipboard (paste straight into Figma). 3 columns: one big
       // featured swatch + two stacked columns of cards.
       const SPEC = [
-        { col:1, name:'Azul Turquesa', bg:'#0FC4D5', ink:'#061833', hex:'#0FC4D5', rgb:'R15 G196 B213', cmyk:'C73 M0 Y10 K0',  pms:'PMS 320 C',   flex:1 },
-        { col:2, name:'BluStar Navy',  bg:'#061833', ink:'#FFFFFF', hex:'#061833', rgb:'R6 G24 B51',    cmyk:'C100 M85 Y45 K55',pms:'PMS 5395 C', flex:2 },
-        { col:2, name:'Royal Blue',    bg:'#3259FF', ink:'#FFFFFF', hex:'#3259FF', rgb:'R50 G89 B255',  cmyk:'C80 M65 Y0 K0',  pms:'PMS 2727 C',  flex:1.5 },
-        { col:2, name:'Branco',        bg:'#FFFFFF', ink:'#061833', hex:'#FFFFFF', rgb:'R255 G255 B255',cmyk:'C0 M0 Y0 K0',    pms:'—',           flex:1.5, light:true },
-        { col:3, name:'Preto',         bg:'#000000', ink:'#FFFFFF', hex:'#000000', rgb:'R0 G0 B0',      cmyk:'C0 M0 Y0 K100',  pms:'Black 6 C',   flex:1 },
-        { col:3, name:'Navy Deep',     bg:'#04001E', ink:'#FFFFFF', hex:'#04001E', rgb:'R4 G0 B30',     cmyk:'C100 M100 Y40 K65',pms:'PMS 2766 C',flex:1 },
-        { col:3, name:'Royal Blue',    bg:'#3259FF', ink:'#FFFFFF', hex:'#3259FF', rgb:'R50 G89 B255',  cmyk:'C80 M65 Y0 K0',  pms:'PMS 2727 C',  flex:1.5 },
-        { col:3, name:'Cyan 200',      bg:'#A6D9DE', ink:'#061833', hex:'#A6D9DE', rgb:'R166 G217 B222',cmyk:'C32 M2 Y12 K0',  pms:'PMS 5523 C',  flex:1 },
-        { col:3, name:'Cyan 100',      bg:'#BFFAFF', ink:'#061833', hex:'#BFFAFF', rgb:'R191 G250 B255',cmyk:'C22 M0 Y3 K0',   pms:'—',           flex:1 },
-        { col:3, name:'Cyan 50',       bg:'#DFFCFF', ink:'#061833', hex:'#DFFCFF', rgb:'R223 G252 B255',cmyk:'C10 M0 Y1 K0',   pms:'—',           flex:1 },
+        { col: 1, name: 'Azul Turquesa', bg: '#0FC4D5', ink: '#061833', hex: '#0FC4D5', rgb: 'R15 G196 B213', cmyk: 'C73 M0 Y10 K0', pms: 'PMS 320 C', flex: 1 },
+        { col: 2, name: 'BluStar Navy', bg: '#061833', ink: '#FFFFFF', hex: '#061833', rgb: 'R6 G24 B51', cmyk: 'C100 M85 Y45 K55', pms: 'PMS 5395 C', flex: 2 },
+        { col: 2, name: 'Royal Blue', bg: '#3259FF', ink: '#FFFFFF', hex: '#3259FF', rgb: 'R50 G89 B255', cmyk: 'C80 M65 Y0 K0', pms: 'PMS 2727 C', flex: 1.5 },
+        { col: 2, name: 'Branco', bg: '#FFFFFF', ink: '#061833', hex: '#FFFFFF', rgb: 'R255 G255 B255', cmyk: 'C0 M0 Y0 K0', pms: '—', flex: 1.5, light: true },
+        { col: 3, name: 'Preto', bg: '#000000', ink: '#FFFFFF', hex: '#000000', rgb: 'R0 G0 B0', cmyk: 'C0 M0 Y0 K100', pms: 'Black 6 C', flex: 1 },
+        { col: 3, name: 'Navy Deep', bg: '#04001E', ink: '#FFFFFF', hex: '#04001E', rgb: 'R4 G0 B30', cmyk: 'C100 M100 Y40 K65', pms: 'PMS 2766 C', flex: 1 },
+        { col: 3, name: 'Royal Blue', bg: '#3259FF', ink: '#FFFFFF', hex: '#3259FF', rgb: 'R50 G89 B255', cmyk: 'C80 M65 Y0 K0', pms: 'PMS 2727 C', flex: 1.5 },
+        { col: 3, name: 'Cyan 200', bg: '#A6D9DE', ink: '#061833', hex: '#A6D9DE', rgb: 'R166 G217 B222', cmyk: 'C32 M2 Y12 K0', pms: 'PMS 5523 C', flex: 1 },
+        { col: 3, name: 'Cyan 100', bg: '#BFFAFF', ink: '#061833', hex: '#BFFAFF', rgb: 'R191 G250 B255', cmyk: 'C22 M0 Y3 K0', pms: '—', flex: 1 },
+        { col: 3, name: 'Cyan 50', bg: '#DFFCFF', ink: '#061833', hex: '#DFFCFF', rgb: 'R223 G252 B255', cmyk: 'C10 M0 Y1 K0', pms: '—', flex: 1 },
       ];
       // Rendered on a fixed 1920×1080 (16:9) canvas and scaled to fit the column
       // width (praia mirror) — so it matches the reference exactly at any size:
       // every card shows its full name + HEX/RGB/CMYK/PMS, white page background,
       // equal card heights (col1 = one tall card, col2 = 3, col3 = 6). Text uses
       // DS tokens (Body name, Body Small meta), name top-left + meta below it.
-      const card = (c) => `<div class="cspec-card" data-hex="${c.hex}" title="Clique para copiar o HEX (preview)" style="background:${c.bg};color:${c.ink};border-radius:16px;padding:14px 20px;cursor:pointer;flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;gap:8px;overflow:hidden;${c.light ? 'border:2px solid #D9D9D9;' : ''}">
+      const card =
+        c => `<div class="cspec-card" data-hex="${c.hex}" title="Clique para copiar o HEX (preview)" style="background:${c.bg};color:${c.ink};border-radius:16px;padding:14px 20px;cursor:pointer;flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;gap:8px;overflow:hidden;${c.light ? 'border:2px solid #D9D9D9;' : ''}">
             <div class="tk-m" style="margin:0;color:inherit;line-height:1.2;white-space:nowrap">${c.name}</div>
             <div class="tk-m" style="margin:0;color:inherit;line-height:1.25;white-space:pre-line">HEX ${c.hex}
 ${c.rgb}
@@ -2266,7 +2717,7 @@ ${c.pms}</div>
       const c1 = SPEC.filter(c => c.col === 1);
       const c2 = SPEC.filter(c => c.col === 2);
       const c3 = SPEC.filter(c => c.col === 3);
-      const colWrap = (cards) => `<div style="flex:1;display:flex;flex-direction:column;gap:16px;min-height:0">${cards.map(card).join('')}</div>`;
+      const colWrap = cards => `<div style="flex:1;display:flex;flex-direction:column;gap:16px;min-height:0">${cards.map(card).join('')}</div>`;
       const inner = `<div style="width:1920px;height:1080px;box-sizing:border-box;background:#fff;padding:24px;display:flex;gap:16px;align-items:stretch">${colWrap(c1)}${colWrap(c2)}${colWrap(c3)}</div>`;
       wrap.innerHTML = `<div class="praia-frame" style="aspect-ratio:1920/1080;width:100%;background:#fff;border-radius:var(--r-md);overflow:hidden"><div class="praia-mirror" data-edit-w="1920" data-edit-h="1080" style="width:1920px;height:1080px">${inner}</div></div>`;
       return wrap.firstChild;
@@ -2277,25 +2728,30 @@ ${c.pms}</div>
       // canvas and scaled to fit (praia mirror). In preview, clicking a cell
       // copies that cell's background HEX (paste straight into Figma).
       const BGS = [
-        { n:'branco',    hex:'#FFFFFF', light:true },
-        { n:'cyan 50',   hex:'#DFFCFF', light:true },
-        { n:'cyan 100',  hex:'#BFFAFF', light:true },
-        { n:'cyan 200',  hex:'#A6D9DE', light:true },
-        { n:'turquesa',  hex:'#0FC4D5' },
-        { n:'royal 300', hex:'#4D8BFE' },
-        { n:'royal',     hex:'#3259FF' },
-        { n:'navy',      hex:'#061833' },
-        { n:'navy deep', hex:'#04001E' },
-        { n:'preto',     hex:'#000000' },
+        { n: 'branco', hex: '#FFFFFF', light: true },
+        { n: 'cyan 50', hex: '#DFFCFF', light: true },
+        { n: 'cyan 100', hex: '#BFFAFF', light: true },
+        { n: 'cyan 200', hex: '#A6D9DE', light: true },
+        { n: 'turquesa', hex: '#0FC4D5' },
+        { n: 'royal 300', hex: '#4D8BFE' },
+        { n: 'royal', hex: '#3259FF' },
+        { n: 'navy', hex: '#061833' },
+        { n: 'navy deep', hex: '#04001E' },
+        { n: 'preto', hex: '#000000' },
       ];
       // Foregrounds mirror the full background palette so every brand color is
       // paired against every other (10×10 matrix), matching the reference sheet.
       const FGS = BGS.map(c => ({ n: c.n, hex: c.hex }));
       // Square cells: derive canvas height from the column cell width so rows and
       // columns stay proportional regardless of how many foregrounds exist.
-      const PAD = 24, GAP = 16, CW = (1920 - PAD * 2 - GAP * (BGS.length - 1)) / BGS.length;
+      const PAD = 24,
+        GAP = 16,
+        CW = (1920 - PAD * 2 - GAP * (BGS.length - 1)) / BGS.length;
       const H = Math.round(PAD * 2 + GAP * (FGS.length - 1) + CW * FGS.length);
-      const cell = (fg, bg) => `<div class="ccon-card" data-hex="${bg.hex}" title="Clique para copiar o HEX (preview)" style="background:${bg.hex};border-radius:12px;padding:18px;cursor:pointer;min-height:0;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;${bg.light ? 'box-shadow:inset 0 0 0 1px #D9D9D9;' : ''}">
+      const cell = (
+        fg,
+        bg
+      ) => `<div class="ccon-card" data-hex="${bg.hex}" title="Clique para copiar o HEX (preview)" style="background:${bg.hex};border-radius:12px;padding:18px;cursor:pointer;min-height:0;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;${bg.light ? 'box-shadow:inset 0 0 0 1px #D9D9D9;' : ''}">
             <div class="tk-xl" style="margin:0;color:${fg.hex}">Aa</div>
             <div class="tk-m" style="margin:0;color:${fg.hex};white-space:pre-line">${fg.n}\nno ${bg.n}</div>
           </div>`;
@@ -2309,47 +2765,56 @@ ${c.pms}</div>
       // name + HEX/RGB/CMYK/PMS. Rendered on a fixed 1920×1080 canvas, scaled to
       // fit (praia mirror). In preview, clicking a bar copies its HEX (reuses the
       // .cspec-card click-to-copy handler).
-      const hx = h => h.replace('#','');
-      const rgbOf = h => { const n = parseInt(hx(h),16); return [ (n>>16)&255, (n>>8)&255, n&255 ]; };
-      const inkOf = (h) => { const [r,g,b] = rgbOf(h); const L = (0.299*r+0.587*g+0.114*b)/255; return L > 0.6 ? '#061833' : '#FFFFFF'; };
+      const hx = h => h.replace('#', '');
+      const rgbOf = h => {
+        const n = parseInt(hx(h), 16);
+        return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+      };
+      const inkOf = h => {
+        const [r, g, b] = rgbOf(h);
+        const L = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        return L > 0.6 ? '#061833' : '#FFFFFF';
+      };
       const COLORS = [
-        { col:1, name:'Midnight', hex:'#0A1726', pms:'PMS 5395 C' },
-        { col:1, name:'Gray',     hex:'#A6A6A6', pms:'Cool Gray 7 C' },
-        { col:1, name:'Green',    hex:'#7CE56F', pms:'PMS 7488 C' },
-        { col:1, name:'Sand',     hex:'#F5DB87', pms:'PMS 7401 C' },
-        { col:1, name:'Peach',    hex:'#F5B888', pms:'PMS 1565 C' },
-        { col:1, name:'Salmon',   hex:'#F58C82', pms:'PMS 7416 C' },
-        { col:2, name:'Slate',    hex:'#1C2430', pms:'PMS 432 C' },
-        { col:2, name:'Orange',   hex:'#ED5A1F', pms:'PMS 1655 C' },
-        { col:2, name:'Forest',   hex:'#1E3A1B', pms:'PMS 5535 C' },
-        { col:2, name:'Olive',    hex:'#6E6E12', pms:'PMS 384 C' },
-        { col:2, name:'Rust',     hex:'#7A3A12', pms:'PMS 1545 C' },
-        { col:2, name:'Maroon',   hex:'#4A1410', pms:'PMS 490 C' },
+        { col: 1, name: 'Midnight', hex: '#0A1726', pms: 'PMS 5395 C' },
+        { col: 1, name: 'Gray', hex: '#A6A6A6', pms: 'Cool Gray 7 C' },
+        { col: 1, name: 'Green', hex: '#7CE56F', pms: 'PMS 7488 C' },
+        { col: 1, name: 'Sand', hex: '#F5DB87', pms: 'PMS 7401 C' },
+        { col: 1, name: 'Peach', hex: '#F5B888', pms: 'PMS 1565 C' },
+        { col: 1, name: 'Salmon', hex: '#F58C82', pms: 'PMS 7416 C' },
+        { col: 2, name: 'Slate', hex: '#1C2430', pms: 'PMS 432 C' },
+        { col: 2, name: 'Orange', hex: '#ED5A1F', pms: 'PMS 1655 C' },
+        { col: 2, name: 'Forest', hex: '#1E3A1B', pms: 'PMS 5535 C' },
+        { col: 2, name: 'Olive', hex: '#6E6E12', pms: 'PMS 384 C' },
+        { col: 2, name: 'Rust', hex: '#7A3A12', pms: 'PMS 1545 C' },
+        { col: 2, name: 'Maroon', hex: '#4A1410', pms: 'PMS 490 C' },
       ];
-      const bar = (c) => { const ink = inkOf(c.hex); const [r,g,b] = rgbOf(c.hex);
+      const bar = c => {
+        const ink = inkOf(c.hex);
+        const [r, g, b] = rgbOf(c.hex);
         return `<div class="cspec-card" data-hex="${c.hex}" title="Clique para copiar o HEX (preview)" style="background:${c.hex};color:${ink};border-radius:16px;padding:20px 28px;cursor:pointer;flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;gap:10px;overflow:hidden">
             <div class="tk-m" style="margin:0;color:inherit;line-height:1.2;white-space:nowrap">${c.name}</div>
             <div class="tk-m" style="margin:0;color:inherit;line-height:1.3;white-space:pre-line">HEX ${c.hex}
 R${r} G${g} B${b}
 ${c.pms}</div>
-          </div>`; };
-      const col = (n) => `<div style="flex:1;display:flex;flex-direction:column;gap:20px;min-height:0">${COLORS.filter(c=>c.col===n).map(bar).join('')}</div>`;
+          </div>`;
+      };
+      const col = n =>
+        `<div style="flex:1;display:flex;flex-direction:column;gap:20px;min-height:0">${COLORS.filter(c => c.col === n)
+          .map(bar)
+          .join('')}</div>`;
       const inner = `<div style="width:1920px;height:1080px;box-sizing:border-box;background:#fff;padding:24px;display:flex;gap:20px;align-items:stretch">${col(1)}${col(2)}</div>`;
       wrap.innerHTML = `<div class="praia-frame" style="aspect-ratio:1920/1080;width:100%;background:#fff;border-radius:var(--r-md);overflow:hidden"><div class="praia-mirror" data-edit-w="1920" data-edit-h="1080" style="width:1920px;height:1080px">${inner}</div></div>`;
       return wrap.firstChild;
     }
     if (name === 'Paleta de cores') {
       // Fixed Blustar palette: 8 primárias + 9 neutros + 6 terciárias = 23 cores
-      const FIXED_PALETTE = [
-        '#000000','#04001E','#0A1F3B','#3259FF','#0FC4D5','#A6D9DE','#BFFAFF','#DFFCFF',
-        '#FFFFFF','#F3F4F6','#D1D5DB','#9CA3AF','#6B7280','#4B5563','#374151','#1F2937','#0A1018',
-        '#1B8FA8','#235789','#0A1F3B','#F5B888','#ED5A1F','#7CE56F',
-      ];
+      const FIXED_PALETTE = ['#000000', '#04001E', '#0A1F3B', '#3259FF', '#0FC4D5', '#A6D9DE', '#BFFAFF', '#DFFCFF', '#FFFFFF', '#F3F4F6', '#D1D5DB', '#9CA3AF', '#6B7280', '#4B5563', '#374151', '#1F2937', '#0A1018', '#1B8FA8', '#235789', '#0A1F3B', '#F5B888', '#ED5A1F', '#7CE56F'];
       const themes = [
         { id: 'illustration', label: 'Illustration', selected: [4, 5, 6, 17, 20, 22], palette: FIXED_PALETTE },
-        { id: 'marketing',    label: 'Marketing',    selected: [3, 4, 8, 21],         palette: FIXED_PALETTE },
-        { id: 'product',      label: 'Product',      selected: [2, 3, 8, 10, 16],     palette: FIXED_PALETTE },
-        { id: 'brand',        label: 'Brand',        selected: [1, 2, 3, 4],          palette: FIXED_PALETTE },
+        { id: 'marketing', label: 'Marketing', selected: [3, 4, 8, 21], palette: FIXED_PALETTE },
+        { id: 'product', label: 'Product', selected: [2, 3, 8, 10, 16], palette: FIXED_PALETTE },
+        { id: 'brand', label: 'Brand', selected: [1, 2, 3, 4], palette: FIXED_PALETTE },
       ];
       const activeId = 'illustration';
       const render = (themes, activeId) => {
@@ -2373,55 +2838,58 @@ ${c.pms}</div>
     if (name === 'Color pairing') {
       const palettes = {
         brand: [
-          { name: 'Azul Asfalto',    hex: '#061833' },
-          { name: 'Azul Noturno',    hex: '#04001E' },
-          { name: 'Azul Profundo',   hex: '#0A1F3B' },
-          { name: 'Azul Céu',        hex: '#3259FF' },
-          { name: 'Azul Turquesa',   hex: '#0FC4D5' },
-          { name: 'Azul Horizonte',  hex: '#A6D9DE' },
-          { name: 'Azul Aberto',     hex: '#BFFAFF' },
-          { name: 'Azul Nuvem',      hex: '#DFFCFF' },
+          { name: 'Azul Asfalto', hex: '#061833' },
+          { name: 'Azul Noturno', hex: '#04001E' },
+          { name: 'Azul Profundo', hex: '#0A1F3B' },
+          { name: 'Azul Céu', hex: '#3259FF' },
+          { name: 'Azul Turquesa', hex: '#0FC4D5' },
+          { name: 'Azul Horizonte', hex: '#A6D9DE' },
+          { name: 'Azul Aberto', hex: '#BFFAFF' },
+          { name: 'Azul Nuvem', hex: '#DFFCFF' },
         ],
         marketing: [
-          { name: 'Royal Blue',  hex: '#3259FF' },
-          { name: 'Cyan',        hex: '#0FC4D5' },
-          { name: 'Sun',         hex: '#F59F3A' },
-          { name: 'Coral',       hex: '#E63946' },
-          { name: 'Mint',        hex: '#7CB342' },
-          { name: 'Yellow',      hex: '#FFD166' },
-          { name: 'Magenta',     hex: '#D946EF' },
-          { name: 'Cloud',       hex: '#BFFAFF' },
+          { name: 'Royal Blue', hex: '#3259FF' },
+          { name: 'Cyan', hex: '#0FC4D5' },
+          { name: 'Sun', hex: '#F59F3A' },
+          { name: 'Coral', hex: '#E63946' },
+          { name: 'Mint', hex: '#7CB342' },
+          { name: 'Yellow', hex: '#FFD166' },
+          { name: 'Magenta', hex: '#D946EF' },
+          { name: 'Cloud', hex: '#BFFAFF' },
         ],
         app: [
-          { name: 'Navy',        hex: '#061833' },
-          { name: 'Navy Deep',   hex: '#04001E' },
-          { name: 'Surface',    hex: '#0B1F3F' },
-          { name: 'Mid',         hex: '#1F3A66' },
-          { name: 'Cyan',        hex: '#0FC4D5' },
-          { name: 'Cyan 100',    hex: '#BFFAFF' },
-          { name: 'Gray 300',    hex: '#9CA3AF' },
-          { name: 'Gray 100',    hex: '#E5E7EB' },
+          { name: 'Navy', hex: '#061833' },
+          { name: 'Navy Deep', hex: '#04001E' },
+          { name: 'Surface', hex: '#0B1F3F' },
+          { name: 'Mid', hex: '#1F3A66' },
+          { name: 'Cyan', hex: '#0FC4D5' },
+          { name: 'Cyan 100', hex: '#BFFAFF' },
+          { name: 'Gray 300', hex: '#9CA3AF' },
+          { name: 'Gray 100', hex: '#E5E7EB' },
         ],
         ilustracao: [
-          { name: 'Cyan',        hex: '#0FC4D5' },
-          { name: 'Royal',       hex: '#3259FF' },
-          { name: 'Sun',         hex: '#F59F3A' },
-          { name: 'Coral',       hex: '#E63946' },
-          { name: 'Pink',        hex: '#FF6B9D' },
-          { name: 'Purple',      hex: '#9D4EDD' },
-          { name: 'Mint',        hex: '#06A77D' },
-          { name: 'Sand',        hex: '#FFD166' },
+          { name: 'Cyan', hex: '#0FC4D5' },
+          { name: 'Royal', hex: '#3259FF' },
+          { name: 'Sun', hex: '#F59F3A' },
+          { name: 'Coral', hex: '#E63946' },
+          { name: 'Pink', hex: '#FF6B9D' },
+          { name: 'Purple', hex: '#9D4EDD' },
+          { name: 'Mint', hex: '#06A77D' },
+          { name: 'Sand', hex: '#FFD166' },
         ],
       };
       const tabs = [
-        { id: 'brand',      label: 'Brand' },
-        { id: 'marketing',  label: 'Marketing' },
-        { id: 'app',        label: 'APP' },
+        { id: 'brand', label: 'Brand' },
+        { id: 'marketing', label: 'Marketing' },
+        { id: 'app', label: 'APP' },
         { id: 'ilustracao', label: 'Ilustração' },
       ];
-      const inkFor = (hex) => {
-        const x = hex.replace('#',''); const r=parseInt(x.slice(0,2),16),g=parseInt(x.slice(2,4),16),b=parseInt(x.slice(4,6),16);
-        return (0.2126*r+0.7152*g+0.0722*b)/255 > 0.55 ? '#061833' : '#ffffff';
+      const inkFor = hex => {
+        const x = hex.replace('#', '');
+        const r = parseInt(x.slice(0, 2), 16),
+          g = parseInt(x.slice(2, 4), 16),
+          b = parseInt(x.slice(4, 6), 16);
+        return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 > 0.55 ? '#061833' : '#ffffff';
       };
       const swatch = (p, sel) => `<button type="button" class="cl-pair-swatch${sel ? ' selected' : ''}" data-hex="${p.hex}" data-name="${p.name}" aria-label="${p.name}"><span class="dot" style="background:${p.hex}"></span><span class="label">${p.name}</span></button>`;
       const activeTab = 'brand';
@@ -2460,11 +2928,31 @@ ${c.pms}</div>
       return wrap.firstChild;
     }
     if (name === 'Color card' || name === 'Color cards' || name === 'Color palette') {
-      const hexToRgb = (h) => { const x = h.replace('#',''); return [parseInt(x.slice(0,2),16), parseInt(x.slice(2,4),16), parseInt(x.slice(4,6),16)]; };
-      const rgbToCmyk = (r,g,b) => { const R=r/255,G=g/255,B=b/255; const k=1-Math.max(R,G,B); if(k===1)return[0,0,0,100]; const c=(1-R-k)/(1-k), m=(1-G-k)/(1-k), y=(1-B-k)/(1-k); return [Math.round(c*100),Math.round(m*100),Math.round(y*100),Math.round(k*100)]; };
-      const luma = (h) => { const [r,g,b]=hexToRgb(h); return (0.2126*r+0.7152*g+0.0722*b)/255; };
-      const ink = (h) => luma(h) > 0.55 ? '#061833' : '#ffffff';
-      const meta = (hex) => { const [r,g,b]=hexToRgb(hex); const [c,m,y,k]=rgbToCmyk(r,g,b); return `<div class="meta-hex">HEX ${hex.toUpperCase()}</div><div class="meta-rgb">R${r} G${g} B${b}</div><div class="meta-cmyk">C${c} M${m} Y${y} K${k}</div><div class="meta-pms">PMS 4280 C</div>`; };
+      const hexToRgb = h => {
+        const x = h.replace('#', '');
+        return [parseInt(x.slice(0, 2), 16), parseInt(x.slice(2, 4), 16), parseInt(x.slice(4, 6), 16)];
+      };
+      const rgbToCmyk = (r, g, b) => {
+        const R = r / 255,
+          G = g / 255,
+          B = b / 255;
+        const k = 1 - Math.max(R, G, B);
+        if (k === 1) return [0, 0, 0, 100];
+        const c = (1 - R - k) / (1 - k),
+          m = (1 - G - k) / (1 - k),
+          y = (1 - B - k) / (1 - k);
+        return [Math.round(c * 100), Math.round(m * 100), Math.round(y * 100), Math.round(k * 100)];
+      };
+      const luma = h => {
+        const [r, g, b] = hexToRgb(h);
+        return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+      };
+      const ink = h => (luma(h) > 0.55 ? '#061833' : '#ffffff');
+      const meta = hex => {
+        const [r, g, b] = hexToRgb(hex);
+        const [c, m, y, k] = rgbToCmyk(r, g, b);
+        return `<div class="meta-hex">HEX ${hex.toUpperCase()}</div><div class="meta-rgb">R${r} G${g} B${b}</div><div class="meta-cmyk">C${c} M${m} Y${y} K${k}</div><div class="meta-pms">PMS 4280 C</div>`;
+      };
 
       if (name === 'Color card') {
         const hex = '#0FC4D5';
@@ -2481,7 +2969,7 @@ ${c.pms}</div>
           { hex: '#04001E', name: 'Azul\nNoturno' },
           { hex: '#061833', name: 'Azul\nProfundo' },
         ];
-        const cardHtml = (c) => `<div class="cl-card" data-color="${c.hex}" style="background:${c.hex};color:${ink(c.hex)}">
+        const cardHtml = c => `<div class="cl-card" data-color="${c.hex}" style="background:${c.hex};color:${ink(c.hex)}">
           <div class="cl-name" contenteditable="true">${c.name}</div>
           <div class="cl-meta">${meta(c.hex)}</div>
         </div>`;
@@ -2490,7 +2978,7 @@ ${c.pms}</div>
       }
 
       // Color palette
-      const colors = ['#0FC4D5','#235789','#0a1f3b','#f5b888','#ed5a1f','#a23a1a','#7CE56F'];
+      const colors = ['#0FC4D5', '#235789', '#0a1f3b', '#f5b888', '#ed5a1f', '#a23a1a', '#7CE56F'];
       const stripHtml = (hex, label) => `<div class="cl-strip" data-color="${hex}" style="background:${hex};color:${ink(hex)}">
         <div class="cl-name" contenteditable="true">${label}</div>
         <div class="cl-meta">${meta(hex)}</div>
@@ -2503,14 +2991,15 @@ ${c.pms}</div>
       return wrap.firstChild;
     }
     if (name === 'Text cards') {
-      wrap.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="card"><div class="tile-title">Card title</div><div class="tile-desc" style="margin-top:8px">Short description.</div></div><div class="card"><div class="tile-title">Card title</div><div class="tile-desc" style="margin-top:8px">Short description.</div></div></div>';
+      wrap.innerHTML =
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="card"><div class="tile-title">Card title</div><div class="tile-desc" style="margin-top:8px">Short description.</div></div><div class="card"><div class="tile-title">Card title</div><div class="tile-desc" style="margin-top:8px">Short description.</div></div></div>';
       return wrap.firstChild;
     }
     if (name === 'Resources') {
       const lock = '<span class="bs-icon" style="--bs-icon-size:12px;vertical-align:-2px;margin-left:6px;opacity:0.7">lock</span>';
       const chev = '<span class="bs-icon" style="--bs-icon-size:16px">chevron_right</span>';
-      const dl   = '<span class="bs-icon" style="--bs-icon-size:16px">download</span>';
-      const ext  = '<span class="bs-icon" style="--bs-icon-size:16px">open_in_new</span>';
+      const dl = '<span class="bs-icon" style="--bs-icon-size:16px">download</span>';
+      const ext = '<span class="bs-icon" style="--bs-icon-size:16px">open_in_new</span>';
       const item = (icon, title, locked, desc, action) => `<a href="#" class="resource-row"><div class="resource-thumb">${icon}</div><div class="resource-body"><div class="resource-title">${title}${locked ? lock : ''}</div><div class="resource-desc">${desc}</div></div><div class="resource-action">${action}</div></a>`;
       wrap.innerHTML = `<section class="resources-block"><h2 class="resources-title">Resources</h2><div class="resources-grid">
         ${item('<div style="width:100%;height:100%;background:#f59f3a;display:grid;place-items:center;color:#fff;font:700 18px/1 var(--font)">▣</div>', 'Composition', false, 'Learn how to build layouts across product and marketing applications.', chev)}
@@ -2535,8 +3024,8 @@ ${c.pms}</div>
     }
     if (name === 'On this page') {
       const arrow = '<span class="bs-icon" style="--bs-icon-size:22px">arrow_forward</span>';
-      const links = ['Our color palettes','Color with our logo','Color pairing tool','Color with typography','Our color strategy','Color with illustration','Color with images','Neutral backgrounds','Color with program badges','Resources'];
-      const item = (t) => `<a href="#" class="otp-link"><span>${t}</span>${arrow}</a>`;
+      const links = ['Our color palettes', 'Color with our logo', 'Color pairing tool', 'Color with typography', 'Our color strategy', 'Color with illustration', 'Color with images', 'Neutral backgrounds', 'Color with program badges', 'Resources'];
+      const item = t => `<a href="#" class="otp-link"><span>${t}</span>${arrow}</a>`;
       wrap.innerHTML = `<section class="otp-block"><h2 class="otp-title">On this page</h2><div class="otp-grid">${links.map(item).join('')}</div></section>`;
       return wrap.firstChild;
     }
@@ -2552,11 +3041,13 @@ ${c.pms}</div>
   (() => {
     try {
       if (!window.__praiaTplOverrides) {
-        try { window.__praiaTplOverrides = JSON.parse(localStorage.getItem('praia.tpl.overrides') || '{}'); }
-        catch { window.__praiaTplOverrides = {}; }
+        try {
+          window.__praiaTplOverrides = JSON.parse(localStorage.getItem('praia.tpl.overrides') || '{}');
+        } catch {
+          window.__praiaTplOverrides = {};
+        }
       }
-      const colorModuleNames = ['Colors','Color card','Color cards','Color palette','Color pairing','Paleta de cores',
-        'On this page'];
+      const colorModuleNames = ['Colors', 'Color card', 'Color cards', 'Color palette', 'Color pairing', 'Paleta de cores', 'On this page'];
       colorModuleNames.forEach(name => {
         if (window.__praiaTplOverrides[name]) return; // não sobrescreve customização do usuário
         const el = buildModule(name);
@@ -2568,7 +3059,7 @@ ${c.pms}</div>
 
       // 2026-05-28: text templates — markup canônico em tokens DS + grid 12 col.
       // O override garante que thumb e inserção mostram o mesmo componente.
-      const textTemplateHeights = { '01': 110, '02': 780, '03': 147, '04': 224, '05': 300, '06': 380, '07': 620, '08': 60, 'Cover': 700 };
+      const textTemplateHeights = { '01': 110, '02': 780, '03': 147, '04': 224, '05': 300, '06': 380, '07': 620, '08': 60, Cover: 700 };
       const textTemplateMarkups = {
         '01': `
           <section style="display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--ds-gap,24px);overflow-wrap:anywhere;row-gap:16px;align-items:start">
@@ -2649,7 +3140,7 @@ ${c.pms}</div>
         // Cover: full-bleed cover (edge-to-edge), NOT the 12-col content grid.
         // BluStar Cyan background; dark (navy) type. Eyebrow on top, big title at
         // the bottom-left with a reading-time caption bottom-right.
-        'Cover': `
+        Cover: `
           <section data-cover="05" style="background:var(--bs-cyan);padding:80px;box-sizing:border-box;display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--ds-gap,24px);row-gap:24px;align-content:end;align-items:end;overflow-wrap:anywhere">
             <h4 class="tk-mb" style="grid-column:1 / -1;grid-row:1;margin:0;color:var(--bs-navy);letter-spacing:0.04em;font-feature-settings:'ss01' on">02.CRAFT</h4>
             <h1 class="tk-super" style="grid-column:1 / span 11;grid-row:2;margin:0;color:var(--bs-navy);letter-spacing:-0.02em">Craft in an age of infinite output</h1>
@@ -2666,7 +3157,7 @@ ${c.pms}</div>
       // title scales DOWN to a banner-appropriate size when fit to the page
       // width (instead of rendering at its raw 220px and overflowing).
       const TEXT_TPL_EDITW = {};
-      const editWFor = (name) => TEXT_TPL_EDITW[name] || 1280;
+      const editWFor = name => TEXT_TPL_EDITW[name] || 1280;
       // Measure the natural content height of a template's markup at its native
       // canvas width. Returns null if measurement isn't reliable yet (fonts).
       const measureTextHeight = (html, ew = 1280) => {
@@ -2682,7 +3173,7 @@ ${c.pms}</div>
       // Per-template thumb canvas background. The cover (05) uses cyan so the
       // preview cell's letterbox area blends with the cover instead of showing
       // a dark band.
-      const TEXT_TPL_BG = { 'Cover': 'var(--bs-cyan)' };
+      const TEXT_TPL_BG = { Cover: 'var(--bs-cyan)' };
       const buildOverride = (name, html, h) => {
         const ew = editWFor(name);
         const bg = TEXT_TPL_BG[name] || 'var(--bs-navy)';
@@ -2710,7 +3201,7 @@ ${c.pms}</div>
       // Fonts may not have loaded when the first (synchronous) measurement ran,
       // which would leave a slightly-off height. Re-measure once fonts are ready
       // and refresh any already-rendered cells/instances so 01 + 03 stay flush.
-      const refreshFitTemplate = (name) => {
+      const refreshFitTemplate = name => {
         const ov = window.__praiaTplOverrides[name];
         if (!ov) return;
         window.__praiaPropagateTemplate?.(name, ov);
@@ -2756,10 +3247,14 @@ ${c.pms}</div>
           window.__praiaTplOverrides[name] = thumb.outerHTML;
           refreshFitTemplate(name);
         });
-        try { localStorage.setItem('praia.tpl.overrides', JSON.stringify(window.__praiaTplOverrides)); } catch {}
+        try {
+          localStorage.setItem('praia.tpl.overrides', JSON.stringify(window.__praiaTplOverrides));
+        } catch {}
         window.__praiaApplyMirrorScale?.();
       };
-    } catch (e) { /* não bloqueia render se algo falhar */ }
+    } catch (e) {
+      /* não bloqueia render se algo falhar */
+    }
   })();
 
   function makeSlot() {
@@ -2777,7 +3272,9 @@ ${c.pms}</div>
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', relabelSlots);
-  } else { relabelSlots(); }
+  } else {
+    relabelSlots();
+  }
   // Also relabel after any DOM swap (autosave restore, undo/redo, etc.)
   new MutationObserver(relabelSlots).observe(document.body, { childList: true, subtree: true });
   // Delegated: survives innerHTML restore from autosave
@@ -2807,24 +3304,27 @@ ${c.pms}</div>
     // into a nested block (e.g. restored from older state).
     container.querySelectorAll(':scope > :not(.add-module-slot) .add-module-slot').forEach(s => s.remove());
     // Strip truly empty wrapper elements (artifacts of deletes / legacy state).
-    [...container.children].forEach(c => { if (isEmptyBlock(c)) c.remove(); });
+    [...container.children].forEach(c => {
+      if (isEmptyBlock(c)) c.remove();
+    });
     // Deterministic, idempotent rule: enforce exactly the pattern
     //   slot, block, slot, block, … , slot
     // i.e. ONE add-template slot before every block and ONE trailing slot, never
     // two in a row — no matter what inserting/deleting left behind. A second pass
     // over an already-correct page makes zero mutations (so the MutationObserver
     // that calls this doesn't loop).
-    let wantSlot = true;            // the next element we expect is a slot
+    let wantSlot = true; // the next element we expect is a slot
     let node = container.firstElementChild;
     while (node) {
       const next = node.nextElementSibling;
       const isSlot = node.classList.contains('add-module-slot');
       if (isSlot) {
-        if (wantSlot) wantSlot = false;   // good — this slot fills the gap
-        else node.remove();               // duplicate slot in a row → drop it
+        if (wantSlot)
+          wantSlot = false; // good — this slot fills the gap
+        else node.remove(); // duplicate slot in a row → drop it
       } else {
         if (wantSlot) container.insertBefore(makeSlot(), node); // missing slot → add
-        wantSlot = true;                  // after a block we again expect a slot
+        wantSlot = true; // after a block we again expect a slot
       }
       node = next;
     }
@@ -2845,14 +3345,16 @@ ${c.pms}</div>
     document.querySelectorAll('.guide-page[data-ds-canvas] .add-module-slot').forEach(s => s.remove());
     // Strip any slots that ended up inside multi-column containers (defensive cleanup
     // for state restored from older versions of this template).
-    document.querySelectorAll(
-      '[data-world="guide"] .color-grid .add-module-slot, ' +
-      '[data-world="guide"] .type-grid .add-module-slot, ' +
-      '[data-world="guide"] .card .add-module-slot, ' +
-      '[data-world="home"] .color-grid .add-module-slot, ' +
-      '[data-world="home"] .type-grid .add-module-slot, ' +
-      '[data-world="home"] .card .add-module-slot'
-    ).forEach(s => s.remove());
+    document
+      .querySelectorAll(
+        '[data-world="guide"] .color-grid .add-module-slot, ' +
+          '[data-world="guide"] .type-grid .add-module-slot, ' +
+          '[data-world="guide"] .card .add-module-slot, ' +
+          '[data-world="home"] .color-grid .add-module-slot, ' +
+          '[data-world="home"] .type-grid .add-module-slot, ' +
+          '[data-world="home"] .card .add-module-slot'
+      )
+      .forEach(s => s.remove());
   }
 
   function open(slot) {
@@ -2881,7 +3383,10 @@ ${c.pms}</div>
         filters.querySelectorAll('.ds-tpl-filter').forEach(b => b.classList.toggle('is-active', b.dataset.tplFilter === 'all'));
         body.appendChild(filters);
       }
-      if (grid) { grid.removeAttribute('data-filter'); body.appendChild(grid); }
+      if (grid) {
+        grid.removeAttribute('data-filter');
+        body.appendChild(grid);
+      }
       // The cloned cells contain .praia-mirror children; bind the
       // ResizeObserver to the new .praia-frame wraps and scale on next frame
       // so the modal preview matches the DS cells.
@@ -2894,11 +3399,13 @@ ${c.pms}</div>
     currentInsertBefore = null;
   }
 
-  document.querySelectorAll('.am-tab').forEach(t => t.addEventListener('click', () => {
-    document.querySelectorAll('.am-tab').forEach(x => x.classList.toggle('active', x === t));
-    renderGrid(t.dataset.cat);
-    requestAnimationFrame(() => window.__praiaApplyScaledThumbs?.());
-  }));
+  document.querySelectorAll('.am-tab').forEach(t =>
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.am-tab').forEach(x => x.classList.toggle('active', x === t));
+      renderGrid(t.dataset.cat);
+      requestAnimationFrame(() => window.__praiaApplyScaledThumbs?.());
+    })
+  );
   document.getElementById('am-cancel').addEventListener('click', close);
   document.getElementById('am-add').addEventListener('click', () => {
     if (selectedModuleName) insertModule(selectedModuleName);
@@ -2928,8 +3435,13 @@ ${c.pms}</div>
     const name = cell.dataset.tplName;
     selectedName = name;
     const r = resolveByName(name);
-    if (r?.kind === 'template') { selectedTplId = r.id; selectedModuleName = null; }
-    else { selectedModuleName = name; selectedTplId = null; }
+    if (r?.kind === 'template') {
+      selectedTplId = r.id;
+      selectedModuleName = null;
+    } else {
+      selectedModuleName = name;
+      selectedTplId = null;
+    }
   });
   overlay.addEventListener('dblclick', e => {
     const cell = e.target.closest('#am-body-mirror .ds-tpl-cell');
@@ -2942,8 +3454,12 @@ ${c.pms}</div>
     close();
     document.getElementById('ds-canvas-btn')?.click();
   });
-  overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('open')) close(); });
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) close();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+  });
   // Re-inject when new pages get cloned (Duplicate); also after the menu actions
   injectSlots();
   // Watch for cloned pages

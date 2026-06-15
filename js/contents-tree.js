@@ -27,9 +27,15 @@
   function renderContents() {
     if (!contents) return;
     const page = document.querySelector('.guide-page.active');
-    if (!page) { contents.innerHTML = '<div class="gsc-empty">No active page.</div>'; return; }
+    if (!page) {
+      contents.innerHTML = '<div class="gsc-empty">No active page.</div>';
+      return;
+    }
     const comps = [...page.querySelectorAll('.praia-component')];
-    if (!comps.length) { contents.innerHTML = '<div class="gsc-empty">Os componentes inseridos pelo + Add module aparecem aqui.</div>'; return; }
+    if (!comps.length) {
+      contents.innerHTML = '<div class="gsc-empty">Os componentes inseridos pelo + Add module aparecem aqui.</div>';
+      return;
+    }
     let html = '';
     comps.forEach((c, i) => {
       const name = c.dataset.componentName || 'Component';
@@ -72,7 +78,7 @@
     // Chevron click → toggle expansion only.
     if (toggle) {
       e.stopPropagation();
-      comp.dataset.gscExpanded = (comp.dataset.gscExpanded === 'true') ? 'false' : 'true';
+      comp.dataset.gscExpanded = comp.dataset.gscExpanded === 'true' ? 'false' : 'true';
       renderContents();
       return;
     }

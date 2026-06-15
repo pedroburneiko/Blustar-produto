@@ -16,13 +16,20 @@
   const closeBtn = document.getElementById('grec-close');
   if (!preview || !nameInput || !hexInput) return;
 
-  let currentToken = null;  // e.g. '--bs-cyan'
-  let snapshot = null;      // { token, hex, name }
+  let currentToken = null; // e.g. '--bs-cyan'
+  let snapshot = null; // { token, hex, name }
 
-  const norm = (h) => {
+  const norm = h => {
     let v = (h || '').trim().replace(/^#?/, '#');
     if (!/^#[0-9a-fA-F]{3,8}$/.test(v)) return null;
-    if (v.length === 4) v = '#' + v.slice(1).split('').map(c => c + c).join('');
+    if (v.length === 4)
+      v =
+        '#' +
+        v
+          .slice(1)
+          .split('')
+          .map(c => c + c)
+          .join('');
     return v.toUpperCase();
   };
 
@@ -65,7 +72,8 @@
 
   function closeEditor() {
     right.classList.remove('editing-color');
-    currentToken = null; snapshot = null;
+    currentToken = null;
+    snapshot = null;
   }
 
   function applyHex(hex) {
@@ -88,7 +96,10 @@
 
   hexInput.addEventListener('input', () => {
     const v = norm(hexInput.value);
-    if (v) { picker.value = v; applyHex(v); }
+    if (v) {
+      picker.value = v;
+      applyHex(v);
+    }
   });
   picker.addEventListener('input', () => {
     hexInput.value = picker.value.toUpperCase();
@@ -108,15 +119,26 @@
     syncSwatchesUI();
     window.__praiaAutosave?.();
   }
-  cancelBtn.addEventListener('click', () => { revert(); closeEditor(); });
-  closeBtn.addEventListener('click', () => { revert(); closeEditor(); });
+  cancelBtn.addEventListener('click', () => {
+    revert();
+    closeEditor();
+  });
+  closeBtn.addEventListener('click', () => {
+    revert();
+    closeEditor();
+  });
 
   // Delegated: click on any DS swatch opens the editor (DS mode only).
-  document.addEventListener('click', (e) => {
-    if (!document.body.classList.contains('ds-mode')) return;
-    const sw = e.target.closest('.ds-color-swatch');
-    if (!sw) return;
-    e.preventDefault(); e.stopPropagation();
-    openEditor(sw.dataset.token, sw.dataset.name);
-  }, true);
+  document.addEventListener(
+    'click',
+    e => {
+      if (!document.body.classList.contains('ds-mode')) return;
+      const sw = e.target.closest('.ds-color-swatch');
+      if (!sw) return;
+      e.preventDefault();
+      e.stopPropagation();
+      openEditor(sw.dataset.token, sw.dataset.name);
+    },
+    true
+  );
 })();

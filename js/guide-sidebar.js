@@ -24,7 +24,12 @@
   // and strip whitespace-only text nodes that fight the CSS grid layout.
   function normalizeItem(it) {
     if (!it.querySelector('.gsi-label')) {
-      const txt = [...it.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join(' ').replace(/\s+/g, ' ').trim();
+      const txt = [...it.childNodes]
+        .filter(n => n.nodeType === 3)
+        .map(n => n.textContent)
+        .join(' ')
+        .replace(/\s+/g, ' ')
+        .trim();
       if (txt) {
         const lbl = document.createElement('span');
         lbl.className = 'gsi-label';
@@ -76,7 +81,10 @@
     // Apply collapsed state — hide sub items whose ancestor master is collapsed
     items.forEach(it => {
       const parentId = it.dataset.parent;
-      if (!parentId) { it.classList.remove('gsi-hidden'); return; }
+      if (!parentId) {
+        it.classList.remove('gsi-hidden');
+        return;
+      }
       const master = list.querySelector(`.guide-side-item[data-page="${CSS.escape(parentId)}"]:not([data-parent])`);
       const collapsed = master?.classList.contains('collapsed');
       it.classList.toggle('gsi-hidden', !!collapsed);
@@ -87,7 +95,9 @@
 
   // --- Drag & drop reordering (master/sub) ---
   const sideListEl2 = document.querySelector('[data-world="guide"] .guide-side-list');
-  function makeDraggable(it) { it.setAttribute('draggable', 'true'); }
+  function makeDraggable(it) {
+    it.setAttribute('draggable', 'true');
+  }
   document.querySelectorAll('.guide-side-item').forEach(makeDraggable);
   window.__praiaMakeDraggable = makeDraggable;
 
@@ -103,7 +113,10 @@
       if (!it) return;
       __dragId = it.dataset.page;
       it.classList.add('gsi-dragging');
-      try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', __dragId); } catch {}
+      try {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', __dragId);
+      } catch {}
     });
     sideListEl2.addEventListener('dragend', () => {
       document.querySelectorAll('.gsi-dragging').forEach(x => x.classList.remove('gsi-dragging'));
@@ -149,7 +162,7 @@
       // Don't allow dropping a master (with subs) INSIDE another item
       if (pos === 'inside' && draggedIsMaster) {
         const hasSubs = !!sideListEl2.querySelector(`.guide-side-item[data-parent="${CSS.escape(dragged.dataset.page)}"]`);
-        if (hasSubs) pos = (y < h / 2) ? 'before' : 'after';
+        if (hasSubs) pos = y < h / 2 ? 'before' : 'after';
       }
       it.classList.add('gsi-drop-' + pos);
       it.dataset.dropPos = pos;
@@ -187,7 +200,10 @@
       const pos = target.dataset.dropPos || 'after';
       delete target.dataset.dropPos;
       clearDropMarkers();
-      if (!dragged || dragged === target) { __dragId = null; return; }
+      if (!dragged || dragged === target) {
+        __dragId = null;
+        return;
+      }
       // Collect dragged group (master + subs) to move together
       const draggedIsMaster = !dragged.dataset.parent;
       const group = [dragged];
@@ -210,12 +226,14 @@
       // otherwise the freshly-reparented dragged shows up in the subs query
       // below and pins itself before the master (the original bug: dragged
       // sub appeared above the new master instead of nested under it).
-      let anchor = (pos === 'before') ? target : target.nextSibling;
+      let anchor = pos === 'before' ? target : target.nextSibling;
       // If target is a master with subs, "after" needs to skip past existing subs (so masters stay contiguous)
       if (pos === 'after' && !target.dataset.parent) {
         let lastSub = target;
         const subs = sideListEl2.querySelectorAll(`.guide-side-item[data-parent="${CSS.escape(target.dataset.page)}"]`);
-        subs.forEach(s => { if (s !== dragged) lastSub = s; });
+        subs.forEach(s => {
+          if (s !== dragged) lastSub = s;
+        });
         anchor = lastSub.nextSibling;
       }
       // If inside, place at end of the group (target's existing parent, or target itself)
@@ -224,7 +242,9 @@
         const groupMaster = sideListEl2.querySelector(`.guide-side-item[data-page="${CSS.escape(groupMasterId)}"]:not([data-parent])`);
         let lastSub = groupMaster || target;
         const subs = sideListEl2.querySelectorAll(`.guide-side-item[data-parent="${CSS.escape(groupMasterId)}"]`);
-        subs.forEach(s => { if (s !== dragged) lastSub = s; });
+        subs.forEach(s => {
+          if (s !== dragged) lastSub = s;
+        });
         anchor = lastSub.nextSibling;
       }
       // Now safe to mutate parent + insert
@@ -248,7 +268,8 @@
     sideListEl.addEventListener('click', e => {
       const caret = e.target.closest('.gsi-caret');
       if (caret) {
-        e.preventDefault(); e.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
         const it = caret.closest('.guide-side-item');
         if (!it) return;
         it.classList.toggle('collapsed');
@@ -263,7 +284,10 @@
       e.stopPropagation();
       const it = (eye || dots).closest('.guide-side-item');
       if (!it) return;
-      if (eye) { it.classList.toggle('hidden-page'); return; }
+      if (eye) {
+        it.classList.toggle('hidden-page');
+        return;
+      }
       openMenu(it, dots);
     });
     sideListEl.addEventListener('dblclick', e => {
@@ -293,7 +317,8 @@
       const mh = menu.offsetHeight;
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      const gap = 6, pad = 8;
+      const gap = 6,
+        pad = 8;
       // Horizontal: open to the right of trigger by default; flip to the left
       // if it would overflow the viewport.
       let left = r.right + gap;
@@ -311,11 +336,16 @@
     document.querySelectorAll('.guide-side-item.gsi-open').forEach(x => x.classList.remove('gsi-open'));
     currentItem = null;
   }
-  document.addEventListener('click', e => { if (!menu.contains(e.target)) closeMenu(); });
+  document.addEventListener('click', e => {
+    if (!menu.contains(e.target)) closeMenu();
+  });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeMenu();
     if (currentItem && (e.key === 'Delete' || e.key === 'Backspace') && document.activeElement.tagName !== 'INPUT') doAct('delete');
-    if (currentItem && e.key.toLowerCase() === 'd' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); doAct('duplicate'); }
+    if (currentItem && e.key.toLowerCase() === 'd' && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      doAct('duplicate');
+    }
   });
 
   function doAct(act) {
@@ -345,21 +375,30 @@
       const sel = window.getSelection();
       const range = document.createRange();
       range.selectNodeContents(lbl);
-      sel.removeAllRanges(); sel.addRange(range);
+      sel.removeAllRanges();
+      sel.addRange(range);
       const commit = () => {
         lbl.removeAttribute('contenteditable');
         const txt = (lbl.textContent || '').trim() || orig;
         lbl.textContent = txt;
         if (pageEl) {
-          const h = pageEl.querySelector('h2'); if (h) h.textContent = txt;
-          const wt = pageEl.querySelector('.world-title'); if (wt) wt.textContent = txt;
+          const h = pageEl.querySelector('h2');
+          if (h) h.textContent = txt;
+          const wt = pageEl.querySelector('.world-title');
+          if (wt) wt.textContent = txt;
         }
         window.__praiaAutosave?.();
       };
       lbl.addEventListener('blur', commit, { once: true });
       lbl.addEventListener('keydown', e => {
-        if (e.key === 'Enter') { e.preventDefault(); lbl.blur(); }
-        if (e.key === 'Escape') { lbl.textContent = orig; lbl.blur(); }
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          lbl.blur();
+        }
+        if (e.key === 'Escape') {
+          lbl.textContent = orig;
+          lbl.blur();
+        }
       });
       lbl.addEventListener('paste', e => {
         e.preventDefault();
@@ -373,23 +412,28 @@
       // Promote currentItem to master if it was a sub, then add a sub beneath it
       const masterId = currentItem.dataset.parent || currentItem.dataset.page;
       const list = document.querySelector('.guide-side-list');
-      const masterItem = currentItem.dataset.parent
-        ? list.querySelector(`.guide-side-item[data-page="${CSS.escape(masterId)}"]:not([data-parent])`)
-        : currentItem;
-      if (!masterItem) { closeMenu(); return; }
+      const masterItem = currentItem.dataset.parent ? list.querySelector(`.guide-side-item[data-page="${CSS.escape(masterId)}"]:not([data-parent])`) : currentItem;
+      if (!masterItem) {
+        closeMenu();
+        return;
+      }
       // Find last sub of this master (or the master itself)
       const subs = [...list.querySelectorAll(`.guide-side-item[data-parent="${CSS.escape(masterId)}"]`)];
       const insertAfter = subs.length ? subs[subs.length - 1] : masterItem;
       // Generate unique id (check both pages and sidebar items)
-      const takenIds = new Set([
-        ...[...document.querySelectorAll('.guide-page')].map(p => p.dataset.page),
-        ...[...document.querySelectorAll('.guide-side-item')].map(it => it.dataset.page),
-      ].filter(Boolean));
-      let newId; do { newId = 'p-' + Math.random().toString(36).slice(2, 9); } while (takenIds.has(newId));
+      const takenIds = new Set([...[...document.querySelectorAll('.guide-page')].map(p => p.dataset.page), ...[...document.querySelectorAll('.guide-side-item')].map(it => it.dataset.page)].filter(Boolean));
+      let newId;
+      do {
+        newId = 'p-' + Math.random().toString(36).slice(2, 9);
+      } while (takenIds.has(newId));
       const takenNames = new Set([...document.querySelectorAll('.guide-side-item')].map(a => (a.querySelector('.gsi-label')?.textContent || a.textContent).trim()));
       const baseName = 'New sub-page';
-      let nm = baseName, k = 2;
-      while (takenNames.has(nm)) { nm = baseName + ' ' + k; k++; }
+      let nm = baseName,
+        k = 2;
+      while (takenNames.has(nm)) {
+        nm = baseName + ' ' + k;
+        k++;
+      }
       const fileIcon = '<span class="gs-icon bs-icon" style="--bs-icon-size:16px">description</span>';
       const checkIcon = '<span class="gs-check bs-icon" style="--bs-icon-size:16px">check</span>';
       const item = document.createElement('a');
@@ -423,7 +467,8 @@
       const sel = window.getSelection();
       const range = document.createRange();
       range.selectNodeContents(label);
-      sel.removeAllRanges(); sel.addRange(range);
+      sel.removeAllRanges();
+      sel.addRange(range);
       const commit = () => {
         label.removeAttribute('contenteditable');
         const txt = (label.textContent || '').trim() || nm;
@@ -436,8 +481,14 @@
       };
       label.addEventListener('blur', commit, { once: true });
       label.addEventListener('keydown', e => {
-        if (e.key === 'Enter') { e.preventDefault(); label.blur(); }
-        if (e.key === 'Escape') { label.textContent = nm; label.blur(); }
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          label.blur();
+        }
+        if (e.key === 'Escape') {
+          label.textContent = nm;
+          label.blur();
+        }
       });
       label.addEventListener('paste', e => {
         e.preventDefault();
@@ -470,8 +521,16 @@
       actions.className = 'gsi-actions';
       actions.innerHTML = `<button class="gsi-eye" aria-label="Hide">${eyeSvg}</button><button class="gsi-dots" aria-label="More">${dotsSvg}</button>`;
       clonedItem.appendChild(actions);
-      actions.querySelector('.gsi-eye').addEventListener('click', e => { e.stopPropagation(); e.preventDefault(); clonedItem.classList.toggle('hidden-page'); });
-      actions.querySelector('.gsi-dots').addEventListener('click', e => { e.stopPropagation(); e.preventDefault(); openMenu(clonedItem, e.currentTarget); });
+      actions.querySelector('.gsi-eye').addEventListener('click', e => {
+        e.stopPropagation();
+        e.preventDefault();
+        clonedItem.classList.toggle('hidden-page');
+      });
+      actions.querySelector('.gsi-dots').addEventListener('click', e => {
+        e.stopPropagation();
+        e.preventDefault();
+        openMenu(clonedItem, e.currentTarget);
+      });
       clonedItem.addEventListener('click', e => {
         e.preventDefault();
         const p = clonedItem.dataset.page;
@@ -494,7 +553,10 @@
       const isMaster = !currentItem.dataset.parent;
       const subs = isMaster ? [...document.querySelectorAll(`.guide-side-item[data-parent="${CSS.escape(currentItem.dataset.page)}"]`)] : [];
       const extra = subs.length ? ` e ${subs.length} sub-página${subs.length > 1 ? 's' : ''}` : '';
-      if (!confirm(`Tem certeza que deseja deletar "${pageName}"${extra}? Esta ação não pode ser desfeita.`)) { closeMenu(); return; }
+      if (!confirm(`Tem certeza que deseja deletar "${pageName}"${extra}? Esta ação não pode ser desfeita.`)) {
+        closeMenu();
+        return;
+      }
       const wasActive = currentItem.classList.contains('active') || subs.some(s => s.classList.contains('active'));
       // Delete sub items + their pages first (only when removing a master)
       subs.forEach(s => {
@@ -521,9 +583,11 @@
     }
     closeMenu();
   }
-  menu.querySelectorAll('.gsi-menu-item').forEach(mi => mi.addEventListener('click', e => {
-    if (mi.classList.contains('disabled')) return;
-    e.stopPropagation();
-    doAct(mi.dataset.act);
-  }));
+  menu.querySelectorAll('.gsi-menu-item').forEach(mi =>
+    mi.addEventListener('click', e => {
+      if (mi.classList.contains('disabled')) return;
+      e.stopPropagation();
+      doAct(mi.dataset.act);
+    })
+  );
 })();
