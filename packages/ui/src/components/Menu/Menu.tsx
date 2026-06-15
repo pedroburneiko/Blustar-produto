@@ -10,7 +10,12 @@ export interface MenuItem {
   disabled?: boolean;
 }
 
-export type MenuEntry = MenuItem | "separator";
+/** Cabeçalho de seção (não interativo) — agrupa itens no menu. */
+export interface MenuHeader {
+  header: ReactNode;
+}
+
+export type MenuEntry = MenuItem | MenuHeader | "separator";
 
 export interface MenuProps {
   open: boolean;
@@ -59,6 +64,14 @@ export function Menu({ open, onClose, position, items, ...rest }: MenuProps) {
         {items.map((item, i) =>
           item === "separator" ? (
             <div key={`sep${i}`} className="my-1 h-px bg-line" />
+          ) : "header" in item ? (
+            <div
+              key={`hd${i}`}
+              role="presentation"
+              className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wider text-subtle"
+            >
+              {item.header}
+            </div>
           ) : (
             <button
               key={i}

@@ -13,14 +13,29 @@ export function InsertTemplateButton({ pageId }: { pageId: string }) {
   const masters = useEditorStore(useShallow((s) => Object.values(s.document.templates.masters)));
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
 
-  const items: MenuEntry[] = masters.map((m) => ({
-    label: `${m.category} · ${m.label}`,
-    onSelect: () => {
-      const s = useEditorStore.getState();
-      const id = s.insertComponent(pageId, m.name, { ...DEFAULT_RECT });
-      if (id) s.selectLayers([id]);
-    },
-  }));
+  // Catálogo agrupado por categoria (cabeçalho de seção + itens), preservando
+  // a ordem de aparição das categorias.
+  const byCategory = new Map<string, typeof masters>();
+  for (const m of masters) {
+    const cat = m.category || "Outros";
+    if (!byCategory.has(cat)) byCategory.set(cat, []);
+    byCategory.get(cat)!.push(m);
+  }
+
+  const items: MenuEntry[] = [];
+  for (const [cat, group] of byCategory) {
+    items.push({ header: cat });
+    for (const m of group) {
+      items.push({
+        label: m.label,
+        onSelect: () => {
+          const s = useEditorStore.getState();
+          const id = s.insertComponent(pageId, m.name, { ...DEFAULT_RECT });
+          if (id) s.selectLayers([id]);
+        },
+      });
+    }
+  }
 
   return (
     <>

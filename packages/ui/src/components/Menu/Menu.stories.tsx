@@ -13,7 +13,26 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-function Demo() {
+import type { MenuEntry } from "./Menu";
+
+const PAGE_ITEMS: MenuEntry[] = [
+  { label: "Renomear", onSelect: () => {} },
+  { label: "Adicionar sub-página", onSelect: () => {} },
+  { label: "Duplicar", onSelect: () => {}, shortcut: "⌘D" },
+  "separator",
+  { label: "Excluir", onSelect: () => {}, shortcut: "del", danger: true },
+];
+
+// Catálogo agrupado por categoria — exercita os cabeçalhos de seção.
+const CATALOG_ITEMS: MenuEntry[] = [
+  { header: "Layout" },
+  { label: "Hero", onSelect: () => {} },
+  { label: "Card", onSelect: () => {} },
+  { header: "Conteúdo" },
+  { label: "CTA", onSelect: () => {} },
+];
+
+function Demo({ items = PAGE_ITEMS }: { items?: MenuEntry[] }) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   return (
@@ -34,19 +53,15 @@ function Demo() {
         onClose={() => setOpen(false)}
         position={pos}
         aria-label="Ações da página"
-        items={[
-          { label: "Renomear", onSelect: () => {} },
-          { label: "Adicionar sub-página", onSelect: () => {} },
-          { label: "Duplicar", onSelect: () => {}, shortcut: "⌘D" },
-          "separator",
-          { label: "Excluir", onSelect: () => {}, shortcut: "del", danger: true },
-        ]}
+        items={items}
       />
     </div>
   );
 }
 
 export const Padrao: Story = { render: () => <Demo /> };
+
+export const ComCabecalhos: Story = { render: () => <Demo items={CATALOG_ITEMS} /> };
 
 export const Abre: Story = {
   render: () => <Demo />,
