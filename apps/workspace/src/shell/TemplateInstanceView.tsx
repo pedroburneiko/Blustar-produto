@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { Button } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
 import type { ComponentLayer, Layer, LayerOverride, TemplateMaster } from "@blustar/core";
@@ -25,37 +25,79 @@ function slotStyle(layer: Layer): CSSProperties {
   return { background: layer.style?.background, color: layer.style?.color };
 }
 
+interface SlotCtx {
+  master: TemplateMaster;
+  overrides?: Record<string, LayerOverride>;
+  instanceId: string;
+  selectedSlot: string | null;
+}
+
+/** Envolve um slot folha: clique seleciona o slot (sub-seleção); realça se ativo. */
+function Slot({ ctx, slotId, children }: { ctx: SlotCtx; slotId: string; children: ReactNode }) {
+  const selected = ctx.selectedSlot === slotId;
+  return (
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+        useEditorStore.getState().selectSlot(ctx.instanceId, slotId);
+      }}
+      style={{
+        outline: selected ? "1.5px solid var(--bs-focus-ring)" : "1px solid transparent",
+        outlineOffset: 2,
+        borderRadius: 2,
+        cursor: "pointer",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 /** Renderiza um slot do master (recursivo p/ grupos), já com override aplicado. */
-function SlotView({ master, slotId, overrides }: { master: TemplateMaster; slotId: string; overrides?: Record<string, LayerOverride> }) {
-  const raw = master.layers[slotId];
+function SlotView({ ctx, slotId }: { ctx: SlotCtx; slotId: string }) {
+  const raw = ctx.master.layers[slotId];
   if (!raw) return null;
-  const layer = effective(raw, overrides?.[slotId]);
+  const layer = effective(raw, ctx.overrides?.[slotId]);
   if (!layer.visible) return null;
 
   switch (layer.type) {
     case "text":
       return (
-        <div style={{ fontSize: layer.font?.size, fontWeight: layer.font?.weight, color: layer.style?.color ?? "var(--bs-text)" }}>
-          {layer.text}
-        </div>
+        <Slot ctx={ctx} slotId={slotId}>
+          <div style={{ fontSize: layer.font?.size, fontWeight: layer.font?.weight, color: layer.style?.color ?? "var(--bs-text)" }}>
+            {layer.text}
+          </div>
+        </Slot>
       );
     case "button":
-      return <Button variant={layer.variant as "primary" | "secondary" | "ghost"}>{layer.label}</Button>;
+      return (
+        <Slot ctx={ctx} slotId={slotId}>
+          <Button variant={layer.variant as "primary" | "secondary" | "ghost"}>{layer.label}</Button>
+        </Slot>
+      );
     case "shape": {
       const radius = layer.shape === "ellipse" ? "var(--bs-radius-full)" : "var(--bs-radius-md)";
-      return <div style={{ width: "100%", minHeight: 40, borderRadius: radius, ...slotStyle(layer) }} />;
+      return (
+        <Slot ctx={ctx} slotId={slotId}>
+          <div style={{ width: "100%", minHeight: 40, borderRadius: radius, ...slotStyle(layer) }} />
+        </Slot>
+      );
     }
     case "image":
-      return layer.src ? (
-        <img src={layer.src} alt={layer.name} style={{ width: "100%", borderRadius: "var(--bs-radius-md)" }} />
-      ) : (
-        <div style={{ minHeight: 60, display: "grid", placeItems: "center", border: "1px solid var(--bs-border)", borderRadius: "var(--bs-radius-md)", color: "var(--bs-text-subtle)", fontSize: 12 }}>FOTO</div>
+      return (
+        <Slot ctx={ctx} slotId={slotId}>
+          {layer.src ? (
+            <img src={layer.src} alt={layer.name} style={{ width: "100%", borderRadius: "var(--bs-radius-md)" }} />
+          ) : (
+            <div style={{ minHeight: 60, display: "grid", placeItems: "center", border: "1px solid var(--bs-border)", borderRadius: "var(--bs-radius-md)", color: "var(--bs-text-subtle)", fontSize: 12 }}>FOTO</div>
+          )}
+        </Slot>
       );
     case "group":
       return (
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--bs-space-3)", ...slotStyle(layer) }}>
           {raw.children.map((cid) => (
-            <SlotView key={cid} master={master} slotId={cid} overrides={overrides} />
+            <SlotView key={cid} ctx={ctx} slotId={cid} />
           ))}
         </div>
       );
@@ -66,11 +108,14 @@ function SlotView({ master, slotId, overrides }: { master: TemplateMaster; slotI
 
 /**
  * Renderiza uma instância de componente: a subárvore do master (lida da store →
- * propagação automática) com os overrides da instância aplicados. Sem master no
- * registry, mostra um placeholder.
+ * propagação automática) com os overrides da instância. Clicar num slot faz
+ * sub-seleção (edita o override só desta instância). Sem master → placeholder.
  */
 export function TemplateInstanceView({ instance }: { instance: ComponentLayer }) {
   const master = useEditorStore((s) => s.document.templates.masters[instance.templateName]);
+  const selectedSlot = useEditorStore((s) =>
+    s.selection.slot?.instanceId === instance.id ? s.selection.slot.slotKey : null,
+  );
   if (!master) {
     return (
       <div style={{ display: "grid", placeItems: "center", height: "100%", border: "1px solid var(--bs-border)", borderRadius: "var(--bs-radius-md)", background: "var(--bs-surface)", color: "var(--bs-text-subtle)", fontSize: 12, fontWeight: 600 }}>
@@ -78,9 +123,10 @@ export function TemplateInstanceView({ instance }: { instance: ComponentLayer })
       </div>
     );
   }
+  const ctx: SlotCtx = { master, overrides: instance.overrides, instanceId: instance.id, selectedSlot };
   return (
     <div style={{ width: "100%", height: "100%", padding: "var(--bs-space-4)", overflow: "hidden" }}>
-      <SlotView master={master} slotId={master.rootId} overrides={instance.overrides} />
+      <SlotView ctx={ctx} slotId={master.rootId} />
     </div>
   );
 }

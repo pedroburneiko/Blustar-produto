@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Panel, Tabs } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
 import { LayerInspector } from "./LayerInspector";
+import { SlotOverrideEditor } from "./SlotOverrideEditor";
 import { StylesPanel } from "./StylesPanel";
 
 /**
@@ -11,6 +12,15 @@ import { StylesPanel } from "./StylesPanel";
  */
 export function Inspector() {
   const selectedId = useEditorStore((s) => s.selection.layerIds[0] ?? null);
+  const slot = useEditorStore((s) => s.selection.slot);
+
+  if (slot) {
+    return (
+      <Panel aria-label="Inspector">
+        <SlotOverrideEditor instanceId={slot.instanceId} slotKey={slot.slotKey} />
+      </Panel>
+    );
+  }
 
   if (selectedId) {
     return (

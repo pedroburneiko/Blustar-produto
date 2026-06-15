@@ -37,6 +37,8 @@ import {
 export interface Selection {
   pageId: Id | null;
   layerIds: Id[];
+  /** Sub-seleção de um slot dentro de uma instância de componente (efêmero). */
+  slot: { instanceId: Id; slotKey: Id } | null;
 }
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
@@ -93,6 +95,8 @@ export interface EditorState {
   insertComponent: (pageId: Id, templateName: string, rect: LayerRect) => Id | null;
   /** Define/funde o override de um slot da instância. */
   setSlotOverride: (instanceId: Id, slotKey: Id, patch: LayerOverride) => void;
+  /** Override de TEXTO de um slot — coalescido (burst = 1 entrada). */
+  setSlotOverrideText: (instanceId: Id, slotKey: Id, patch: LayerOverride) => void;
   /** Remove o override de um slot (slot volta a herdar do master). */
   clearSlotOverride: (instanceId: Id, slotKey: Id) => void;
   /** Edita uma layer do master (propaga para as instâncias, exceto slots sobrescritos). */
@@ -105,6 +109,10 @@ export interface EditorState {
   // --- ações efêmeras ---
   selectLayers: (ids: Id[]) => void;
   clearSelection: () => void;
+  /** Sub-seleciona um slot dentro de uma instância (seleciona a instância também). */
+  selectSlot: (instanceId: Id, slotKey: Id) => void;
+  /** Limpa a sub-seleção de slot (mantém a instância selecionada). */
+  clearSlot: () => void;
   setActivePage: (pageId: Id | null) => void;
   setActiveBoard: (boardId: Id | null) => void;
   /** Inicia um gesto de drag/resize (preview efêmero, fora do undo). */
@@ -121,8 +129,27 @@ function initialState(doc?: BrandDocument): Pick<EditorState, 'document' | 'sele
   const document = doc ?? createDocument();
   return {
     document,
-    selection: { pageId: null, layerIds: [] },
+    selection: { pageId: null, layerIds: [], slot: null },
     ui: { activeBoardId: document.boards[0] ?? null, interaction: null, saveStatus: 'idle' },
+  };
+}
+
+/** Aplica/funde um override de slot numa instância (mutação sobre o draft). */
+function applyOverride(
+  doc: BrandDocument,
+  instanceId: Id,
+  slotKey: Id,
+  patch: LayerOverride,
+): void {
+  const inst = doc.entities.layers[instanceId];
+  if (!inst || inst.type !== 'component') return;
+  if (!inst.overrides) inst.overrides = {};
+  const prev = inst.overrides[slotKey] ?? {};
+  inst.overrides[slotKey] = {
+    ...prev,
+    ...patch,
+    style: patch.style ? { ...prev.style, ...patch.style } : prev.style,
+    font: patch.font ? { ...prev.font, ...patch.font } : prev.font,
   };
 }
 
@@ -437,18 +464,13 @@ export const useEditorStore = create<EditorState>()(
       },
 
       setSlotOverride: (instanceId, slotKey, patch) =>
-        set((state) => {
-          const inst = state.document.entities.layers[instanceId];
-          if (!inst || inst.type !== 'component') return;
-          if (!inst.overrides) inst.overrides = {};
-          const prev = inst.overrides[slotKey] ?? {};
-          inst.overrides[slotKey] = {
-            ...prev,
-            ...patch,
-            style: patch.style ? { ...prev.style, ...patch.style } : prev.style,
-            font: patch.font ? { ...prev.font, ...patch.font } : prev.font,
-          };
-        }),
+        set((state) => applyOverride(state.document, instanceId, slotKey, patch)),
+
+      setSlotOverrideText: (instanceId, slotKey, patch) => {
+        historyController.setMode('text'); // burst de digitação = 1 entrada
+        set((state) => applyOverride(state.document, instanceId, slotKey, patch));
+        historyController.setMode('immediate');
+      },
 
       clearSlotOverride: (instanceId, slotKey) =>
         set((state) => {
@@ -488,11 +510,24 @@ export const useEditorStore = create<EditorState>()(
       selectLayers: (ids) =>
         set((state) => {
           state.selection.layerIds = ids;
+          state.selection.slot = null; // selecionar layer limpa a sub-seleção
         }),
 
       clearSelection: () =>
         set((state) => {
           state.selection.layerIds = [];
+          state.selection.slot = null;
+        }),
+
+      selectSlot: (instanceId, slotKey) =>
+        set((state) => {
+          state.selection.layerIds = [instanceId];
+          state.selection.slot = { instanceId, slotKey };
+        }),
+
+      clearSlot: () =>
+        set((state) => {
+          state.selection.slot = null;
         }),
 
       setActivePage: (pageId) =>
