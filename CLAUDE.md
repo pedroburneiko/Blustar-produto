@@ -97,3 +97,10 @@ reference/        protótipo vanilla   SPEC da migração — SOMENTE CONSULTA
 - Verificação real do fluxo Supabase (carga/salvamento end-to-end).
 - Edge cases de override (instâncias × master).
 - Integrar máscara de imagem em um template real.
+- **Grid responsivo por breakpoint — faixa de feature (pós-pitch).** Tokens já existem
+  (`packages/tokens`: `breakpoints`, `gridByBreakpoint`, `breakpointForWidth` em `src/grid.ts`;
+  `--bs-bp-*` e `--bs-grid-*` em `tokens.css`). Falta: (a) `<Grid>`/`<Col>` do DS escolherem a
+  config pela largura do artboard + story dos 3 bps; (b) painel Columns com seletor de breakpoint
+  + chip do bp ativo (derivado da largura, **estado efêmero, fora do undo**) + campos por bp;
+  (c) **model em `packages/core`**: config de grid vira **override no documento** (tokens = default
+  de marca), **1 undo por mutação** — **direção APROVADA**. NÃO estender `LayerBox` antes do pitch.

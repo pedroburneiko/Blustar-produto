@@ -119,6 +119,20 @@
   --bs-space-6: 24px;
   --bs-space-7: 32px;
 
+  /* ---- Grid responsivo (breakpoints + config por breakpoint) ----
+     Mantidos em sincronia com a API JS em src/grid.ts.
+     Larguras = largura do ARTBOARD (não da viewport). */
+  --bs-bp-mobile:  0px;
+  --bs-bp-tablet:  640px;
+  --bs-bp-desktop: 1024px;
+  /* margem/gutter por breakpoint (mobile é o caso primário — motoboy no celular) */
+  --bs-grid-margin-mobile:  var(--bs-space-4); /* 16px */
+  --bs-grid-gutter-mobile:  var(--bs-space-4); /* 16px */
+  --bs-grid-margin-tablet:  var(--bs-space-7); /* 32px */
+  --bs-grid-gutter-tablet:  var(--bs-space-6); /* 24px */
+  --bs-grid-margin-desktop: 60px;              /* dedicado (fora da escala) */
+  --bs-grid-gutter-desktop: 30px;              /* dedicado (fora da escala) */
+
   /* ---- Motion ---- */
   --bs-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
