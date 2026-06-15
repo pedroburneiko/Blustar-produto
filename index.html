@@ -8157,29 +8157,6 @@ document.addEventListener('click', e => {
 });
 
 
-/* Preview mode toggle — preserves scroll position when chrome shows/hides */
-(() => {
-  const playBtn = document.getElementById('preview-btn');
-  if (!playBtn) return;
-  function getScroller() {
-    return document.querySelector('main') || document.scrollingElement || document.documentElement;
-  }
-  const toggle = () => {
-    const sc = getScroller();
-    const prev = sc.scrollTop;
-    const on = document.body.classList.toggle('preview-mode');
-    playBtn.classList.toggle('active', on);
-    playBtn.setAttribute('aria-pressed', on);
-    // Histórico de versões é só do modo edição — fecha o painel ao entrar no preview.
-    if (on) window.__praiaCloseHistory?.();
-    // Restore scroll after layout settles (sidebar/right panel display change)
-    requestAnimationFrame(() => { sc.scrollTop = prev; });
-  };
-  playBtn.addEventListener('click', toggle);
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && document.body.classList.contains('preview-mode')) toggle();
-  });
-})();
 
 /* Design System Canvas — pinned page that catalogs tokens + every template.
    Editable + persists via autosave like any other page. */
@@ -9694,121 +9671,15 @@ document.addEventListener('click', e => {
   });
 })();
 
-/* Right inspector tabs */
-document.querySelectorAll('.gr-tab').forEach(t => {
-  t.addEventListener('click', () => {
-    const pane = t.dataset.pane;
-    document.querySelectorAll('.gr-tab').forEach(x => x.classList.toggle('active', x.dataset.pane === pane));
-    document.querySelectorAll('.gr-pane').forEach(x => x.classList.toggle('active', x.dataset.pane === pane));
-    document.querySelector('.guide-right').setAttribute('data-active', pane);
-  });
-});
 
-/* Breakpoint dropdown */
-(() => {
-  const trig = document.getElementById('bp-trigger');
-  const dd = document.getElementById('bp-dd');
-  const label = document.getElementById('bp-label');
-  if (!trig || !dd) return;
-  trig.addEventListener('click', e => { e.stopPropagation(); dd.classList.toggle('open'); });
-  document.addEventListener('click', e => { if (!dd.contains(e.target)) dd.classList.remove('open'); });
-  dd.querySelectorAll('.gt-dd-item').forEach(it => {
-    it.addEventListener('click', () => {
-      const bp = it.dataset.bp;
-      if (bp === 'grid') { dd.classList.remove('open'); return; }
-      dd.querySelectorAll('.gt-dd-item').forEach(x => x.dataset.bp !== 'grid' && x.classList.toggle('active', x === it));
-      label.textContent = bp;
-      dd.classList.remove('open');
-    });
-  });
-})();
 
 applyRoute();
 
 
-/* Heading anchor — click the link icon to copy a shareable URL to that heading.
-   Delegated so it survives autosave's innerHTML round-trips. */
-(() => {
-  const slugify = (s) => (s || '').toString().toLowerCase()
-    .normalize('NFD').replace(/[̀-ͯ]/g, '')
-    .trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'section';
-  const ensureUniqueId = (el, base) => {
-    let id = base; let n = 2;
-    while (document.getElementById(id) && document.getElementById(id) !== el) {
-      id = base + '-' + n++;
-    }
-    el.id = id;
-    return id;
-  };
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.heading-anchor-btn');
-    if (!btn) return;
-    e.preventDefault(); e.stopPropagation();
-    const mod = btn.closest('.heading-mod');
-    const h = mod?.querySelector('h1, h2, h3, h4, h5, h6');
-    if (!h) return;
-    const id = h.id || ensureUniqueId(h, slugify(h.textContent));
-    // Find the closest guide page id so the deep-link also restores the active page
-    const pageId = h.closest('.guide-page')?.dataset.page;
-    const url = location.origin + location.pathname + (pageId ? '?page=' + encodeURIComponent(pageId) : '') + '#' + id;
-    window.__praiaCopy?.(url);
-    window.__praiaToast?.('Link copiado');
-  }, true);
-
-  // On load, if URL has ?page=X#anchor, activate that page and scroll to anchor.
-  // Heading id may not exist immediately (autosave restore is async), so retry briefly.
-  function applyDeepLink() {
-    const params = new URLSearchParams(location.search);
-    const pageId = params.get('page');
-    const hash = decodeURIComponent(location.hash.slice(1));
-    if (pageId) {
-      const item = document.querySelector(`.guide-side-item[data-page="${CSS.escape(pageId)}"]`);
-      const page = document.querySelector(`.guide-page[data-page="${CSS.escape(pageId)}"]`);
-      if (item && page) {
-        document.querySelectorAll('.guide-side-item').forEach(x => x.classList.toggle('active', x === item));
-        document.querySelectorAll('.guide-page').forEach(p => p.classList.toggle('active', p === page));
-      }
-    }
-    if (!hash) return;
-    const topnav = document.querySelector('#topnav');
-    const offset = (topnav?.getBoundingClientRect().height || 0) + 16;
-    const tryScroll = (attempts = 20) => {
-      const target = document.getElementById(hash);
-      const scroller = document.querySelector('#main') || document.scrollingElement || document.documentElement;
-      if (target && scroller) {
-        const targetTop = target.getBoundingClientRect().top + scroller.scrollTop - (scroller.getBoundingClientRect?.().top || 0);
-        scroller.scrollTo({ top: targetTop - offset, behavior: 'smooth' });
-        return;
-      }
-      if (attempts > 0) setTimeout(() => tryScroll(attempts - 1), 100);
-    };
-    tryScroll();
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyDeepLink);
-  } else { setTimeout(applyDeepLink, 200); }
-  // Re-apply if the hash changes without a full reload (in-app navigation)
-  window.addEventListener('hashchange', applyDeepLink);
-})();
-
-/* Chip toggles inside Gen Studio */
-document.querySelectorAll('.chip-row').forEach(row => {
-  row.addEventListener('click', e => {
-    const chip = e.target.closest('.chip');
-    if (!chip) return;
-    row.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-  });
-});
 
 
-/* Guide TOC highlight */
-document.querySelectorAll('.guide-toc a').forEach(a => {
-  a.addEventListener('click', e => {
-    document.querySelectorAll('.guide-toc a').forEach(x => x.classList.remove('active'));
-    a.classList.add('active');
-  });
-});
+
+
 </script>
 
 <!-- Persistência (autosave/histórico/undo-redo/restore) — extraído para
@@ -9825,6 +9696,10 @@ document.querySelectorAll('.guide-toc a').forEach(a => {
 <script src="js/type-inspector.js"></script>
 <script src="js/color-token-editor.js"></script>
 <script src="js/new-page.js"></script>
+<script src="js/preview-toggle.js"></script>
+<script src="js/breakpoint-dropdown.js"></script>
+<script src="js/heading-anchor.js"></script>
+<script src="js/ui-misc.js"></script>
 
 <!-- ============================================================
      LOGIN "Entrar com Google" (Gmail) — gate de acesso do cliente.
