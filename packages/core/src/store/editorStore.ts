@@ -25,6 +25,7 @@ import type {
   LayerOverride,
   LayerRect,
   LayerStyle,
+  MaskProps,
   Page,
 } from '../model/types.js';
 import {
@@ -43,10 +44,35 @@ export interface Selection {
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
+/** Caixa exibida da imagem dentro do frame, em px do frame. */
+export interface MaskBox {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/**
+ * Edição de máscara em andamento (estilo Figma, efêmero — fora do undo).
+ * `box` é a geometria ao vivo da imagem; só é commitada ao `layer.mask` (1
+ * entrada de undo) ao sair com Enter/clique-fora. Sair com ESC descarta.
+ */
+export interface MaskEditState {
+  layerId: Id;
+  /** Tamanho do frame em px (para os modos fill/fit/center). */
+  frame: { w: number; h: number };
+  /** Tamanho natural da imagem (preenchido após o load). */
+  nat: { w: number; h: number } | null;
+  /** Geometria ao vivo da imagem (null até o load resolver a inicial). */
+  box: MaskBox | null;
+}
+
 export interface UiState {
   activeBoardId: Id | null;
   /** Gesto de manipulação direta em andamento (efêmero, fora do undo). */
   interaction: Interaction | null;
+  /** Edição de máscara de imagem em andamento (efêmero, fora do undo). */
+  maskEdit: MaskEditState | null;
   /** Estado do autosave (para a topbar). */
   saveStatus: SaveStatus;
 }
@@ -89,6 +115,8 @@ export interface EditorState {
   /** Move uma layer absoluta por (dx,dy); coalescido (burst de setas = 1 entrada). */
   nudgeLayer: (id: Id, dx: number, dy: number) => void;
   removeLayer: (id: Id) => void;
+  /** Funde a máscara de uma layer de imagem (1 entrada de undo). */
+  setLayerMask: (id: Id, patch: Partial<MaskProps>) => void;
 
   // --- templates / componentes (M6 D) ---
   /** Insere uma instância de componente (referência ao master) numa posição. */
@@ -121,6 +149,14 @@ export interface EditorState {
   updateInteraction: (patch: Partial<Pick<Interaction, 'preview' | 'guides'>>) => void;
   /** Encerra o gesto (limpa o estado efêmero). */
   endInteraction: () => void;
+  /** Entra no modo de edição de máscara de uma imagem (efêmero). */
+  beginMaskEdit: (layerId: Id, frame: { w: number; h: number }) => void;
+  /** Define o tamanho natural carregado da imagem em edição (efêmero). */
+  setMaskNat: (nat: { w: number; h: number }) => void;
+  /** Atualiza a geometria ao vivo da imagem em edição (efêmero). */
+  setMaskBox: (box: MaskBox) => void;
+  /** Sai do modo de edição de máscara (efêmero — o commit é via setLayerMask). */
+  endMaskEdit: () => void;
   /** Atualiza o status do autosave. */
   setSaveStatus: (status: SaveStatus) => void;
 }
@@ -130,7 +166,12 @@ function initialState(doc?: BrandDocument): Pick<EditorState, 'document' | 'sele
   return {
     document,
     selection: { pageId: null, layerIds: [], slot: null },
-    ui: { activeBoardId: document.boards[0] ?? null, interaction: null, saveStatus: 'idle' },
+    ui: {
+      activeBoardId: document.boards[0] ?? null,
+      interaction: null,
+      maskEdit: null,
+      saveStatus: 'idle',
+    },
   };
 }
 
@@ -419,6 +460,13 @@ export const useEditorStore = create<EditorState>()(
         historyController.setMode('immediate');
       },
 
+      setLayerMask: (id, patch) =>
+        set((state) => {
+          const layer = state.document.entities.layers[id];
+          if (!layer || layer.type !== 'image') return;
+          layer.mask = { ...layer.mask, ...patch };
+        }),
+
       removeLayer: (id) =>
         set((state) => {
           const layers = state.document.entities.layers;
@@ -557,6 +605,26 @@ export const useEditorStore = create<EditorState>()(
       endInteraction: () =>
         set((state) => {
           state.ui.interaction = null;
+        }),
+
+      beginMaskEdit: (layerId, frame) =>
+        set((state) => {
+          state.ui.maskEdit = { layerId, frame, nat: null, box: null };
+        }),
+
+      setMaskNat: (nat) =>
+        set((state) => {
+          if (state.ui.maskEdit) state.ui.maskEdit.nat = nat;
+        }),
+
+      setMaskBox: (box) =>
+        set((state) => {
+          if (state.ui.maskEdit) state.ui.maskEdit.box = box;
+        }),
+
+      endMaskEdit: () =>
+        set((state) => {
+          state.ui.maskEdit = null;
         }),
 
       setSaveStatus: (status) =>

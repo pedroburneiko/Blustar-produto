@@ -6,11 +6,19 @@ import {
   SegmentedControl,
   SwatchPicker,
   Select,
+  Button,
   type Swatch,
   type SelectOption,
 } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
 import { MasterEditor } from "./MasterEditor";
+import { centerBox, commitMaskEdit } from "./maskGeom";
+
+const FIT_OPTS: SelectOption[] = [
+  { label: "Fill", value: "fill" },
+  { label: "Fit", value: "fit" },
+  { label: "Crop", value: "crop" },
+];
 
 /** Paleta CURADA (só tokens) para cor de texto / fundo. */
 const COLOR_SWATCHES: Swatch[] = [
@@ -173,9 +181,57 @@ export function LayerInspector({ layerId }: { layerId: string }) {
           <Field label="Fonte (URL)">
             <TextField value={layer.src} onChange={(e) => setText({ src: e.target.value })} placeholder="https://…" aria-label="URL da mídia" />
           </Field>
+          {layer.type === "image" && <MaskControls layerId={layerId} />}
         </Section>
       )}
     </div>
+  );
+}
+
+/**
+ * Controles de máscara de imagem (M6.E). Fill/Fit definem o modo na hora; Crop
+ * abre a edição direta (duplo-clique no canvas tem o mesmo efeito); Centralizar
+ * recentraliza a imagem enquanto se edita. A dica orienta o gesto no canvas.
+ */
+function MaskControls({ layerId }: { layerId: string }) {
+  const layer = useEditorStore((s) => s.document.entities.layers[layerId]);
+  const editing = useEditorStore((s) => s.ui.maskEdit?.layerId === layerId);
+  if (!layer || layer.type !== "image") return null;
+  const fitValue = editing ? "crop" : (layer.mask?.fit ?? "fill");
+
+  function setFit(v: string) {
+    const s = useEditorStore.getState();
+    if (v === "crop") {
+      s.setLayerMask(layerId, { fit: "crop" });
+      if (!editing && layer && layer.rect) s.beginMaskEdit(layerId, { w: layer.rect.w, h: layer.rect.h });
+      return;
+    }
+    s.setLayerMask(layerId, { fit: v as "fill" | "fit" });
+    if (editing) s.endMaskEdit();
+  }
+
+  function center() {
+    const s = useEditorStore.getState();
+    const me = s.ui.maskEdit;
+    if (me?.box) s.setMaskBox(centerBox(me.frame, me.box));
+  }
+
+  return (
+    <>
+      <Field label="Preenchimento">
+        <SegmentedControl options={FIT_OPTS} value={fitValue} onChange={setFit} aria-label="Modo de preenchimento" />
+      </Field>
+      {editing ? (
+        <div style={{ display: "flex", gap: "var(--bs-space-2)" }}>
+          <Button variant="secondary" onClick={center}>Centralizar</Button>
+          <Button variant="primary" onClick={() => commitMaskEdit()}>Concluir</Button>
+        </div>
+      ) : (
+        <span style={{ fontSize: 11, color: "var(--bs-text-subtle)" }}>
+          Duplo-clique na foto para ajustar o recorte.
+        </span>
+      )}
+    </>
   );
 }
 

@@ -139,11 +139,22 @@ export interface FontProps {
   weight?: number;
 }
 
-/** Crop/box de máscara de imagem (detalhado no M6 — paridade de máscaras). */
+/** Modo de preenchimento da máscara de imagem (paridade com o SPEC). */
+export type MaskFit = 'fill' | 'fit' | 'crop';
+
+/**
+ * Crop/box de máscara de imagem (M6.E — paridade de máscaras, estilo Figma).
+ * `fill`/`fit` derivam a geometria do frame em render (object-fit cover/contain).
+ * `crop` é o ajuste manual: a imagem é desenhada em `natural * scale`, ancorada
+ * em `(offsetX, offsetY)` no sistema de coordenadas do frame.
+ */
 export interface MaskProps {
-  /** Offset/escala do conteúdo dentro do recorte. */
+  /** Modo atual (default `fill`). */
+  fit?: MaskFit;
+  /** Canto superior-esquerdo da imagem em px do frame (modo `crop`). */
   offsetX?: number;
   offsetY?: number;
+  /** Escala sobre o tamanho natural: `displayedW = naturalW * scale` (modo `crop`). */
   scale?: number;
 }
 

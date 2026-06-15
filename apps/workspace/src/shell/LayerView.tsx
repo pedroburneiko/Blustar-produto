@@ -1,9 +1,11 @@
 import { memo, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
 import { Button } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
-import type { Layer, LayerBox, LayerRect, LayerStyle } from "@blustar/core";
+import type { ImageLayer, Layer, LayerBox, LayerRect, LayerStyle } from "@blustar/core";
 import { ResizeHandles } from "./ResizeHandles";
 import { TemplateInstanceView } from "./TemplateInstanceView";
+import { MaskEditOverlay } from "./MaskEditOverlay";
+import { cropBox } from "./maskGeom";
 import { computeMoveSnap, siblingRects } from "./snapping";
 
 const DRAG_THRESHOLD = 3; // px para distinguir clique de arraste
@@ -58,6 +60,56 @@ function Placeholder({ label, style }: { label: string; style?: CSSProperties })
   );
 }
 
+/**
+ * Conteúdo de uma layer de imagem, com máscara (M6.E). `fill`/`fit` usam
+ * object-fit (cover/contain). `crop` desenha a imagem em `natural * scale`
+ * ancorada no offset salvo — precisa do tamanho natural (lido no onLoad).
+ */
+function ImageContent({ layer }: { layer: ImageLayer }) {
+  const [nat, setNat] = useState<{ w: number; h: number } | null>(null);
+  if (!layer.src) return <Placeholder label="FOTO" style={{ height: "100%" }} />;
+
+  const fit = layer.mask?.fit ?? "fill";
+  const wrap: CSSProperties = {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+    overflow: "hidden",
+    borderRadius: "var(--bs-radius-md)",
+  };
+
+  // crop só renderiza posicionado quando já sabemos o tamanho natural; senão
+  // cai no cover (evita flash de imagem deslocada antes do load).
+  if (fit === "crop" && layer.mask?.scale && nat) {
+    const b = cropBox(nat, layer.mask.offsetX ?? 0, layer.mask.offsetY ?? 0, layer.mask.scale);
+    return (
+      <div style={wrap}>
+        <img
+          src={layer.src}
+          alt={layer.name}
+          draggable={false}
+          style={{ position: "absolute", left: b.x, top: b.y, width: b.w, height: b.h, display: "block" }}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div style={wrap}>
+      <img
+        src={layer.src}
+        alt={layer.name}
+        draggable={false}
+        onLoad={(e) => {
+          const img = e.currentTarget;
+          if (img.naturalWidth) setNat({ w: img.naturalWidth, h: img.naturalHeight });
+        }}
+        style={{ width: "100%", height: "100%", objectFit: fit === "fit" ? "contain" : "cover", display: "block" }}
+      />
+    </div>
+  );
+}
+
 /** Renderiza o conteúdo específico do tipo da layer (sem o wrapper externo). */
 function LayerContent({ layer }: { layer: Layer }) {
   switch (layer.type) {
@@ -99,11 +151,7 @@ function LayerContent({ layer }: { layer: Layer }) {
     }
 
     case "image":
-      return layer.src ? (
-        <img src={layer.src} alt={layer.name} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "var(--bs-radius-md)" }} />
-      ) : (
-        <Placeholder label="FOTO" style={{ height: "100%" }} />
-      );
+      return <ImageContent layer={layer} />;
 
     case "video":
       return layer.src ? (
@@ -145,6 +193,7 @@ function LayerViewImpl({ layerId }: LayerViewProps) {
   const livePreview = useEditorStore((s) =>
     s.ui.interaction?.layerId === layerId ? s.ui.interaction.preview : null,
   );
+  const maskEditing = useEditorStore((s) => s.ui.maskEdit?.layerId === layerId);
   const [hover, setHover] = useState(false);
   const dragRef = useRef<{ px: number; py: number; rect: LayerRect; dragging: boolean } | null>(null);
 
@@ -153,6 +202,19 @@ function LayerViewImpl({ layerId }: LayerViewProps) {
   function select(e: MouseEvent) {
     e.stopPropagation(); // clique no filho seleciona o filho, não o grupo/canvas
     useEditorStore.getState().selectLayers([layerId]);
+  }
+
+  // Duplo-clique numa imagem entra no modo de edição de máscara (M6.E).
+  function onDoubleClick(e: MouseEvent) {
+    if (layer.type !== "image" || !layer.src) return;
+    e.stopPropagation();
+    e.preventDefault();
+    const el = e.currentTarget as HTMLElement;
+    const frame = layer.rect
+      ? { w: layer.rect.w, h: layer.rect.h }
+      : { w: el.clientWidth, h: el.clientHeight };
+    useEditorStore.getState().selectLayers([layerId]);
+    useEditorStore.getState().beginMaskEdit(layerId, frame);
   }
 
   // --- Drag (mover) — apenas layers absolutas (rect) ---
@@ -196,11 +258,13 @@ function LayerViewImpl({ layerId }: LayerViewProps) {
     useEditorStore.getState().endInteraction(); // 1 gesto = 1 entrada de histórico
   }
 
-  const outline = selected
-    ? "2px solid var(--bs-focus-ring)"
-    : hover
-      ? "1px dashed var(--bs-brand)"
-      : "1px solid transparent";
+  const outline = maskEditing
+    ? "1px solid transparent" // o overlay desenha o contorno tracejado do recorte
+    : selected
+      ? "2px solid var(--bs-focus-ring)"
+      : hover
+        ? "1px dashed var(--bs-brand)"
+        : "1px solid transparent";
 
   // Layer absoluta (M4): posiciona via rect (ou preview ao vivo). Senão, flow (M2).
   const rect = livePreview ?? layer.rect;
@@ -212,6 +276,9 @@ function LayerViewImpl({ layerId }: LayerViewProps) {
 
   const wrapperStyle: CSSProperties = {
     ...absolute,
+    // O overlay de máscara (absolute inset:0) precisa de um ancestral posicionado.
+    // Layers absolutas já são position:absolute; imagens em flow precisam disto.
+    ...(maskEditing && !rect ? { position: "relative" as const } : {}),
     outline,
     outlineOffset: 4,
     borderRadius: 2,
@@ -229,6 +296,7 @@ function LayerViewImpl({ layerId }: LayerViewProps) {
       aria-pressed={selected}
       style={wrapperStyle}
       onClick={select}
+      onDoubleClick={layer.type === "image" ? onDoubleClick : undefined}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
@@ -237,12 +305,13 @@ function LayerViewImpl({ layerId }: LayerViewProps) {
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      onPointerDown={layer.rect ? onPointerDown : undefined}
-      onPointerMove={layer.rect ? onPointerMove : undefined}
-      onPointerUp={layer.rect ? onPointerUp : undefined}
+      onPointerDown={layer.rect && !maskEditing ? onPointerDown : undefined}
+      onPointerMove={layer.rect && !maskEditing ? onPointerMove : undefined}
+      onPointerUp={layer.rect && !maskEditing ? onPointerUp : undefined}
     >
       <LayerContent layer={layer} />
-      {selected && layer.rect && <ResizeHandles layerId={layer.id} />}
+      {maskEditing && layer.type === "image" && <MaskEditOverlay layer={layer} />}
+      {selected && layer.rect && !maskEditing && <ResizeHandles layerId={layer.id} />}
     </div>
   );
 }
