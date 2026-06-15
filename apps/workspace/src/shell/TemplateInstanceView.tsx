@@ -77,9 +77,11 @@ function SlotView({ ctx, slotId }: { ctx: SlotCtx; slotId: string }) {
       );
     case "shape": {
       const radius = layer.shape === "ellipse" ? "var(--bs-radius-full)" : "var(--bs-radius-md)";
+      // Mídia/forma respeita a altura definida no master (box.height); senão, base.
+      const h = raw.box?.height;
       return (
         <Slot ctx={ctx} slotId={slotId}>
-          <div style={{ width: "100%", minHeight: 40, borderRadius: radius, ...slotStyle(layer) }} />
+          <div style={{ width: "100%", height: h, minHeight: h ? undefined : 40, borderRadius: radius, ...slotStyle(layer) }} />
         </Slot>
       );
     }

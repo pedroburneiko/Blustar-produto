@@ -11,6 +11,7 @@ import {
   type BoardKind,
   type BrandDocument,
   type Layer,
+  type LayerOverride,
   type Page,
   type TemplateMaster,
 } from '@blustar/core';
@@ -59,6 +60,12 @@ export function sampleDocument(): BrandDocument {
       doc.entities.pages[free.id] = free;
       board.pages.push(free.id);
       seedFreeCanvas(doc, free);
+
+      // Cena de demo do pitch: 1 master × várias instâncias (propagação).
+      const vitrine = createPage(board.id, 'Vitrine');
+      doc.entities.pages[vitrine.id] = vitrine;
+      board.pages.push(vitrine.id);
+      seedVitrine(doc, vitrine);
     }
   }
 
@@ -87,10 +94,11 @@ function seedMasters(doc: BrandDocument): void {
       createLayer('text', 'master', { name: 'Chamada', text: 'Pronto para começar?', font: { size: '1.25rem', weight: 700 } }),
       createLayer('button', 'master', { name: 'Botão', label: 'Comece agora', variant: 'primary' }),
     ]),
-    makeMaster('Card', 'Card', 'Layout', [
-      createLayer('shape', 'master', { name: 'Mídia', shape: 'rect', style: { background: 'var(--bs-surface-2)' } }),
-      createLayer('text', 'master', { name: 'Título', text: 'Título do card', font: { size: '1.125rem', weight: 700 } }),
-      createLayer('text', 'master', { name: 'Texto', text: 'Descrição do card.', style: { color: 'var(--bs-text-muted)' } }),
+    makeMaster('Card', 'Plano', 'Layout', [
+      createLayer('shape', 'master', { name: 'Mídia', shape: 'rect', style: { background: 'var(--bs-brand)' }, box: { height: '84px' } }),
+      createLayer('text', 'master', { name: 'Título', text: 'Plano', font: { size: '1.125rem', weight: 700 } }),
+      createLayer('text', 'master', { name: 'Preço', text: 'R$ 49 / mês', style: { color: 'var(--bs-text-muted)' } }),
+      createLayer('button', 'master', { name: 'CTA', label: 'Assinar', variant: 'secondary' }),
     ]),
   ];
   for (const m of masters) doc.templates.masters[m.name] = m;
@@ -134,6 +142,51 @@ function seedFreeCanvas(doc: BrandDocument, page: Page): void {
     rect: { x: 380, y: 240, w: 320, h: 200 },
     overrides: {},
   }));
+}
+
+/** id do slot (layer do master) pelo nome — para endereçar overrides no seed. */
+function cardSlot(doc: BrandDocument, name: string): string {
+  const master = doc.templates.masters['Card'];
+  return Object.values(master.layers).find((l) => l.name === name)?.id ?? '';
+}
+
+/**
+ * Cena de demo do pitch: 6 instâncias do master `Card` num grid 3×2 (frame
+ * 900×560). Quatro herdam puro; duas carregam override (título/cor) — assim
+ * editar o master propaga aos herdados, mas o override vence nas customizadas.
+ */
+function seedVitrine(doc: BrandDocument, page: Page): void {
+  const pid = page.id;
+  const titleSlot = cardSlot(doc, 'Título');
+  const mediaSlot = cardSlot(doc, 'Mídia');
+
+  const W = 260;
+  const H = 230;
+  const xs = [35, 320, 605];
+  const ys = [38, 292];
+
+  let i = 0;
+  for (const y of ys) {
+    for (const x of xs) {
+      i += 1;
+      const overrides: Record<string, LayerOverride> = {};
+      if (i === 2) {
+        // instância customizada: título próprio + mídia navy (override vence)
+        overrides[titleSlot] = { text: 'Plano Pro' };
+        overrides[mediaSlot] = { style: { background: 'var(--bs-azul-profundo)' } };
+      }
+      if (i === 5) {
+        overrides[titleSlot] = { text: 'Plano Free' };
+      }
+      attach(doc, createLayer('component', pid, {
+        name: `Card ${i}`,
+        templateName: 'Card',
+        category: 'Layout',
+        rect: { x, y, w: W, h: H },
+        overrides,
+      }));
+    }
+  }
 }
 
 /** Registra a layer no documento (em page.roots ou nos filhos do pai). */
