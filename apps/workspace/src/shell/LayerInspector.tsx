@@ -8,6 +8,7 @@ import {
   SwatchPicker,
   Select,
   Button,
+  Upload,
   type Swatch,
   type SelectOption,
 } from "@blustar/ui";
@@ -177,7 +178,11 @@ export function LayerInspector({ layerId }: { layerId: string }) {
   const setFont = (patch: Parameters<typeof s.updateLayerFont>[1]) => useEditorStore.getState().updateLayerFont(layerId, patch);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--bs-space-5)", padding: "var(--bs-space-4) var(--bs-space-3)" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--bs-space-5)", padding: "var(--bs-space-5) var(--bs-space-4)" }}>
+      {/* Título do painel (Estilo Visual) */}
+      <h2 style={{ margin: 0, fontSize: 22, fontWeight: 600, color: "var(--bs-text)", letterSpacing: "-0.01em" }}>
+        Estilo Visual
+      </h2>
       {/* Header */}
       <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
         <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--bs-text-subtle)" }}>
@@ -201,15 +206,15 @@ export function LayerInspector({ layerId }: { layerId: string }) {
             </Field>
           </Section>
           <Section title="Tipografia">
-            <Field label="Tamanho">
+            <Field label="Texto" inline>
               <Select options={SIZE_OPTS} value={layer.font?.size ?? ""} onChange={(v) => setFont({ size: v })} aria-label="Tamanho" />
             </Field>
-            <Field label="Peso">
+            <Field label="Peso" inline>
               <Select options={WEIGHT_OPTS} value={String(layer.font?.weight ?? "")} onChange={(v) => setFont({ weight: Number(v) })} aria-label="Peso" />
             </Field>
           </Section>
           <Section title="Cor">
-            <Field label="Cor do texto">
+            <Field label="Cor" inline>
               <SwatchPicker swatches={COLOR_SWATCHES} value={layer.style?.color ?? ""} onChange={(v) => setStyle({ color: v })} aria-label="Cor do texto" />
             </Field>
           </Section>
@@ -265,8 +270,20 @@ export function LayerInspector({ layerId }: { layerId: string }) {
 
       {(layer.type === "image" || layer.type === "video") && (
         <Section title="Mídia">
-          <Field label="Fonte (URL)">
-            <TextField value={layer.src} onChange={(e) => setText({ src: e.target.value })} placeholder="https://…" aria-label="URL da mídia" />
+          <Field label={layer.type === "video" ? "Vídeo" : "Imagem"} inline>
+            {/* Upload (Cloudinary) ainda não implementado — define a mídia pela URL abaixo. */}
+            <Button size="sm" variant="primary" leftIcon={<Upload size={16} />} disabled>
+              Upload
+            </Button>
+          </Field>
+          <Field label="Source" inline>
+            <TextField
+              value={layer.src}
+              onChange={(e) => setText({ src: e.target.value })}
+              placeholder="http:// res.cloudi…"
+              aria-label="URL da mídia"
+              style={{ width: 130 }}
+            />
           </Field>
           {layer.type === "image" && <MaskControls layerId={layerId} />}
         </Section>

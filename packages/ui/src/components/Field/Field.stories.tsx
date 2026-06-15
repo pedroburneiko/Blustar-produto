@@ -21,3 +21,14 @@ export const ComRotulo: Story = {
     </div>
   ),
 };
+
+/** Linha (rótulo à esquerda, controle à direita) — painel Estilo Visual. */
+export const Inline: Story = {
+  render: () => (
+    <div style={{ width: 280 }}>
+      <Field label="Source" htmlFor="f2" inline hint="custom">
+        <TextField id="f2" defaultValue="http://res.cloudi…" />
+      </Field>
+    </div>
+  ),
+};
