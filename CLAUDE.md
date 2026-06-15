@@ -9,20 +9,27 @@ uma sessão nova deve se reorientar a partir daqui. Regras específicas do Desig
 
 ## 1. STATUS ATUAL  ← atualize a cada milestone
 
+**Postura: PRODUTO para usuário final.** Não é mais demo de pitch. A régua é
+funcionar de verdade — edição, persistência e undo reais. Features novas são
+bem-vindas quando servem ao produto.
+
 **Marcos concluídos (✅):** M0–M7, e M6 A/B/C/D/E — todos completos (confirmado no git log).
 
 - **Templates (M6.D) — completo:** masters + instâncias, **propagação ao vivo**
   (render de instância = master + overrides), inserção via **catálogo de templates**,
   **master-edit por painel** (inspector), **overrides por slot** (sub-seleção).
-- **Cena de demo "Vitrine" — montada:** grid 3×2, 6 instâncias do master Card de preço.
-  Vive no seed (`apps/workspace/src/sampleDocument.ts`). O *money shot* funciona:
-  editar o master propaga às 6 instâncias ao vivo.
+- **Cena "Vitrine" — montada:** grid 3×2, 6 instâncias do master Card de preço.
+  Vive no seed (`apps/workspace/src/sampleDocument.ts`). Editar o master propaga às 6 ao vivo.
+- **Grid responsivo por breakpoint — completo (ponta a ponta):** tokens
+  (`breakpoints`/`gridByBreakpoint`/`breakpointForWidth`); `<Grid>` do DS resolve pela própria
+  content-box; override por bp no documento (`box.grid` + `resolveGrid`, tokens = default,
+  `setLayerGrid` = 1 undo); render de grupo adapta pela largura do artboard (`ui.artboardWidth`,
+  efêmero); painel Columns com seletor de bp (touch), chip do bp ativo e campos por bp.
+  Restante/edge cases na seção 6.
 - **Qualidade:** build (`pnpm -r build`), testes (Vitest no core) e CI (`.github/workflows/ci.yml`)
   verdes.
-- **Git:** HEAD sincronizado com `origin/main` (push feito). Confirme com `git status` /
-  `git rev-list --left-right --count origin/main...HEAD`.
 
-**Foco atual: polish + ensaio do pitch. NÃO construir features novas.**
+**Foco atual: ligar a persistência (rodar do Supabase, não do seed) + polish do produto.**
 
 ---
 
@@ -97,10 +104,8 @@ reference/        protótipo vanilla   SPEC da migração — SOMENTE CONSULTA
 - Verificação real do fluxo Supabase (carga/salvamento end-to-end).
 - Edge cases de override (instâncias × master).
 - Integrar máscara de imagem em um template real.
-- **Grid responsivo por breakpoint — faixa de feature (pós-pitch).** Tokens já existem
-  (`packages/tokens`: `breakpoints`, `gridByBreakpoint`, `breakpointForWidth` em `src/grid.ts`;
-  `--bs-bp-*` e `--bs-grid-*` em `tokens.css`). Falta: (a) `<Grid>`/`<Col>` do DS escolherem a
-  config pela largura do artboard + story dos 3 bps; (b) painel Columns com seletor de breakpoint
-  + chip do bp ativo (derivado da largura, **estado efêmero, fora do undo**) + campos por bp;
-  (c) **model em `packages/core`**: config de grid vira **override no documento** (tokens = default
-  de marca), **1 undo por mutação** — **direção APROVADA**. NÃO estender `LayerBox` antes do pitch.
+- **Grid responsivo por breakpoint — restante.** Edge cases: override em instância de
+  componente (hoje o render de grid honra só **grupos**; `TemplateInstanceView` é outro caminho);
+  ação `clearLayerGrid` p/ remover um override e voltar ao token; reconciliar `box.cols` legado
+  (migrar a Vitrine p/ `grid` override quando for editá-la por bp). Avaliar: breakpoint desktop
+  (≥1024) é inalcançável enquanto o artboard tem `maxWidth: 960`.
