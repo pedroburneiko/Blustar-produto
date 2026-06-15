@@ -80,6 +80,22 @@ Acesso ao localStorage está **espalhado** (~58 chamadas). Centralizar tudo em
 > **Reset**: `index.html:7` — `if(location.search.indexOf('reset')!==-1){localStorage.clear();}`
 > Atalho `?reset=1` deve ser **preservado** na Fase 4.
 
+### 3.1 IndexedDB — blobs de vídeo (descoberto na verificação pré-Fase 4)
+Além do localStorage, há **uma segunda camada de persistência** que o mapa
+inicial não cobria:
+
+| DB | Store | Versão | Onde | Conteúdo |
+|---|---|---|---|---|
+| `praia-videos` | `blobs` | 1 | `index.html:~6877` (IIFE com `idbPut`/`idbGet`/`idbDel`) | Blobs de vídeo enviados, keyed por id |
+
+> ⚠️ **`?reset=1` NÃO limpa esse IndexedDB** (só faz `localStorage.clear()`).
+> A Fase 4 deve decidir explicitamente se o reset passa a limpar o
+> `praia-videos` também, ou se mantém o comportamento atual (não limpa).
+> Strings parecidas mas que **não são storage keys** (confirmado por grep):
+> `blustar_unsigned`/`blustar_ds`/`blustar_ds_photo` (upload preset + tags do
+> Cloudinary), `praia-ds-state`/`praia-button-overrides` (IDs de `<style>`),
+> `praia-frame`/`praia-component` (classes CSS).
+
 ---
 
 ## 4. Grandes blocos funcionais do JS principal (5537–15879)
