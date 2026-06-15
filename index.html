@@ -5,6 +5,10 @@
 <!-- Dev reset: open with ?reset=1 to wipe saved state BEFORE the app boots
      (escapes a frozen state, e.g. heavy restored videos). Runs first, sync. -->
 <script>if(location.search.indexOf('reset')!==-1){try{localStorage.clear();}catch(e){}}</script>
+<!-- Error boundary global (Fase 5): registra window.onerror/unhandledrejection
+     ANTES de qualquer outro script, loga alto e mostra fallback discreto em vez
+     de tela branca. Carregado síncrono p/ capturar erros de boot dos demais. -->
+<script src="js/error-boundary.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Disable browser caching during active development so each preview refresh
      pulls the latest HTML/CSS/JS instead of a stale copy. -->
