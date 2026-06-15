@@ -17,13 +17,15 @@ const ARTBOARD_PRESETS = [
  * Com uma camada selecionada, vira o editor de propriedades dela (edições vão
  * para a store e ENTRAM no undo). Sem seleção, mostra o placeholder Styles/Page.
  */
-export function Inspector() {
+export function Inspector({ floating = false }: { floating?: boolean } = {}) {
   const selectedId = useEditorStore((s) => s.selection.layerIds[0] ?? null);
   const slot = useEditorStore((s) => s.selection.slot);
+  // No preview, o painel flutua como um card (cantos arredondados + sombra).
+  const panelClass = floating ? "rounded-xl shadow-2xl" : "";
 
   if (slot) {
     return (
-      <Panel aria-label="Inspector">
+      <Panel aria-label="Inspector" className={panelClass}>
         <SlotOverrideEditor instanceId={slot.instanceId} slotKey={slot.slotKey} />
       </Panel>
     );
@@ -31,19 +33,19 @@ export function Inspector() {
 
   if (selectedId) {
     return (
-      <Panel aria-label="Inspector">
+      <Panel aria-label="Inspector" className={panelClass}>
         <LayerInspector layerId={selectedId} />
       </Panel>
     );
   }
 
-  return <EmptyInspector />;
+  return <EmptyInspector className={panelClass} />;
 }
 
-function EmptyInspector() {
+function EmptyInspector({ className = "" }: { className?: string }) {
   const [tab, setTab] = useState("styles");
   return (
-    <Panel aria-label="Inspector">
+    <Panel aria-label="Inspector" className={className}>
       <div style={{ padding: "var(--bs-space-3) var(--bs-space-3) 0" }}>
         <Tabs
           items={[

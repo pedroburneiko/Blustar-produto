@@ -27,13 +27,15 @@ export function AppShell() {
   // Overrides de tokens do documento (M6.B): aplicados no root → cascateiam
   // para todo o app (canvas + chrome), como o rootStyle do SPEC.
   const tokenVars = useEditorStore((s) => s.document.tokens.vars);
+  // Modo preview (play): esconde a chrome do editor; a barra Estilo Visual flutua.
+  const preview = useEditorStore((s) => s.ui.preview);
 
   return (
     <div
       style={{
         ...(tokenVars as CSSProperties),
         display: "grid",
-        gridTemplateColumns: "minmax(180px, 200px) minmax(0, 1fr)",
+        gridTemplateColumns: preview ? "minmax(0, 1fr)" : "minmax(180px, 200px) minmax(0, 1fr)",
         height: "100vh",
         background: "var(--bs-bg)",
         color: "var(--bs-text)",
@@ -41,20 +43,41 @@ export function AppShell() {
         overflow: "hidden",
       }}
     >
-      <Rail />
+      {!preview && <Rail />}
       <div style={{ display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0 }}>
         <Topbar />
         <div
           style={{
+            position: "relative",
             display: "grid",
-            gridTemplateColumns: "minmax(210px, 240px) minmax(0, 1fr) minmax(280px, 320px)",
+            gridTemplateColumns: preview
+              ? "minmax(0, 1fr)"
+              : "minmax(210px, 240px) minmax(0, 1fr) minmax(280px, 320px)",
             flex: 1,
             minHeight: 0,
           }}
         >
-          <PagesSidebar />
+          {!preview && <PagesSidebar />}
           <CanvasArea />
-          <Inspector />
+          {preview ? (
+            // Flutuante por cima do canvas, sempre visível (estilo Figma play).
+            <div
+              style={{
+                position: "absolute",
+                top: "var(--bs-space-5)",
+                right: "var(--bs-space-5)",
+                width: 275,
+                maxHeight: "calc(100% - var(--bs-space-7))",
+                display: "flex",
+                zIndex: 10,
+                pointerEvents: "auto",
+              }}
+            >
+              <Inspector floating />
+            </div>
+          ) : (
+            <Inspector />
+          )}
         </div>
       </div>
     </div>
