@@ -1,4 +1,4 @@
-import { Field, TextField, Select, SwatchPicker, type Swatch, type SelectOption } from "@blustar/ui";
+import { Field, TextField, Select, SwatchPicker, Badge, type Swatch, type SelectOption } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
 
 const COLOR_SWATCHES: Swatch[] = [
@@ -22,6 +22,12 @@ const VARIANT_OPTS: SelectOption[] = [
  */
 export function MasterEditor({ templateName }: { templateName: string }) {
   const master = useEditorStore((s) => s.document.templates.masters[templateName]);
+  // Quantas instâncias deste master existem no documento (propagação alvo).
+  const instanceCount = useEditorStore((s) =>
+    Object.values(s.document.entities.layers).filter(
+      (l) => l.type === "component" && l.templateName === templateName,
+    ).length,
+  );
   if (!master) return null;
 
   const setText = (slot: string, patch: Record<string, unknown>) =>
@@ -33,8 +39,9 @@ export function MasterEditor({ templateName }: { templateName: string }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--bs-space-4)" }}>
-      <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--bs-text-subtle)" }}>
-        Master · {master.label}
+      <div style={{ display: "flex", alignItems: "center", gap: "var(--bs-space-2)", flexWrap: "wrap" }}>
+        <Badge variant="brand" leftIcon="◇">Master · {master.label}</Badge>
+        <Badge variant="neutral">{instanceCount} {instanceCount === 1 ? "instância" : "instâncias"}</Badge>
       </div>
       <p style={{ margin: 0, fontSize: 12, color: "var(--bs-text-subtle)" }}>
         Editar aqui propaga para todas as instâncias.
