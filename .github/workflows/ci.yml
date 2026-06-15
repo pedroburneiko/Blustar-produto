@@ -1,23 +1,22 @@
 name: CI
 
-# Build + testes em cada push/PR na main. Independente do deploy do Storybook.
+# Gate de check do app vanilla — espelha o pré-commit local (Biome, só js/).
+# NÃO faz deploy: o deploy é Cloudflare Workers, fora deste pipeline.
+# Mesmo biome.json do pré-commit (nags de idioma desativados): se o gate local
+# passa, este CI passa.
 on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
 
 jobs:
-  build-test:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # Sem 'version': vem do campo packageManager (pnpm@9.x) do package.json raiz.
-      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm -r build
-      - run: pnpm test
+          node-version: lts/*
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run check
