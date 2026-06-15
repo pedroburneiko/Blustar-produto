@@ -1,5 +1,5 @@
 import { useCallback, useRef } from "react";
-import { useEditorStore } from "@blustar/core";
+import { useEditorStore, DEFAULT_ARTBOARD_WIDTH } from "@blustar/core";
 import { LayerView } from "./LayerView";
 import { GuidesOverlay } from "./GuidesOverlay";
 import { InsertTemplateButton } from "./InsertTemplateButton";
@@ -65,9 +65,10 @@ export function CanvasArea() {
       }}
     >
       {page ? (
-        // Cap do artboard. Stopgap: 1280 p/ o breakpoint desktop (≥1024) ser
-        // alcançável (antes 960 prendia em ~tablet). Vira propriedade por página.
-        <div ref={artboardRef} style={{ maxWidth: 1280, margin: "0 auto" }}>
+        // Largura do artboard = propriedade da página (frame de largura fixa).
+        // Define a largura de referência do grid responsivo; rola na horizontal
+        // (overflow:auto do pai) quando maior que a viewport do canvas.
+        <div ref={artboardRef} style={{ width: page.artboardWidth ?? DEFAULT_ARTBOARD_WIDTH, margin: "0 auto" }}>
           {/* world-head */}
           <div style={{ marginBottom: "var(--bs-space-7)" }}>
             <div
