@@ -11,18 +11,22 @@ export interface SegmentedControlProps {
   onChange: (value: string) => void;
   "aria-label"?: string;
   disabled?: boolean;
+  /** Alvos de toque de 48px (uso em campo). Padrão: tamanho desktop. */
+  touch?: boolean;
   className?: string;
 }
 
 /**
  * Controle segmentado do Blustar Design System (escolha única entre poucas
  * opções, ex.: Dark/Light). role="radiogroup". Selecionado = superfície + ink.
+ * `touch` eleva os segmentos a 48px (mínimo tocável).
  */
 export function SegmentedControl({
   options,
   value,
   onChange,
   disabled = false,
+  touch = false,
   className = "",
   ...rest
 }: SegmentedControlProps) {
@@ -30,7 +34,11 @@ export function SegmentedControl({
     <div
       role="radiogroup"
       aria-label={rest["aria-label"]}
-      className={["inline-flex p-0.5 gap-0.5 rounded-md bg-surface border border-line", className]
+      className={[
+        "inline-flex p-0.5 gap-0.5 rounded-md bg-surface border border-line",
+        touch ? "w-full" : "",
+        className,
+      ]
         .filter(Boolean)
         .join(" ")}
     >
@@ -45,7 +53,8 @@ export function SegmentedControl({
             disabled={disabled}
             onClick={() => onChange(opt.value)}
             className={[
-              "px-3 py-1 text-sm font-semibold rounded-[6px] transition-colors duration-150",
+              "font-semibold rounded-[6px] transition-colors duration-150",
+              touch ? "min-h-12 flex-1 px-4 text-base" : "px-3 py-1 text-sm",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
               "disabled:opacity-50 disabled:cursor-not-allowed",
               active ? "bg-surface-2 text-ink" : "text-muted hover:text-ink",

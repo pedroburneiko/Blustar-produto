@@ -30,6 +30,28 @@ function Controlled() {
 
 export const Padrao: Story = { render: () => <Controlled /> };
 
+/** Alvos de 48px (uso em campo / mobile). Ocupa a largura disponível. */
+function ControlledTouch() {
+  const [v, setV] = useState("tablet");
+  return (
+    <div style={{ maxWidth: 360 }}>
+      <SegmentedControl
+        options={[
+          { value: "mobile", label: "Mobile" },
+          { value: "tablet", label: "Tablet" },
+          { value: "desktop", label: "Desktop" },
+        ]}
+        value={v}
+        onChange={setV}
+        touch
+        aria-label="Breakpoint"
+      />
+    </div>
+  );
+}
+
+export const Touch: Story = { render: () => <ControlledTouch /> };
+
 export const Seleciona: Story = {
   render: () => <Controlled />,
   play: async ({ canvasElement }) => {

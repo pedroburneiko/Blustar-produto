@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Field,
   TextField,
@@ -10,9 +11,102 @@ import {
   type Swatch,
   type SelectOption,
 } from "@blustar/ui";
-import { useEditorStore } from "@blustar/core";
+import { useEditorStore, resolveGrid, breakpointForWidth, type Breakpoint } from "@blustar/core";
 import { MasterEditor } from "./MasterEditor";
 import { centerBox, commitMaskEdit } from "./maskGeom";
+
+const BP_OPTS: { value: Breakpoint; label: string }[] = [
+  { value: "mobile", label: "Mobile" },
+  { value: "tablet", label: "Tablet" },
+  { value: "desktop", label: "Desktop" },
+];
+const BP_LABEL: Record<Breakpoint, string> = { mobile: "Mobile", tablet: "Tablet", desktop: "Desktop" };
+
+/**
+ * Painel de grid responsivo de um container (grupo/instância). O seletor escolhe
+ * QUAL breakpoint editar (estado local, efêmero); o chip mostra o bp ATIVO
+ * derivado da largura do artboard. Os campos editam a config do bp selecionado
+ * via setLayerGrid (1 entrada de undo por rajada). O valor exibido é o efetivo
+ * (override do doc se houver, senão default do token); o hint diz a origem.
+ */
+function GridPanel({ layerId }: { layerId: string }) {
+  const box = useEditorStore((s) => s.document.entities.layers[layerId]?.box);
+  const artboardWidth = useEditorStore((s) => s.ui.artboardWidth);
+  const activeBp: Breakpoint = artboardWidth == null ? "desktop" : breakpointForWidth(artboardWidth);
+  const [editBp, setEditBp] = useState<Breakpoint>(activeBp);
+
+  const eff = resolveGrid(box, editBp); // valores efetivos do bp em edição
+  const ov = box?.grid?.[editBp];
+  const setGrid = (patch: Parameters<ReturnType<typeof useEditorStore.getState>["setLayerGrid"]>[2]) =>
+    useEditorStore.getState().setLayerGrid(layerId, editBp, patch);
+
+  const origin = (has: boolean) => (has ? "override" : "padrão do token");
+
+  return (
+    <Section title="Grid responsivo">
+      <SegmentedControl
+        options={BP_OPTS}
+        value={editBp}
+        onChange={(v) => setEditBp(v as Breakpoint)}
+        touch
+        aria-label="Breakpoint a editar"
+      />
+      <div
+        style={{
+          fontSize: 12,
+          color: "var(--bs-text-subtle)",
+          display: "flex",
+          alignItems: "center",
+          gap: "var(--bs-space-2)",
+        }}
+      >
+        <span
+          aria-hidden
+          style={{ width: 8, height: 8, borderRadius: "var(--bs-radius-full)", background: "var(--bs-brand)" }}
+        />
+        Ativo: <strong style={{ color: "var(--bs-text)" }}>{BP_LABEL[activeBp]}</strong>
+        {artboardWidth != null && <> · {Math.round(artboardWidth)}px</>}
+      </div>
+
+      <Field label="Colunas" hint={origin(ov?.columns != null)}>
+        <NumberField
+          value={eff.columns}
+          onChange={(n) => setGrid({ columns: n })}
+          min={1}
+          max={24}
+          suffix="col"
+          aria-label="Colunas"
+        />
+      </Field>
+      <Field label="Tipo">
+        <Select
+          options={[{ label: "Stretch", value: "stretch" }]}
+          value="stretch"
+          onChange={() => setGrid({ type: "stretch" })}
+          aria-label="Tipo de grid"
+        />
+      </Field>
+      <Field label="Margem" hint={origin(ov?.margin != null)}>
+        <NumberField
+          value={eff.margin}
+          onChange={(n) => setGrid({ margin: n })}
+          min={0}
+          suffix="px"
+          aria-label="Margem"
+        />
+      </Field>
+      <Field label="Gutter" hint={origin(ov?.gutter != null)}>
+        <NumberField
+          value={eff.gutter}
+          onChange={(n) => setGrid({ gutter: n })}
+          min={0}
+          suffix="px"
+          aria-label="Gutter"
+        />
+      </Field>
+    </Section>
+  );
+}
 
 const FIT_OPTS: SelectOption[] = [
   { label: "Fill", value: "fill" },
@@ -80,7 +174,6 @@ export function LayerInspector({ layerId }: { layerId: string }) {
   // Texto livre = coalescido (1 entrada por burst de digitação).
   const setText = (patch: Parameters<typeof s.updateLayerText>[1]) => useEditorStore.getState().updateLayerText(layerId, patch);
   const setStyle = (patch: Parameters<typeof s.updateLayerStyle>[1]) => useEditorStore.getState().updateLayerStyle(layerId, patch);
-  const setBox = (patch: Parameters<typeof s.updateLayerBox>[1]) => useEditorStore.getState().updateLayerBox(layerId, patch);
   const setFont = (patch: Parameters<typeof s.updateLayerFont>[1]) => useEditorStore.getState().updateLayerFont(layerId, patch);
 
   return (
@@ -146,35 +239,29 @@ export function LayerInspector({ layerId }: { layerId: string }) {
       )}
 
       {layer.type === "component" && (
-        <Section title="Layout">
-          <Field label="Colunas">
-            <NumberField value={layer.box?.cols ?? 1} onChange={(n) => setBox({ cols: n })} min={1} max={24} suffix="col" aria-label="Colunas" />
-          </Field>
-          <Field label="Fundo">
-            <SegmentedControl
-              options={[{ value: "dark", label: "Dark" }, { value: "light", label: "Light" }]}
-              value={layer.style?.bgMode ?? "light"}
-              onChange={(v) => setStyle({ bgMode: v as "light" | "dark" })}
-              aria-label="Modo de fundo"
-            />
-          </Field>
-          <Field label="Cor de fundo">
-            <SwatchPicker swatches={COLOR_SWATCHES} value={layer.style?.background ?? ""} onChange={(v) => setStyle({ background: v })} aria-label="Cor de fundo" />
-          </Field>
-        </Section>
+        <>
+          <GridPanel layerId={layerId} />
+          <Section title="Aparência">
+            <Field label="Fundo">
+              <SegmentedControl
+                options={[{ value: "dark", label: "Dark" }, { value: "light", label: "Light" }]}
+                value={layer.style?.bgMode ?? "light"}
+                onChange={(v) => setStyle({ bgMode: v as "light" | "dark" })}
+                aria-label="Modo de fundo"
+              />
+            </Field>
+            <Field label="Cor de fundo">
+              <SwatchPicker swatches={COLOR_SWATCHES} value={layer.style?.background ?? ""} onChange={(v) => setStyle({ background: v })} aria-label="Cor de fundo" />
+            </Field>
+          </Section>
+        </>
       )}
 
       {layer.type === "component" && layer.templateName && (
         <MasterEditor templateName={layer.templateName} />
       )}
 
-      {layer.type === "group" && (
-        <Section title="Layout">
-          <Field label="Colunas">
-            <NumberField value={layer.box?.cols ?? 1} onChange={(n) => setBox({ cols: n })} min={1} max={12} suffix="col" aria-label="Colunas" />
-          </Field>
-        </Section>
-      )}
+      {layer.type === "group" && <GridPanel layerId={layerId} />}
 
       {(layer.type === "image" || layer.type === "video") && (
         <Section title="Mídia">
