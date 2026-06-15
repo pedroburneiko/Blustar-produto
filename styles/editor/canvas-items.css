@@ -1,0 +1,443 @@
+/* Extraído de index.html (linhas 1918-2359) — Fase 2 do refactor. Tokens: ver ds-tokens.css */
+/* Clickable items inside the edit canvas: hover/selected outline. */
+/* Each item's box hugs its text content (so selection/drag is per-character,
+   not the full grid cell). place-self still drives the anchor position. */
+.ds-edit-canvas .am-tpl-thumb > *:not(.ds-grid-overlay) { cursor: pointer; transition: outline-color .12s var(--ease); }
+/* Text items hug their characters; image templates need their original sizing
+   so layout-driven blocks (.tpl-block) keep their flex/grid dimensions. */
+.ds-edit-canvas[data-ds-cat="text"] .am-tpl-thumb > *:not(.ds-grid-overlay) { width: max-content; max-width: 100%; height: max-content; }
+.ds-edit-canvas .am-tpl-thumb > *:hover { outline: 1px dashed var(--bs-cyan); outline-offset: 2px; }
+.ds-edit-canvas .am-tpl-thumb > .ds-item-active { outline: 2px solid var(--bs-blue); outline-offset: 2px; cursor: grab; }
+.ds-edit-canvas .am-tpl-thumb > .ds-item-active.is-dragging { cursor: grabbing; user-select: none; }
+
+/* Column grid overlay — 12 cols by default; cosmetic only, sits above template
+   background but below interactive items. */
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb {
+  --ds-cols: 12;
+  --ds-gap: 16px;
+  --ds-margin: 24px;
+  padding: var(--ds-margin) !important;
+  /* Normalize the template's internal gap to the gutter so its 2/3/4-col
+     layouts naturally line up with our 12-col system (6/4/3 cols each). */
+  gap: var(--ds-gap) !important;
+  position: relative;
+  /* Canvas is the crop frame (Figma-style): clip items that extend past the
+     edge when the canvas height is reduced. */
+  overflow: hidden !important;
+}
+/* Nested wrappers inside image templates (flex columns w/ block+caption) also
+   use the gutter so their internal spacing stays on the grid system. */
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > *:not(.ds-grid-overlay) > *,
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > *:not(.ds-grid-overlay) {
+  /* Don't blow up text-only inline divs; only normalize containers that already
+     declared a gap (display:flex/grid). */
+}
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb [style*="display:flex"][style*="gap"],
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb [style*="display: flex"][style*="gap"] { gap: var(--ds-gap) !important; }
+/* Column overlay: N tinted column blocks separated by a gutter gap. Sits
+   inside the breathing margin and below interactive items. */
+.ds-grid-overlay {
+  position: absolute;
+  inset: var(--ds-margin);
+  display: grid;
+  grid-template-columns: repeat(var(--ds-cols), 1fr);
+  gap: var(--ds-gap);
+  pointer-events: none;
+  z-index: 5;
+}
+.ds-grid-overlay > span { display: block; background: rgba(0, 226, 255, 0.18); border-radius: 2px; }
+/* Margin guides — outline the inner bounds (top/right/bottom/left margins)
+   so the snap targets are visible alongside the column spans. */
+.ds-grid-overlay::before {
+  content: ''; position: absolute; inset: 0;
+  border: 1px solid rgba(0, 226, 255, 0.45);
+  pointer-events: none;
+}
+.ds-edit-canvas .am-tpl-thumb > *:not(.ds-grid-overlay) { position: relative; z-index: 1; }
+/* Text items hug their content so the selection box is tight to the copy,
+   not the full grid cell. Other kinds (media/button) keep their layout box. */
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="text"] { width: fit-content; max-width: 100%; }
+/* "TEXT" label badge on hover/selection — same blue tone as the selection
+   outline, anchored to the top-left of the item box. */
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="text"]:hover::before,
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="text"].ds-item-active::before,
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="image"].ds-item-active::before,
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="video"].ds-item-active::before,
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="button"]:hover::before,
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="button"].ds-item-active::before {
+  position: absolute;
+  top: -22px; left: 0;
+  background: var(--bs-blue);
+  color: var(--bs-white);
+  font: 600 10px/1 var(--font);
+  letter-spacing: .08em;
+  padding: 4px 6px;
+  border-radius: 3px;
+  z-index: 6;
+  pointer-events: none;
+  white-space: nowrap;
+}
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="text"].ds-item-active::before { content: "TEXT"; }
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="image"].ds-item-active::before { content: "FOTO"; }
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="video"].ds-item-active::before { content: "VIDEO"; }
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="button"]:hover::before,
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="button"].ds-item-active::before { content: "BUTTON"; }
+/* Images/videos often fill the canvas edge-to-edge; the parent .am-tpl-thumb
+   clips overflow, so a badge above the item (top: -22px) gets cut off. Pin
+   the badge to the inside of the item's top-left instead. */
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="image"].ds-item-active::before,
+body.ds-tpl-edit .ds-edit-canvas .am-tpl-thumb > [data-ds-item-kind="video"].ds-item-active::before {
+  top: 8px; left: 8px;
+}
+/* Figma-style resize handles — shown on the active image/video item. */
+.ds-resize-handle {
+  position: absolute;
+  width: 9px; height: 9px;
+  background: var(--bs-white);
+  border: 1.5px solid var(--bs-blue);
+  border-radius: 2px;
+  z-index: 7;
+  pointer-events: auto;
+  box-sizing: border-box;
+}
+.ds-resize-handle.h-nw { top: -5px; left: -5px; cursor: nwse-resize; }
+.ds-resize-handle.h-ne { top: -5px; right: -5px; cursor: nesw-resize; }
+.ds-resize-handle.h-sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
+.ds-resize-handle.h-se { bottom: -5px; right: -5px; cursor: nwse-resize; }
+.ds-resize-handle.h-n  { top: -5px; left: calc(50% - 4.5px); cursor: ns-resize; }
+.ds-resize-handle.h-s  { bottom: -5px; left: calc(50% - 4.5px); cursor: ns-resize; }
+.ds-resize-handle.h-w  { top: calc(50% - 4.5px); left: -5px; cursor: ew-resize; }
+.ds-resize-handle.h-e  { top: calc(50% - 4.5px); right: -5px; cursor: ew-resize; }
+/* Image mask edit mode (Figma-style): double-click a photo to enter mask edit.
+   The .tpl-block stays put as the CROP FRAME (dashed cyan outline). Handles
+   move onto the IMAGE itself (which can extend past the frame). */
+body.ds-img-mask-edit .ds-edit-canvas .tpl-block.ds-mask-target {
+  outline: 1.5px dashed var(--bs-cyan);
+  outline-offset: 0;
+  background-color: transparent !important;
+  background-image: none !important;
+  overflow: visible !important; /* let the image extend past the frame */
+}
+/* Hide the frame's own resize handles while we're editing the image inside. */
+body.ds-img-mask-edit .ds-edit-canvas .tpl-block.ds-mask-target > .ds-resize-handle { display: none !important; }
+.ds-mask-img-wrap {
+  position: absolute;
+  z-index: 5;
+  cursor: grab;
+  user-select: none;
+  /* solid outline so the user clearly sees the image's bounds (Figma-style). */
+  outline: 2px solid var(--bs-blue);
+}
+.ds-mask-img-wrap.is-panning { cursor: grabbing; }
+.ds-mask-img-wrap > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.ds-mask-img-wrap > .ds-resize-handle { z-index: 7; }
+/* Fill / Fit / Crop / Center mode buttons in the right inspector. */
+.gr-imgfit-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; flex: 1; }
+.gr-imgfit-btn {
+  appearance: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font: 600 var(--type-s-size)/1 var(--font);
+  padding: 6px 0;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background .15s var(--ease), color .15s var(--ease), border-color .15s var(--ease);
+}
+.gr-imgfit-btn:hover { color: var(--text); border-color: var(--text-3); }
+.gr-imgfit-btn.is-active {
+  background: var(--bs-cyan);
+  color: var(--bs-navy);
+  border-color: var(--bs-cyan);
+}
+/* Image masks in the edit canvas show no fallback color: empty areas of the
+   mask (e.g. after Fit, or after panning) are transparent so the canvas
+   behind shows through. */
+body.ds-tpl-edit .ds-edit-canvas .tpl-block[data-ds-item-kind="image"] {
+  background-color: transparent !important;
+}
+
+/* Right inspector: Item panel (margin / corner radius / anchor).
+   Uses the parent .grl-body horizontal padding; each gr-item-group renders
+   as its own section with a top divider for visual rhythm consistent with
+   the Cor section above it. */
+.gr-item-insp { display: none; padding: 0; }
+body.ds-item-selected .guide-right.component-mode .gr-item-insp { display: block; }
+.gr-item-insp .gr-item-group {
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+}
+.gr-item-insp .gr-item-group:first-child { padding-top: 16px; }
+.gr-item-insp .gre-section { margin: 0; }
+.gr-item-insp .gre-section + .gre-section { padding-top: 0; border-top: 0; }
+.gr-item-insp .gre-row { margin-bottom: 14px; }
+.gr-item-insp .gre-row:last-child { margin-bottom: 0; }
+.gr-item-insp .gre-label { margin-bottom: 14px; }
+/* Fechamento visual: linha abaixo da última seção do inspector de item. */
+.gr-item-insp .gr-item-group:last-child { border-bottom: 1px solid var(--border); }
+/* Alinhar o título "Layout" do painel direito com "Design System" do sidebar
+   esquerdo — mesmo padding-top e tipografia (sb size, weight 700). */
+body.ds-tpl-edit .gr-comp-insp { padding-top: 0 !important; }
+body.ds-tpl-edit .gr-comp-insp .gre-head { padding: 24px 16px 8px; border-bottom: 0; }
+body.ds-tpl-edit .gr-comp-insp .gre-head h3 {
+  font: 700 var(--type-sb-size)/1 var(--font);
+  color: var(--text);
+}
+/* Aumentar respiro entre seções (Cor / Type / Position). */
+body.ds-tpl-edit .gr-comp-customize { padding: 20px 0; }
+.gr-item-label {
+  font: 500 10px/1.4 var(--font); text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text-3); margin: 10px 0 8px;
+}
+.gr-item-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
+.gr-item-num {
+  width: 96px; height: 28px; padding: 0 10px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm);
+  color: var(--text); font: inherit; text-align: right;
+}
+.gr-item-num:focus { outline: none; border-color: var(--bs-cyan); }
+.gr-anchor-wrap { position: relative; }
+.gr-anchor-btn {
+  width: 36px; height: 36px; border: 1px solid var(--border); border-radius: var(--r-sm);
+  background: var(--surface); display: inline-grid; place-items: center; cursor: pointer; padding: 0;
+}
+.gr-anchor-btn:hover { border-color: var(--bs-cyan); }
+.gr-anchor-grid {
+  display: grid; grid-template-columns: repeat(3, 4px); grid-template-rows: repeat(3, 4px); gap: 5px;
+}
+.gr-anchor-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--text-3); }
+.gr-anchor-dot.active { background: var(--bs-blue); }
+.gr-anchor-menu {
+  position: fixed; z-index: 9999;
+  background: var(--popover, var(--surface)); border: 1px solid var(--border); border-radius: var(--r-md);
+  min-width: 200px; padding: 4px; display: none; flex-direction: column;
+  box-shadow: 0 12px 32px rgba(0,0,0,.45);
+  max-height: calc(100vh - 24px); overflow: auto;
+}
+.gr-anchor-menu.open { display: flex; }
+.gr-anchor-opt {
+  display: grid; grid-template-columns: 28px 1fr; gap: 8px; align-items: center;
+  padding: 8px; border-radius: var(--r-sm); cursor: pointer; color: var(--text);
+  font: inherit; background: transparent; border: 0; text-align: left;
+}
+.gr-anchor-opt:hover, .gr-anchor-opt.active { background: var(--hover); }
+.gr-anchor-opt .gr-anchor-grid { transform: scale(.8); transform-origin: center; }
+/* Variante (button) menu: single-column list, mirrors the Type/Estilo
+   dropdown look — no icon column, no wrapping. */
+#grc-item-btnvar-menu { min-width: 220px; }
+#grc-item-btnvar-menu .gr-anchor-opt {
+  grid-template-columns: 1fr;
+  padding: 10px 12px;
+  white-space: nowrap;
+}
+
+/* Customizar — type/style/color editor (visible while a component is selected). */
+.grc-color {
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 1px solid var(--border); cursor: pointer; padding: 0;
+  transition: transform .1s var(--ease);
+}
+.grc-color:hover { transform: scale(1.1); }
+.grc-color.active { outline: 2px solid var(--bs-blue); outline-offset: 2px; }
+
+/* Advanced (editing-state) sections live inside the comp inspector. */
+.gr-comp-advanced { display: none; }
+body.editing-component .gr-comp-advanced { display: block; }
+body.editing-component .gr-comp-btns { display: none; }
+
+/* Save / Undo buttons in the component-edit header. */
+.gr-comp-head-actions { display: inline-flex; align-items: center; gap: 6px; }
+.gr-comp-head-btn {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text);
+  font: 600 12px/1 var(--font);
+  padding: 6px 12px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 28px;
+  transition: background .15s var(--ease), border-color .15s var(--ease);
+}
+.gr-comp-head-btn:hover { background: var(--hover); border-color: var(--border-strong); }
+.gr-comp-head-btn svg { width: 14px; height: 14px; }
+.gr-comp-head-btn.primary { background: var(--bs-cyan); border-color: var(--bs-cyan); color: var(--bs-ink); }
+.gr-comp-head-btn.primary:hover { background: var(--bs-cyan); filter: brightness(1.05); }
+.gr-comp-head-actions .gr-comp-head-btn,
+.gr-comp-head-actions .gre-close { display: none; }
+body.editing-component .gr-comp-head-actions .gr-comp-head-btn { display: inline-flex; }
+.gr-comp-head-actions .gre-close { display: inline-flex; }
+body.editing-component .gr-comp-head-actions .gre-close { display: none; }
+
+.grl-row-toggle { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
+.grl-toggle {
+  width: 32px; height: 18px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  position: relative; cursor: pointer;
+  transition: background .15s var(--ease);
+}
+.grl-toggle-dot { position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--text); transition: transform .15s var(--ease); }
+.grl-toggle[aria-pressed="true"] { background: var(--bs-cyan); border-color: var(--bs-cyan); }
+.grl-toggle[aria-pressed="true"] .grl-toggle-dot { transform: translateX(14px); background: var(--bs-ink); }
+
+.grl-seg { display: inline-flex; gap: 2px; background: var(--surface); border-radius: var(--r-sm); padding: 2px; }
+.grl-seg-btn {
+  background: transparent; border: 0; color: var(--text-3);
+  font: 500 12px/1 var(--font); padding: 5px 10px; border-radius: 4px; cursor: pointer;
+}
+.grl-seg-btn.active { background: var(--surface-2); color: var(--text); }
+.grl-suffix { color: var(--text-3); font: 500 12px/1 var(--font); padding: 0 8px; }
+
+/* Text inspector — for text elements */
+.gr-text-insp { display: none; flex: 1; flex-direction: column; }
+.guide-right.text-mode .gr-tabs,
+.guide-right.text-mode .gr-search,
+.guide-right.text-mode .gr-body,
+.guide-right.text-mode .gr-foot,
+.guide-right.text-mode .gr-edit,
+.guide-right.text-mode .gr-layout { display: none; }
+.guide-right.text-mode .gr-text-insp { display: flex; }
+
+/* Video play overlay — shown when autoplay is off and video is paused */
+.video-mod { position: relative; }
+.video-mod-play {
+  position: absolute; inset: 0; display: none;
+  align-items: center; justify-content: center;
+  background: var(--overlay-light); cursor: pointer;
+  border: 0; padding: 0; color: var(--bs-white);
+  transition: background .2s var(--ease);
+  z-index: var(--z-base);
+}
+.video-mod-play:hover { background: var(--overlay-md); }
+.video-mod-play svg {
+  width: 64px; height: 64px;
+  background: var(--overlay-dark); border-radius: 50%;
+  padding: 16px; backdrop-filter: blur(4px);
+  transition: transform .15s var(--ease);
+}
+.video-mod-play:hover svg { transform: scale(1.08); }
+.video-mod[data-show-play="true"] .video-mod-play { display: flex; }
+body.preview-mode .video-mod-play { background: transparent; }
+
+/* Spacing inspector — for .spacer-block */
+.gr-space-insp { display: none; flex: 1; flex-direction: column; }
+.guide-right.spacing-mode .gr-tabs,
+.guide-right.spacing-mode .gr-search,
+.guide-right.spacing-mode .gr-body,
+.guide-right.spacing-mode .gr-foot,
+.guide-right.spacing-mode .gr-edit,
+.guide-right.spacing-mode .gr-layout,
+.guide-right.spacing-mode .gr-text-insp,
+.guide-right.spacing-mode .gr-comp-insp,
+.guide-right.spacing-mode .gr-color-insp,
+.guide-right.spacing-mode .gr-video-insp { display: none; }
+.guide-right.spacing-mode .gr-space-insp { display: flex; }
+.grs-tokens { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.grs-token {
+  background: var(--surface); border: 1px solid var(--border); color: var(--text);
+  padding: 10px 8px; border-radius: var(--r-md); cursor: pointer;
+  font: var(--type-sb-weight) var(--type-sb-size)/1 var(--font); letter-spacing: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  transition: background .15s var(--ease), border-color .15s var(--ease);
+}
+.grs-token:hover { background: var(--hover); }
+.grs-token.active { border-color: var(--bs-blue); background: var(--surface-2); }
+.grs-token-bar { width: 100%; background: var(--text-3); border-radius: 2px; opacity: 0.55; }
+.grs-token.active .grs-token-bar { background: var(--bs-blue); opacity: 1; }
+.grs-token-val { font-size: var(--type-s-size); color: var(--text-2); }
+.grs-token.active .grs-token-val { color: var(--text); }
+
+/* Video inspector — for .video-mod */
+.gr-video-insp { display: none; flex: 1; flex-direction: column; }
+.guide-right.video-mode .gr-tabs,
+.guide-right.video-mode .gr-search,
+.guide-right.video-mode .gr-body,
+.guide-right.video-mode .gr-foot,
+.guide-right.video-mode .gr-edit,
+.guide-right.video-mode .gr-layout,
+.guide-right.video-mode .gr-text-insp,
+.guide-right.video-mode .gr-comp-insp,
+.guide-right.video-mode .gr-color-insp { display: none; }
+.guide-right.video-mode .gr-video-insp { display: flex; }
+.gr-photo-insp { display: none; flex: 1; flex-direction: column; }
+.guide-right.photo-mode .gr-tabs,
+.guide-right.photo-mode .gr-search,
+.guide-right.photo-mode .gr-body,
+.guide-right.photo-mode .gr-foot,
+.guide-right.photo-mode .gr-edit,
+.guide-right.photo-mode .gr-layout,
+.guide-right.photo-mode .gr-text-insp,
+.guide-right.photo-mode .gr-comp-insp,
+.guide-right.photo-mode .gr-video-insp,
+.guide-right.photo-mode .gr-color-insp { display: none; }
+.guide-right.photo-mode .gr-photo-insp { display: flex; }
+.grv-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px;
+}
+.grv-left { display: inline-flex; align-items: center; gap: 10px; color: var(--text); font: var(--type-m-weight) var(--type-m-size)/1 var(--font); letter-spacing: 0; }
+.grv-check {
+  width: 18px; height: 18px; border-radius: 4px; border: 1px solid var(--border);
+  display: inline-grid; place-items: center; cursor: pointer; background: var(--surface);
+  flex-shrink: 0;
+}
+.grv-check[aria-pressed="true"] { background: var(--bs-blue); border-color: var(--bs-blue); }
+.grv-check svg { width: 12px; height: 12px; color: #fff; opacity: 0; }
+.grv-check[aria-pressed="true"] svg { opacity: 1; }
+.grv-actions { display: inline-flex; align-items: center; gap: 4px; }
+.grv-iconbtn {
+  width: 28px; height: 28px; border-radius: var(--r-sm); border: 1px solid transparent;
+  background: transparent; color: var(--text-2); display: inline-grid; place-items: center;
+  cursor: pointer; transition: background .15s var(--ease), color .15s var(--ease);
+}
+.grv-iconbtn:hover { background: var(--hover); color: var(--text); }
+.grv-iconbtn[aria-pressed="true"] { color: var(--bs-blue); }
+.grv-iconbtn svg { width: 16px; height: 16px; }
+.grv-gallery { display: flex; flex-direction: column; gap: 12px; }
+/* Botão "Subir novo" — sozinho acima dos thumbs, 100% token-driven */
+.grv-upload-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; box-sizing: border-box;
+  background: var(--surface-2); border: 1px solid var(--border-strong);
+  color: var(--text);
+  font: var(--type-sb-weight) var(--type-sb-size)/1 var(--font);
+  letter-spacing: var(--type-sb-tracking);
+  padding: 10px 14px; border-radius: var(--r-md); cursor: pointer;
+  transition: background .12s var(--ease), border-color .12s var(--ease);
+}
+.grv-upload-btn:hover { background: var(--hover); border-color: var(--border-strong); color: var(--text); }
+/* Grade de thumbs em 2 colunas */
+.grv-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.grv-card { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.grv-gtile { width: 100%; aspect-ratio: 16/9; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-2) center/cover no-repeat; cursor: pointer; padding: 0; color: var(--text-3); transition: border-color .12s var(--ease), transform .12s var(--ease); }
+.grv-gtile:hover { border-color: var(--bs-cyan); }
+.grv-cap { color: var(--text-3); font: var(--type-xs-weight) var(--type-xs-size)/1.2 var(--font); letter-spacing: var(--type-xs-tracking); text-transform: uppercase; }
+/* Ações ao passar o mouse num thumb da galeria (vídeo/foto): aplicar no bloco
+   (replace) ou tirar do bloco (excluir). Ficam ocultas até o hover do card. */
+.grv-tile-wrap { position: relative; }
+.grv-card-actions {
+  position: absolute; top: 6px; right: 6px;
+  display: flex; gap: 4px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .12s var(--ease);
+}
+.grv-tile-wrap:hover .grv-card-actions { opacity: 1; pointer-events: auto; }
+.grv-card-actions button {
+  width: 26px; height: 26px; display: grid; place-items: center;
+  background: var(--overlay-md, rgba(6,24,51,.72)); color: var(--bs-white);
+  border: 1px solid rgba(255,255,255,.16); border-radius: var(--r-sm);
+  cursor: pointer; padding: 0; backdrop-filter: blur(4px);
+  transition: background .12s var(--ease), color .12s var(--ease), border-color .12s var(--ease);
+}
+.grv-card-actions button:hover { background: var(--bs-cyan); color: var(--bs-navy); border-color: var(--bs-cyan); }
+.grv-card-actions .grv-del:hover { background: var(--status-alert, #e5484d); color: #fff; border-color: var(--status-alert, #e5484d); }
+.grv-ghint { grid-column: 1 / -1; color: var(--text-3); font: 500 var(--type-xs-size)/1.4 var(--font); }
+

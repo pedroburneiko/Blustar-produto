@@ -1,0 +1,90 @@
+/* Extraído de index.html (linhas 355-443) — Fase 2 do refactor. Tokens: ver ds-tokens.css */
+/* =========================================================================
+   MAIN (router outlet)
+   ========================================================================= */
+#main {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bg);
+}
+.world { display: none; }
+.world.active { display: block; }
+.world-inner {
+  max-width: none;
+  margin: 0 auto;
+  padding: 48px 60px 96px;
+}
+@media (max-width: 900px) {
+  .world-inner { padding: 32px 24px 64px; }
+}
+
+/* Back button — used in nested worlds (Guide) */
+.back-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 36px;
+  padding: 0 16px 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  color: var(--text-2);
+  font-size: var(--type-sb-size);
+  font-weight: var(--type-sb-weight);
+  margin-bottom: 24px;
+  transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease);
+}
+.back-btn:hover {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+.back-btn svg { width: 14px; height: 14px; }
+
+/* World header */
+.world-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.world-eyebrow {
+  font-family: var(--type-s-family);
+  font-size: var(--type-s-size);
+  font-weight: var(--type-s-weight);
+  line-height: var(--type-s-line);
+  letter-spacing: var(--type-s-tracking);
+  text-transform: uppercase;
+  color: var(--bs-cyan);
+  margin-bottom: 12px;
+}
+.world-title {
+  font-family: var(--type-super-family);
+  font-weight: var(--type-super-weight);
+  font-size: var(--type-super-size);
+  line-height: var(--type-super-line);
+  letter-spacing: var(--type-super-tracking);
+}
+.world-sub {
+  font-family: var(--type-m-family);
+  font-size: var(--type-m-size);
+  font-weight: var(--type-m-weight);
+  line-height: var(--type-m-line);
+  letter-spacing: var(--type-m-tracking);
+  color: var(--text-2);
+  margin-top: 14px;
+  max-width: none;
+}
+
+/* Generic card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 28px;
+  transition: background .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease);
+}
+.card.interactive { cursor: pointer; }
+.card.interactive:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+}
+

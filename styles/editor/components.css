@@ -1,0 +1,151 @@
+/* Extraído de index.html (linhas 1317-1466) — Fase 2 do refactor. Tokens: ver ds-tokens.css */
+/* Components (templates inserted via Add module) — Figma-style instances. */
+.praia-component {
+  position: relative;
+  outline: 1px solid transparent;
+  outline-offset: 4px;
+  border-radius: 2px;
+  transition: outline-color .15s var(--ease);
+}
+[data-world="guide"]:not(.editing-component) .praia-component:hover,
+[data-world="home"]:not(.editing-component) .praia-component:hover {
+  outline-color: var(--accent-select);
+}
+.praia-component.component-selected {
+  outline: 1.5px solid var(--accent-select);
+}
+/* When editing a component's internals, dim the outline */
+body.editing-component .praia-component.component-selected {
+  outline-color: rgba(162, 89, 255, 0.4);
+  outline-style: dashed;
+}
+/* Block child interactions when component is selected but not being edited */
+.praia-component.component-selected:not(.component-editing) > * {
+  pointer-events: none;
+}
+.praia-component.component-editing > * { pointer-events: auto; }
+body.preview-mode .praia-component { outline: 0 !important; }
+body.preview-mode .praia-component > * { pointer-events: auto !important; }
+
+/* Style utility classes — apply tokens; editing the token (Type editor)
+   updates every element using these classes across all pages. */
+.tk-h0, .tk-super, .tk-xl, .tk-l, .tk-mb, .tk-m, .tk-sb, .tk-s, .tk-xs { letter-spacing: var(--tk-track, 0); }
+.tk-h0 {
+  font-family: var(--type-h0-family) !important;
+  font-weight: var(--type-h0-weight) !important;
+  font-size: var(--type-h0-size) !important;
+  line-height: var(--type-h0-line) !important;
+  letter-spacing: var(--type-h0-tracking) !important;
+}
+.tk-super {
+  font-family: var(--type-super-family) !important;
+  font-weight: var(--type-super-weight) !important;
+  font-size: var(--type-super-size) !important;
+  line-height: var(--type-super-line) !important;
+  letter-spacing: var(--type-super-tracking) !important;
+}
+.tk-xl {
+  font-family: var(--type-xl-family) !important;
+  font-weight: var(--type-xl-weight) !important;
+  font-size: var(--type-xl-size) !important;
+  line-height: var(--type-xl-line) !important;
+  letter-spacing: var(--type-xl-tracking) !important;
+}
+.tk-l {
+  font-family: var(--type-l-family) !important;
+  font-weight: var(--type-l-weight) !important;
+  font-size: var(--type-l-size) !important;
+  line-height: var(--type-l-line) !important;
+  letter-spacing: var(--type-l-tracking) !important;
+}
+.tk-mb {
+  font-family: var(--type-mb-family) !important;
+  font-weight: var(--type-mb-weight) !important;
+  font-size: var(--type-mb-size) !important;
+  line-height: var(--type-mb-line) !important;
+  letter-spacing: var(--type-mb-tracking) !important;
+}
+.tk-m {
+  font-family: var(--type-m-family) !important;
+  font-weight: var(--type-m-weight) !important;
+  font-size: var(--type-m-size) !important;
+  line-height: var(--type-m-line) !important;
+  letter-spacing: var(--type-m-tracking) !important;
+}
+.tk-sb {
+  font-family: var(--type-sb-family) !important;
+  font-weight: var(--type-sb-weight) !important;
+  font-size: var(--type-sb-size) !important;
+  line-height: var(--type-sb-line) !important;
+  letter-spacing: var(--type-sb-tracking) !important;
+  text-transform: uppercase !important;
+}
+.tk-s {
+  font-family: var(--type-s-family) !important;
+  font-weight: var(--type-s-weight) !important;
+  font-size: var(--type-s-size) !important;
+  line-height: var(--type-s-line) !important;
+  letter-spacing: var(--type-s-tracking) !important;
+}
+.tk-xs {
+  font-family: var(--type-xs-family) !important;
+  font-weight: var(--type-xs-weight) !important;
+  font-size: var(--type-xs-size) !important;
+  line-height: var(--type-xs-line) !important;
+  letter-spacing: var(--type-xs-tracking) !important;
+}
+/* Color utility classes — bound to brand color tokens */
+.cl-navy   { color: var(--bs-navy)   !important; }
+.cl-cyan   { color: var(--bs-cyan)   !important; }
+.cl-blue   { color: var(--bs-blue)   !important; }
+.cl-white  { color: var(--bs-white)  !important; }
+.cl-text   { color: var(--text)      !important; }
+.cl-text-2 { color: var(--text-2)    !important; }
+.cl-text-3 { color: var(--text-3)    !important; }
+
+/* Button background color classes — para botões a "cor" é o fundo, não o texto.
+   Cada fundo já leva o texto de contraste correto. */
+.clbg-cyan  { background: var(--bs-cyan)  !important; border-color: var(--bs-cyan)  !important; color: var(--bs-navy)  !important; }
+.clbg-navy  { background: var(--bs-navy)  !important; border-color: var(--bs-navy)  !important; color: var(--bs-white) !important; }
+.clbg-blue  { background: var(--bs-blue)  !important; border-color: var(--bs-blue)  !important; color: var(--bs-white) !important; }
+.clbg-white { background: var(--bs-white) !important; border-color: var(--bs-white) !important; color: var(--bs-navy)  !important; }
+
+/* Token / color popover */
+.tk-popover {
+  position: fixed;
+  z-index: var(--z-toast);
+  min-width: 220px;
+  background: var(--popover);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  padding: 6px;
+  display: none;
+}
+.tk-popover.open { display: block; }
+.tk-popover button {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; text-align: left;
+  background: transparent; border: 0;
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  font: 500 13px/1.1 var(--font);
+}
+.tk-popover button:hover { background: var(--hover); }
+.tk-popover button.active { background: var(--surface-2); }
+.tk-popover .tk-prev {
+  flex: 0 0 28px;
+  display: inline-grid; place-items: center;
+  height: 22px;
+  font-family: var(--font);
+  font-weight: 500;
+  color: var(--text);
+}
+.tk-popover .cl-swatch {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.1);
+  flex: 0 0 18px;
+}
+

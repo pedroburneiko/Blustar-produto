@@ -1,0 +1,57 @@
+/* Extraído de index.html (linhas 599-654) — Fase 2 do refactor. Tokens: ver ds-tokens.css */
+/* =========================================================================
+   GUIDE WORLD
+   ========================================================================= */
+.guide-layout {
+  display: block;
+}
+/* 60px breathing after the pages menu (which ends ~264px from the world edge:
+   64px icon rail + 200px pages rail), matching the gap before the right inspector. */
+[data-world="guide"] .world-inner { padding-left: 248px; padding-right: 300px; }
+[data-world="home"] .world-inner { padding-left: 60px; padding-right: 300px; }
+[data-world="home"] .guide-side { display: none; }
+.gt-select {
+  display: flex; align-items: center; gap: 8px;
+  height: 36px; padding: 0 14px;
+  border-radius: var(--r-md);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: var(--type-sb-size);
+  font-weight: var(--type-sb-weight);
+  cursor: pointer;
+  transition: background .15s var(--ease), border-color .15s var(--ease), color .15s var(--ease);
+}
+.gt-select:hover { background: var(--hover); border-color: var(--border); color: var(--text); }
+.gt-select svg { width: 14px; height: 14px; stroke-width: 1.6; color: currentColor; }
+.gt-select .gt-chev { width: 12px; height: 12px; color: var(--text-3); }
+.gt-iconbtn {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px;
+  border-radius: var(--r-md);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background .15s var(--ease), border-color .15s var(--ease), color .15s var(--ease);
+}
+.gt-iconbtn:hover { background: var(--hover); border-color: var(--border); color: var(--text); }
+.gt-iconbtn svg { width: 16px; height: 16px; stroke-width: 1.6; }
+.gt-iconbtn.gt-labeled {
+  width: auto; padding: 0 14px; gap: 8px;
+  font-family: var(--font); font-weight: var(--type-sb-weight); font-size: var(--type-sb-size);
+  letter-spacing: var(--type-sb-tracking);
+}
+.gt-iconbtn.active {
+  background: var(--bs-cyan);
+  border-color: var(--bs-cyan);
+  color: var(--bs-navy);
+}
+.gt-iconbtn.active:hover {
+  background: var(--bs-cyan);
+  border-color: var(--bs-cyan);
+  color: var(--bs-navy);
+  filter: brightness(1.05);
+}
+

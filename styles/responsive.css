@@ -1,0 +1,21 @@
+/* Extraído de index.html (linhas 4588-4607) — Fase 2 do refactor. Tokens: ver ds-tokens.css */
+/* =========================================================================
+   Responsive
+   ========================================================================= */
+@media (max-width: 1024px) {
+  .home-hero { grid-template-columns: 1fr; }
+  .home-grid { grid-template-columns: repeat(2, 1fr); }
+  .guide-layout { grid-template-columns: 1fr; }
+  .color-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+  #sidebar { display: none; }
+  .world-inner { padding: 32px 20px 64px; }
+  .home-grid { grid-template-columns: 1fr; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--hover); }

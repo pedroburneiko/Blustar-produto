@@ -1,0 +1,344 @@
+/* Extraído de index.html (linhas 3845-4187) — Fase 2 do refactor. Tokens: ver ds-tokens.css */
+/* Icon editor */
+.gr-icon-insp { display: none; flex: 1; flex-direction: column; min-height: 0; }
+.guide-right.icon-mode .gr-tabs,
+.guide-right.icon-mode .gr-search,
+.guide-right.icon-mode .gr-body,
+.guide-right.icon-mode .gr-foot,
+.guide-right.icon-mode .gr-edit,
+.guide-right.icon-mode .gr-edit-color,
+.guide-right.icon-mode .gr-layout,
+.guide-right.icon-mode .gr-text-insp,
+.guide-right.icon-mode .gr-color-insp,
+.guide-right.icon-mode .gr-space-insp,
+.guide-right.icon-mode .gr-video-insp,
+.guide-right.icon-mode .gr-themepal-insp,
+.guide-right.icon-mode .gr-client-insp,
+.guide-right.icon-mode .gr-button-insp,
+.guide-right.icon-mode .gr-history,
+.guide-right.icon-mode .gr-comp-insp { display: none; }
+.guide-right.icon-mode .gr-icon-insp { display: flex; }
+.gri-preview {
+  width: 100%; aspect-ratio: 1.6;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text);
+}
+.gri-preview svg { width: 36px; height: 36px; }
+.gri-svg {
+  width: 100%; box-sizing: border-box;
+  min-height: 140px; resize: vertical;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm);
+  color: var(--text);
+  font: 12px/1.4 'Menlo', monospace;
+  padding: 10px;
+}
+.gri-svg:focus { outline: 2px solid var(--bs-cyan); outline-offset: 1px; }
+/* .gri-actions visuals come from the shared rule above. */
+
+/* Material glyph picker (icon editor) */
+.gri-glyph-preview {
+  display: grid; place-items: center;
+  height: 96px; border-radius: var(--r-md);
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text);
+}
+.gri-glyph-input {
+  width: 100%; box-sizing: border-box;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-sm); color: var(--text);
+  font: 500 13px/1.2 var(--font); padding: 9px 11px;
+}
+.gri-glyph-input:focus { outline: 2px solid var(--bs-cyan); outline-offset: 1px; }
+.gri-browse-link {
+  display: inline-block; margin-top: 8px;
+  font: 500 11px/1.2 var(--font); color: var(--text-3);
+  text-decoration: none;
+}
+.gri-browse-link:hover { color: var(--bs-cyan); }
+.gri-fill-row {
+  display: flex; align-items: center; gap: 8px;
+  font: 500 12px/1.2 var(--font); color: var(--text-2); cursor: pointer;
+}
+
+/* Icon file drop zone — wraps the preview; hover reveals "Trocar SVG" overlay */
+.gri-drop-preview {
+  position: relative; display: block; cursor: pointer;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  transition: outline-color .12s var(--ease);
+  outline: 1px dashed transparent; outline-offset: -1px;
+}
+.gri-drop-preview:hover, .gri-drop-preview.is-dragging {
+  outline-color: var(--bs-cyan);
+}
+.gri-drop-preview .gri-preview {
+  margin: 0; display: flex;
+}
+.gri-hover-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(2px);
+  color: var(--text);
+  font: 12px/1 var(--font); font-weight: 600;
+  opacity: 0; pointer-events: none;
+  transition: opacity .12s var(--ease);
+}
+.gri-drop-preview:hover .gri-hover-overlay,
+.gri-drop-preview.is-dragging .gri-hover-overlay { opacity: 1; }
+.gri-hover-overlay svg { width: 22px; height: 22px; }
+.gri-filename {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 8px;
+  font: 11px/1 var(--font); color: var(--text-3);
+  word-break: break-all;
+}
+.gri-empty { font: 11px/1.3 var(--font); color: var(--text-3); }
+.gri-preview { margin-bottom: 0; }
+
+/* Design System buttons (used both inside DS canvas and the icon inspector) */
+.ds-btn {
+  height: 32px; padding: 0 16px;
+  border-radius: var(--r-full);
+  font: var(--type-s-weight) var(--type-s-size)/1 var(--font);
+  letter-spacing: 0;
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  transition: background .15s var(--ease), border-color .15s var(--ease), color .15s var(--ease), opacity .15s var(--ease);
+}
+.ds-btn-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+.ds-btn-primary:hover { background: var(--text-2); border-color: var(--text-2); }
+.ds-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.ds-btn-secondary { background: transparent; color: var(--text); border-color: var(--border-strong); }
+.ds-btn-secondary:hover { background: var(--hover); }
+.ds-btn-ghost { background: transparent; color: var(--text-2); border-color: transparent; }
+.ds-btn-ghost:hover { background: var(--hover); color: var(--text); }
+.ds-btn-icon {
+  width: 32px; height: 32px; padding: 0;
+  background: transparent; color: var(--text-2);
+  border-color: transparent;
+}
+.ds-btn-icon:hover { background: var(--hover); color: var(--text); }
+/* Botão de CONTEÚDO da marca (usado nos templates). 100% token-driven —
+   cor, raio e tipografia vêm do DS; editável na seção "Botões". */
+.bs-cta {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+  background: var(--bs-cyan); color: var(--bs-navy); border: 0;
+  padding: 12px 20px; border-radius: var(--r-full, 999px);
+  font: var(--type-s-weight, 500) var(--type-sb-size)/1 var(--font);
+  letter-spacing: var(--type-sb-tracking, 0); text-transform: none;
+  transition: opacity .15s var(--ease);
+}
+/* Botões nunca usam peso bold — neutraliza o único tipo bold (Caption Bold)
+   caso seja aplicado a um botão via inspector. */
+.bs-cta.tk-sb { font-weight: var(--type-s-weight, 500) !important; }
+.bs-cta:hover { opacity: 0.9; }
+.bs-cta svg { width: 14px; height: 14px; flex: 0 0 auto; }
+.ds-icon-tile:hover { background: var(--hover) !important; border-color: var(--border-strong) !important; }
+.ds-icon-tile.editing { background: var(--surface-2) !important; border-color: var(--text-2) !important; }
+
+/* Botões — tile grid (click to edit) */
+.ds-btn-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.ds-btn-tile {
+  display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 0; cursor: pointer; text-align: center;
+  font-family: var(--font); color: var(--text);
+  overflow: hidden;
+  transition: background .12s var(--ease), border-color .12s var(--ease);
+}
+.ds-btn-tile:hover { background: var(--hover); border-color: var(--border-strong); }
+.ds-btn-tile.editing { background: var(--surface-2); border-color: var(--text-2); }
+.ds-btn-tile-stage {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 96px;
+  padding: 24px 16px;
+  background: var(--bg);
+}
+.ds-btn-tile-stage > * { pointer-events: none; }
+.ds-btn-tile-label {
+  font: 12px/1 var(--font); color: var(--text-3);
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+  letter-spacing: 0;
+}
+/* Legacy row class kept harmless in case any old reference renders */
+.ds-btn-row { display: none; }
+.gr-button-insp { display: none; flex: 1; flex-direction: column; min-height: 0; }
+.guide-right.button-mode .gr-tabs,
+.guide-right.button-mode .gr-search,
+.guide-right.button-mode .gr-body,
+.guide-right.button-mode .gr-foot,
+.guide-right.button-mode .gr-edit,
+.guide-right.button-mode .gr-edit-color,
+.guide-right.button-mode .gr-layout,
+.guide-right.button-mode .gr-text-insp,
+.guide-right.button-mode .gr-color-insp,
+.guide-right.button-mode .gr-space-insp,
+.guide-right.button-mode .gr-video-insp,
+.guide-right.button-mode .gr-themepal-insp,
+.guide-right.button-mode .gr-icon-insp,
+.guide-right.button-mode .gr-client-insp,
+.guide-right.button-mode .gr-history,
+.guide-right.button-mode .gr-comp-insp { display: none; }
+.guide-right.button-mode .gr-button-insp { display: flex; }
+.grb-preview {
+  width: 100%; padding: 22px 16px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 80px; flex-wrap: wrap; gap: 8px;
+}
+.grb-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.grb-field label { font: 11px/1 var(--font); color: var(--text-3); }
+.grb-field-grid { display: grid; grid-template-columns: 1fr 110px; gap: 12px; align-items: center; margin-bottom: 8px; }
+.grb-field-grid label { margin: 0; }
+.grb-select, .grb-num input {
+  width: 100%; box-sizing: border-box;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm);
+  color: var(--text); font: 12px/1 var(--font);
+  padding: 7px 10px;
+}
+.grb-select:focus, .grb-num input:focus {
+  outline: 2px solid var(--bs-cyan); outline-offset: 1px; border-color: transparent;
+}
+.grb-num { position: relative; display: inline-flex; align-items: center; }
+.grb-suffix { position: absolute; right: 10px; font: 11px/1 var(--font); color: var(--text-3); pointer-events: none; }
+.grb-num input { padding-right: 28px; }
+
+/* Inline swatch grid — same pattern as the Theme palette template inspector.
+   Always visible (no popover), click a swatch to select. */
+.grb-token-current {
+  font: 11px/1 'Menlo', monospace;
+  color: var(--text-3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 120px;
+}
+.grb-color-trigger { width: 100%; justify-content: flex-start !important; }
+.grb-color-trigger .grb-color-dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 1px solid var(--border); background: transparent;
+  flex-shrink: 0;
+}
+.grb-color-trigger .grb-color-name { flex: 1; text-align: left; color: var(--text); }
+.grb-color-trigger svg { width: 10px; height: 10px; color: var(--text-3); margin-left: auto; }
+.grb-color-pop { padding: 10px; min-width: 220px; }
+.grb-color-pop .grb-swatch-grid { padding: 0; border: 0; }
+
+.grb-swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(24px, 1fr));
+  gap: 6px;
+}
+.grb-swatch-grid .gswatch {
+  position: relative;
+  width: 100%; aspect-ratio: 1;
+  background: var(--grb-c, transparent);
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  cursor: pointer; padding: 0;
+  transition: transform .12s var(--ease);
+}
+.grb-swatch-grid .gswatch:hover { transform: scale(1.1); }
+.grb-swatch-grid .gswatch.empty::after {
+  content: ''; position: absolute; left: 2px; right: 2px; top: 50%;
+  height: 1px; background: var(--text-3); transform: rotate(-45deg);
+}
+.grb-swatch-grid .gswatch.selected::after {
+  content: ''; position: absolute; inset: -4px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5px var(--bs-cyan);
+  pointer-events: none;
+}
+
+/* Type token grid */
+.grb-type-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.grb-type-btn {
+  padding: 8px 10px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm);
+  color: var(--text-2); font: 11px/1 var(--font);
+  cursor: pointer;
+  transition: background .12s var(--ease), color .12s var(--ease), border-color .12s var(--ease);
+}
+.grb-type-btn:hover { background: var(--hover); color: var(--text); }
+.grb-type-btn.selected { background: var(--bs-cyan); border-color: var(--bs-cyan); color: var(--bg); }
+
+/* Radio (used for Stroke on/off — looks like Figma's circular toggle) */
+.grb-radio {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: transparent; border: 1px solid var(--border-strong);
+  cursor: pointer; padding: 0; position: relative;
+  transition: border-color .12s var(--ease), background .12s var(--ease);
+}
+.grb-radio[aria-pressed="true"] {
+  border-color: var(--text); background: var(--text);
+}
+.grb-radio[aria-pressed="true"]::after {
+  content: ''; position: absolute; left: 50%; top: 50%;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--bg);
+  transform: translate(-50%, -50%);
+}
+
+/* Stroke block (revealed when toggle is on) */
+.grb-stroke-block { display: flex; flex-direction: column; gap: 8px; }
+.grb-stroke-meta { display: grid; grid-template-columns: 1fr 70px; gap: 8px; }
+.grb-select-mini {
+  display: inline-flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 7px 10px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm);
+  color: var(--text); font: 12px/1 var(--font); cursor: pointer;
+}
+.grb-select-mini svg { width: 12px; height: 12px; }
+
+/* Bordered numeric input (Figma "[H 718]" style) */
+.grb-num-bordered {
+  position: relative; display: inline-flex; align-items: center;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm);
+  padding: 0 8px 0 26px;
+}
+.grb-num-bordered input {
+  width: 100%; box-sizing: border-box;
+  background: transparent; border: 0; outline: none;
+  color: var(--text); font: 12px/1 var(--font);
+  padding: 7px 0;
+}
+.grb-num-bordered input::-webkit-outer-spin-button,
+.grb-num-bordered input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.grb-num-letter,
+.grb-num-glyph {
+  position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
+  font: 11px/1 var(--font); color: var(--text-3);
+  width: 14px; height: 14px; display: inline-flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.grb-num-glyph { stroke: currentColor; }
+
+/* Layout row */
+.grb-layout-row {
+  display: grid; grid-template-columns: 1fr 1fr 24px; gap: 8px; align-items: center;
+  margin-bottom: 10px;
+}
+.grb-lock {
+  width: 24px; height: 24px;
+  background: transparent; border: 0; padding: 0;
+  color: var(--text-3); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: color .12s var(--ease);
+}
+.grb-lock:hover { color: var(--text-2); }
+.grb-lock svg { width: 14px; height: 14px; stroke-width: 1.5; }
+.grb-lock[aria-pressed="true"] { color: var(--text); }
+
+

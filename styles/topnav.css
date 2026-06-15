@@ -1,0 +1,104 @@
+/* Extraído de index.html (linhas 50-152) — Fase 2 do refactor. Tokens: ver ds-tokens.css */
+/* =========================================================================
+   TOP NAV
+   ========================================================================= */
+#topnav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--topnav-h);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: var(--z-nav);
+  gap: 20px;
+}
+.topnav-left { display: flex; align-items: center; gap: 20px; }
+.topnav-center { display: flex; align-items: center; gap: 8px; }
+.topnav-actions { display: flex; align-items: center; gap: 8px; }
+.topnav-brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font);
+  font-weight: var(--type-ui-weight);
+  font-size: var(--type-ui-size);
+  color: var(--text);
+  background: transparent; border: 0; padding: 0; cursor: pointer;
+}
+.topnav-brand:hover { opacity: 0.85; }
+.topnav-brand .brand-logo {
+  height: 14px;
+  width: auto;
+  display: block;
+}
+.topnav-brand .brand-divider {
+  width: 1px; height: 18px; background: var(--border); margin: 0 4px;
+}
+.topnav-brand .brand-sub {
+  color: var(--text-2);
+  font-weight: var(--type-sb-weight);
+  font-size: var(--type-sb-size);
+  letter-spacing: var(--type-sb-tracking);
+}
+
+.topnav-actions { display: flex; align-items: center; gap: 4px; }
+.tn-btn {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: var(--r-full);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  font-size: var(--type-sb-size);
+  font-weight: var(--type-sb-weight);
+  display: flex; align-items: center; gap: 6px;
+  transition: background .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease);
+}
+.tn-btn:hover { color: var(--text); background: var(--hover); }
+.tn-btn-icon {
+  width: 32px; padding: 0;
+  justify-content: center;
+  color: var(--text-2);
+  border-radius: var(--r-full);
+}
+.tn-btn-icon svg { width: 16px; height: 16px; }
+.tn-btn-icon:hover { color: var(--text); background: var(--hover); }
+/* Default: show only the outline variant of the icon. */
+.tn-btn-icon .ico-filled { display: none; }
+.tn-btn-icon .ico-outline { display: inline-block; }
+/* Pressed/active state — outline icon stays outline; only the white color +
+   hover shape behind communicate the state (same language as the clock/history
+   button). Ícones soltos nunca ficam preenchidos no hover/selecionado. */
+.tn-btn-icon.active,
+.tn-btn-icon[aria-pressed="true"] {
+  background: var(--hover);
+  color: var(--text);
+  border-color: transparent;
+}
+.tn-btn-icon.active:hover,
+.tn-btn-icon[aria-pressed="true"]:hover {
+  background: var(--hover);
+}
+.tn-btn.primary {
+  background: var(--text);
+  color: var(--bg);
+  border: 0;            /* no stroke — clean filled pill */
+  height: 26px;
+  padding: 0 12px;
+  font-family: var(--type-s-family);
+  font-weight: var(--type-s-weight);
+  font-size: var(--type-s-size);
+  letter-spacing: var(--type-s-tracking);
+}
+.tn-btn.primary:hover { background: var(--text-2); }
+.tn-avatar {
+  width: 30px; height: 30px;
+  border-radius: var(--r-full);
+  background: var(--bs-cyan);
+  color: var(--bs-navy);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font);
+  font-weight: var(--type-ui-sm-weight);
+  font-size: var(--type-ui-sm-size);
+}
+

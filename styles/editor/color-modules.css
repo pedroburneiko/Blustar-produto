@@ -1,0 +1,368 @@
+/* Extraído de index.html (linhas 3478-3844) — Fase 2 do refactor. Tokens: ver ds-tokens.css */
+/* Color hero — single 16:9 filled card with token info overlaid */
+.cl-hero {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-md);
+  padding: 32px;
+  overflow: hidden;
+  background: var(--bs-cyan);
+}
+.cl-hero .cl-name {
+  font-family: var(--type-s-family);
+  font-weight: var(--type-s-weight);
+  font-size: var(--type-s-size);
+  line-height: var(--type-s-line);
+  letter-spacing: var(--type-s-tracking);
+  white-space: pre-line;
+}
+.cl-hero .cl-meta {
+  margin-top: 18px;
+  font: var(--type-xs-size)/var(--type-xs-line) 'Menlo', monospace;
+}
+
+/* Color cards — N column row with editable fill + stroke */
+.cl-cards {
+  display: grid;
+  grid-template-columns: repeat(var(--cl-cols, 4), 1fr);
+  gap: 16px;
+}
+.cl-card {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--r-md);
+  padding: 22px;
+  overflow: hidden;
+  background: var(--bs-navy);
+  border-style: solid;
+  border-width: var(--cl-stroke, 1px);
+  border-color: var(--border);
+}
+.cl-card .cl-name {
+  font-family: var(--type-s-family);
+  font-weight: var(--type-s-weight);
+  font-size: var(--type-s-size);
+  line-height: var(--type-s-line);
+  letter-spacing: var(--type-s-tracking);
+  white-space: pre-line;
+}
+.cl-card .cl-meta {
+  margin-top: 12px;
+  font: var(--type-xs-size)/var(--type-xs-line) 'Menlo', monospace;
+}
+
+/* Color palette — 16:9 container of vertical color strips, up to 12 */
+.cl-palette {
+  display: grid;
+  grid-template-columns: repeat(var(--cl-cols, 7), 1fr);
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.cl-strip {
+  position: relative;
+  padding: 18px 16px;
+  overflow: hidden;
+}
+.cl-strip .cl-name {
+  font-family: var(--type-s-family);
+  font-weight: var(--type-s-weight);
+  font-size: var(--type-s-size);
+  line-height: var(--type-s-line);
+  letter-spacing: var(--type-s-tracking);
+  white-space: pre-line;
+}
+.cl-strip .cl-meta {
+  margin-top: 10px;
+  font: var(--type-xs-size)/var(--type-xs-line) 'Menlo', monospace;
+}
+
+/* Inline editor controls inside color modules */
+.cl-edit {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity .15s var(--ease);
+  z-index: var(--z-base);
+}
+.cl-hero:hover .cl-edit,
+.cl-card:hover .cl-edit,
+.cl-strip:hover .cl-edit { opacity: 1; }
+body.preview-mode .cl-edit { display: none; }
+.cl-edit input[type="color"] {
+  width: 22px; height: 22px; padding: 0;
+  border: 1px solid rgba(255,255,255,0.45);
+  border-radius: 4px; background: transparent; cursor: pointer;
+}
+.cl-edit select {
+  appearance: none;
+  background: rgba(0,0,0,0.45); color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 4px; padding: 2px 18px 2px 6px;
+  font: 500 11px/1 var(--font); cursor: pointer;
+  background-image: url("data:image/svg+xml;utf8,<span class="bs-icon" style="--bs-icon-size:12px;color:#fff">expand_more</span>");
+  background-repeat: no-repeat; background-position: right 4px center; background-size: 10px 10px;
+}
+.cl-add, .cl-remove {
+  background: rgba(0,0,0,0.45); color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 4px; width: 22px; height: 22px;
+  cursor: pointer; font: 600 14px/1 var(--font);
+  display: grid; place-items: center;
+}
+.cl-add:hover, .cl-remove:hover { background: rgba(0,0,0,0.7); }
+
+/* Cover block — full-bleed across the visible canvas in both edit and preview.
+   Compensates the world-inner's top/left/right padding so the cover touches the
+   topnav and reaches the canvas edges. The right panel sits on top as an
+   overlay; cover bg goes under it for a clean edge. */
+.cover-block {
+  margin-top: -48px;
+  margin-left: calc(-1 * var(--sidebar-collapsed-w));
+  margin-right: -240px;
+  border-radius: 0;
+}
+body.preview-mode .cover-block { margin-right: -60px; }
+/* Drop the add-module slot that sits directly above a cover so nothing breaks
+   the full-bleed top edge. The slot below stays so users can keep adding. */
+.add-module-slot:has(+ .cover-block) { display: none; }
+
+/* Color pairing — visual tool for trying brand colors on a real layout.
+   No card frame: swatches/info live on the canvas, poster floats on the right. */
+.cl-pair {
+  display: flex; flex-direction: column;
+  gap: 24px;
+  container-type: inline-size;
+}
+.cl-pair-tabs {
+  display: flex; align-items: center; gap: 4px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+.cl-pair-tab {
+  background: transparent; border: 0; cursor: pointer;
+  font-family: var(--type-sb-family); font-weight: var(--type-sb-weight);
+  font-size: var(--type-sb-size); line-height: var(--type-sb-line);
+  letter-spacing: var(--type-sb-tracking);
+  color: var(--text-3);
+  padding: 12px 14px;
+  position: relative;
+  transition: color .15s var(--ease);
+}
+.cl-pair-tab::after {
+  content: '';
+  position: absolute;
+  left: 14px; right: 14px; bottom: -1px;
+  height: 2px; background: transparent;
+  transition: background .15s var(--ease);
+}
+.cl-pair-tab:hover { color: var(--text-2); }
+.cl-pair-tab.active { color: var(--text); font-weight: 600; }
+.cl-pair-tab.active::after { background: var(--bs-cyan); }
+.cl-pair-body {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 40px;
+  align-items: stretch;
+}
+.cl-pair-left { justify-content: space-between; }
+.cl-pair-active { margin-top: auto; }
+.cl-pair-active .hex {
+  font-family: 'Menlo', monospace;
+  font-size: var(--type-xs-size);
+  line-height: var(--type-xs-line);
+  color: var(--text-3);
+  margin-top: 4px;
+}
+.cl-pair-left { display: flex; flex-direction: column; gap: 32px; min-width: 0; }
+.cl-pair-head { display: flex; flex-direction: column; gap: 10px; }
+.cl-pair-eyebrow {
+  font-family: var(--type-s-family); font-weight: var(--type-s-weight);
+  font-size: var(--type-s-size); line-height: var(--type-s-line); letter-spacing: var(--type-s-tracking);
+  color: var(--text-3); text-transform: uppercase;
+}
+.cl-pair-title { color: var(--text); margin: 0; }
+
+.cl-pair-swatches {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+}
+.cl-pair-swatch {
+  background: transparent; border: 0; padding: 0; cursor: pointer;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+  min-width: 0;
+}
+.cl-pair-swatch .dot {
+  width: 100%; aspect-ratio: 1; border-radius: 14px;
+  border: 1px solid var(--border);
+  transition: transform .18s var(--ease), box-shadow .18s var(--ease);
+}
+.cl-pair-swatch:hover .dot { transform: scale(1.03); }
+.cl-pair-swatch.selected .dot {
+  outline: 2px solid var(--bs-cyan);
+  outline-offset: 3px;
+}
+.cl-pair-swatch .label {
+  font-family: var(--type-xs-family);
+  font-size: var(--type-xs-size); line-height: var(--type-xs-line); letter-spacing: var(--type-xs-tracking);
+  color: var(--text-3);
+  text-align: left;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;
+}
+.cl-pair-swatch.selected .label { color: var(--text); font-weight: 600; }
+
+.cl-pair-active {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.cl-pair-active .name {
+  font-family: var(--type-mb-family); font-weight: var(--type-mb-weight);
+  font-size: var(--type-mb-size); line-height: var(--type-mb-line);
+  letter-spacing: var(--type-mb-tracking);
+  color: var(--text);
+}
+.cl-pair-active .hex {
+  font: 12px/1.4 'Menlo', monospace; color: var(--text-3);
+  margin-top: 4px;
+}
+.cl-pair-copy {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text); cursor: pointer;
+  font-family: var(--type-sb-family); font-weight: var(--type-sb-weight);
+  font-size: var(--type-sb-size); letter-spacing: var(--type-sb-tracking);
+  transition: background .15s var(--ease), border-color .15s var(--ease);
+}
+.cl-pair-copy:hover { background: var(--hover); border-color: var(--border-strong); }
+.cl-pair-copy svg { width: 14px; height: 14px; stroke-width: 1.8; }
+
+/* Right-side poster — frameless, ratio 3:4, content stacked */
+.cl-pair-poster {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 20px;
+  padding: clamp(24px, 4cqi, 40px);
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: clamp(16px, 2.5cqi, 24px);
+  overflow: hidden;
+  transition: background .2s var(--ease), color .2s var(--ease);
+}
+.cl-pair-poster-title {
+  font-family: var(--type-super-family); font-weight: var(--type-super-weight);
+  font-size: var(--type-super-size);
+  line-height: var(--type-super-line); letter-spacing: var(--type-super-tracking);
+  margin: 0;
+}
+.cl-pair-cta {
+  display: inline-flex; align-items: center; justify-self: start;
+  padding: 12px 22px; border-radius: 999px;
+  font-family: var(--type-sb-family); font-weight: var(--type-sb-weight);
+  font-size: var(--type-sb-size); letter-spacing: var(--type-sb-tracking);
+  cursor: pointer; width: fit-content;
+  transition: background .2s var(--ease), color .2s var(--ease);
+}
+.cl-pair-poster-photo {
+  background: url('assets/Moto.png') center/cover no-repeat;
+  border-radius: 10px;
+  min-height: 0; height: 100%;
+}
+.cl-pair-poster-foot { display: flex; align-items: flex-end; }
+.cl-pair-poster-logo {
+  width: clamp(60px, 16cqi, 110px);
+  height: auto;
+  display: block;
+}
+
+/* Heading module — hover reveals anchor-link button (à la Notion / docs sites) */
+.heading-mod {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; position: relative;
+}
+.heading-anchor-btn {
+  flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 4px;
+  background: transparent; border: 0; padding: 0;
+  color: var(--text-3); cursor: pointer;
+  opacity: 0;
+  transition: opacity .15s var(--ease), color .12s var(--ease);
+}
+.heading-mod:hover .heading-anchor-btn { opacity: 1; }
+.heading-anchor-btn:hover { color: var(--text); }
+.heading-anchor-btn:focus-visible { opacity: 1; outline: 2px solid var(--bs-cyan); outline-offset: 2px; border-radius: 4px; }
+.heading-anchor-btn svg { width: 14px; height: 14px; stroke-width: 1.6; }
+
+/* Theme palettes — same visual language as Color pairing (.cl-pair-*) */
+.tp-block { display: flex; flex-direction: column; gap: 24px; container-type: inline-size; }
+.tp-block.canvas-selected { outline: 0; }
+.tp-tabs {
+  display: flex; align-items: center; gap: 4px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+.tp-tab {
+  background: transparent; border: 0; cursor: pointer;
+  font-family: var(--type-sb-family); font-weight: var(--type-sb-weight);
+  font-size: var(--type-sb-size); line-height: var(--type-sb-line); letter-spacing: var(--type-sb-tracking);
+  color: var(--text-3);
+  padding: 12px 14px;
+  position: relative;
+  transition: color .15s var(--ease);
+}
+.tp-tab::after {
+  content: '';
+  position: absolute;
+  left: 14px; right: 14px; bottom: -1px;
+  height: 2px; background: transparent;
+  transition: background .15s var(--ease);
+}
+.tp-tab:hover { color: var(--text-2); }
+.tp-tab.active { color: var(--text); font-weight: 600; }
+.tp-tab.active::after { background: var(--bs-cyan); }
+.tp-canvas { padding: 0; background: transparent; border: 0; }
+.tp-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--tp-cols, 17), 1fr);
+  gap: clamp(4px, 0.8cqi, 8px);
+}
+.tp-sw {
+  position: relative;
+  background: transparent; border: 0; padding: 0; cursor: pointer;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  outline: none;
+  transition: transform .15s var(--ease), box-shadow .15s var(--ease);
+}
+.tp-sw::before {
+  content: ''; position: absolute; inset: 0;
+  border-radius: inherit;
+  background: var(--tp-bg, #ccc);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+  transition: transform .15s var(--ease);
+}
+.tp-sw:hover::before { transform: scale(1.06); }
+/* Selection is communicated by dimming the non-selected swatches — no ring. */
+/* When the active theme has any selection, dim the swatches outside of it. */
+.tp-block[data-has-sel="true"] .tp-sw:not(.selected)::before { opacity: 0.18; }
+.tp-block[data-has-sel="true"] .tp-sw:not(.selected):hover::before { opacity: 0.6; }
+@container (max-width: 720px) { .tp-grid { grid-template-columns: repeat(8, 1fr); } }
+
+/* Right-panel inspector for Theme palettes */
+.gr-themepal-insp { display: none; flex: 1; flex-direction: column; }
+.guide-right.themepal-mode .gr-tabs,
+.guide-right.themepal-mode .gr-search,
+.guide-right.themepal-mode .gr-body,
+.guide-right.themepal-mode .gr-foot,
+.guide-right.themepal-mode .gr-edit,
+.guide-right.themepal-mode .gr-layout,
+.guide-right.themepal-mode .gr-text-insp,
+.guide-right.themepal-mode .gr-color-insp,
+.guide-right.themepal-mode .gr-video-insp,
+.guide-right.themepal-mode .gr-comp-insp { display: none; }
+.guide-right.themepal-mode .gr-themepal-insp { display: flex; }
+

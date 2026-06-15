@@ -1,0 +1,218 @@
+/* Extraído de index.html (linhas 655-871) — Fase 2 do refactor. Tokens: ver ds-tokens.css */
+/* Breakpoint dropdown */
+.gt-dd-wrap { position: relative; }
+.gt-dd {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 280px;
+  background: var(--popover);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+  padding: 6px;
+  display: none;
+  z-index: var(--z-overlay);
+}
+.gt-dd.open { display: block; }
+.gt-dd-head { padding: 10px 12px 12px; }
+.gt-dd-title {
+  font-family: var(--font);
+  font-weight: var(--type-sb-weight);
+  font-size: var(--type-sb-size);
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.gt-dd-sub {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: var(--type-ui-sm-size);
+  color: var(--text-3);
+}
+.gt-dd-kbd {
+  font-family: var(--font);
+  font-weight: var(--type-s-weight);
+  font-size: var(--type-s-size);
+  color: var(--text-3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--surface-2);
+}
+.gt-dd-sep { height: 1px; background: var(--border); margin: 4px 0; }
+.gt-dd-item {
+  display: grid;
+  grid-template-columns: 16px 16px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  font-size: var(--type-sb-size);
+  cursor: pointer;
+  transition: background .15s var(--ease), color .15s var(--ease);
+}
+.gt-dd-item:hover { background: var(--hover); color: var(--text); }
+.gt-dd-item.active { color: var(--text); font-weight: 600; }
+.gt-dd-item .gtd-check { opacity: 0; }
+.gt-dd-item.active .gtd-check { opacity: 1; }
+.gt-dd-item svg { width: 14px; height: 14px; stroke-width: 1.6; }
+.gt-dd-tag {
+  font-size: var(--type-s-size);
+  color: var(--text-3);
+  font-weight: var(--type-s-weight);
+}
+.guide-side {
+  position: fixed;
+  top: var(--topnav-h);
+  left: var(--sidebar-collapsed-w);
+  width: 184px;
+  height: calc(100vh - var(--topnav-h));
+  padding: 0;
+  border-right: 1px solid var(--border);
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  z-index: var(--z-base);
+  transition: left .25s var(--ease);
+}
+.guide-side > .guide-side-tabs,
+.guide-side > .guide-side-list,
+.guide-side > .guide-side-contents,
+.guide-side > .guide-side-group { padding-left: 16px; padding-right: 16px; }
+.guide-side { overflow: hidden; }
+.guide-side > .guide-side-list { overflow-y: auto; flex: 1 1 auto; min-height: 0; }
+.guide-side > .guide-side-tabs { padding-top: 32px; }
+.guide-side-foot {
+  flex-shrink: 0;
+  padding: 12px 16px 16px;
+  background: var(--bg);
+}
+.guide-side-ds-btn { margin: 0 !important; }
+.guide-side-ds-btn.active { background: var(--bs-cyan); color: var(--bs-navy); border-color: var(--bs-cyan); }
+body.sidebar-collapsed:has(#sidebar:hover) .guide-side {
+  left: var(--sidebar-w);
+}
+
+/* Preview mode — hides editing chrome but keeps main sidebar (workspace/home/guide/gen studio) */
+body.preview-mode .guide-right { display: none; }
+/* DS mode — dedicated canvas without sidebar/inspector/edit affordances */
+body.ds-mode .guide-side { display: none; }
+/* DS left sidebar — mirrors guide-side layout but is DS-only. */
+.ds-side {
+  display: none;
+  position: fixed;
+  top: var(--topnav-h);
+  left: var(--sidebar-collapsed-w);
+  width: 200px;
+  height: calc(100vh - var(--topnav-h));
+  border-right: 1px solid var(--border);
+  background: var(--bg);
+  flex-direction: column;
+  z-index: var(--z-base);
+  overflow: hidden;
+}
+body.ds-mode .ds-side { display: flex; }
+body.sidebar-collapsed:has(#sidebar:hover) .ds-side { left: var(--sidebar-w); }
+.ds-side-tabs {
+  padding: 24px 16px 8px;
+  font-family: var(--font);
+  font-weight: var(--type-sb-weight);
+  font-size: var(--type-sb-size);
+  color: var(--text);
+}
+.ds-side-list {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 4px 12px; overflow-y: auto; flex: 1 1 auto;
+}
+.ds-side-item {
+  display: flex; align-items: center;
+  padding: 7px 8px;
+  border: 0; background: transparent;
+  border-radius: var(--r-sm);
+  color: var(--text-3);
+  font-family: var(--font);
+  font-size: var(--type-sb-size);
+  cursor: pointer;
+  text-align: left;
+  min-width: 0;
+  transition: background .15s var(--ease), color .15s var(--ease);
+}
+.ds-side-item:hover { color: var(--text); background: var(--hover); }
+.ds-side-item.active { color: var(--text); font-weight: 600; background: transparent; }
+.ds-side-item.is-sub { padding-left: 20px; color: var(--text-2); }
+.ds-side-item.is-sub.active { color: var(--text); }
+.ds-side-item.is-parent { color: var(--text-2); }
+.ds-side-item.is-parent.active { color: var(--text); font-weight: 600; }
+/* When DS sidebar is on, push the canvas content to make room. */
+body.ds-mode .world-inner { padding-left: 260px !important; padding-top: 24px !important; }
+/* Align every DS section's top with the "Design System" label in the
+   sidebar (.ds-side-tabs has padding-top: 24px). showDsSection() hides
+   non-active sections via display:none, so :first-of-type doesn't help —
+   strip margin-top on ALL sections; the world-inner padding-top:24px in
+   ds-mode is the single source of vertical offset. */
+body.ds-mode section[data-ds-section] { margin-top: 0 !important; }
+body.ds-mode #main { background: var(--bg); }
+/* Right Styles panel stays so clicking elements opens the inspector for edits */
+body.ds-mode :is([data-world="guide"], [data-world="home"]) .world-inner {
+  padding: 30px 60px 64px;
+  transition: padding-right .2s var(--ease);
+}
+/* When the right panel is open for editing, shrink content so it doesn't hide under it */
+body.ds-mode:has(.guide-right.editing, .guide-right.editing-color, .guide-right.icon-mode, .guide-right.button-mode, .guide-right.client-mode, .guide-right.themepal-mode, .guide-right.component-mode, .guide-right.history-mode) :is([data-world="guide"], [data-world="home"]) .world-inner {
+  padding-right: 300px;
+}
+/* First section starts flush with the sidebar logo (no extra top margin) */
+body.ds-mode .guide-page[data-page="p-ds-canvas"] > section:first-of-type {
+  margin-top: 0 !important;
+}
+/* Right panel becomes an overlay in DS — only visible when editing a token */
+body.ds-mode .guide-right { display: none; }
+body.ds-mode .guide-right.editing,
+body.ds-mode .guide-right.editing-color,
+body.ds-mode .guide-right.icon-mode,
+body.ds-mode .guide-right.button-mode,
+body.ds-mode .guide-right.client-mode,
+body.ds-mode .guide-right.themepal-mode,
+body.ds-mode .guide-right.component-mode,
+body.ds-mode .guide-right.history-mode { display: flex; }
+/* In DS mode, the Edit/Detach (per-instance) actions are not meaningful — only Customizar. */
+body.ds-mode .gr-comp-insp .gr-comp-btns[data-state="select"] { display: none; }
+body.preview-mode #ds-canvas-btn { visibility: hidden !important; pointer-events: none; }
+/* Histórico de versões só existe no modo edição — esconde no preview (play). */
+body.preview-mode #version-history-btn { display: none; }
+body.ds-mode #ds-canvas-btn { background: var(--surface-2); color: var(--text); }
+body.ds-mode .add-module-slot { display: none; }
+body.ds-mode .canvas-hover-tools,
+body.ds-mode .canvas-hover-ring,
+body.ds-mode .canvas-ctx { display: none !important; }
+body.ds-mode .praia-component:hover { outline: 1px dashed var(--bs-cyan); outline-offset: 4px; cursor: pointer; }
+body.ds-mode .praia-component.component-selected { outline: 2px solid var(--bs-blue) !important; outline-offset: 4px; }
+body.ds-mode .spacer-block::before,
+body.ds-mode .spacer-block .spacer-select,
+body.ds-mode .spacer-block .spacer-label { display: none; }
+body.preview-mode #main { background: var(--bg); }
+body.preview-mode .guide-side {
+  top: var(--topnav-h);
+  height: calc(100vh - var(--topnav-h));
+}
+body.preview-mode [data-world="guide"] .world-inner {
+  /* Balanced breathing: 60px gap after the pages menu (which ends at 248px from
+     the viewport edge: 64px icon rail + 184px pages rail) and 60px before the
+     right edge. world-inner sits 64px in, so 244px padding = 60px after the rail. */
+  padding-left: 244px;
+  padding-right: 60px;
+  padding-top: 48px;
+}
+body.preview-mode [data-world="home"] .world-inner {
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-top: 48px;
+}
+body.preview-mode .back-btn,
+body.preview-mode .world-eyebrow { display: none; }
+body.preview-mode .guide-side-tabs,
+body.preview-mode .guide-side-newpage,
+body.preview-mode .guide-side-group { display: none; }
+body.preview-mode .guide-side { padding-top: 36px; }
+body.preview-mode .guide-side-item .gs-check { display: none; }
+body.preview-mode .guide-side-item { grid-template-columns: auto 1fr auto; }
+

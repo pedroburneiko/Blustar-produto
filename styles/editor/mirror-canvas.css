@@ -1,0 +1,242 @@
+/* Extraído de index.html (linhas 2658-2898) — Fase 2 do refactor. Tokens: ver ds-tokens.css */
+/* Cores / Imagens: force the thumb area to a uniform aspect-ratio so every
+   card visually matches, regardless of the per-template hint. */
+.am-grid[data-cat="colors"] .am-tpl-thumb,
+.am-grid[data-cat="images"] .am-tpl-thumb {
+  aspect-ratio: 16 / 10 !important;
+  height: auto !important;
+  width: 100%;
+}
+.am-tpl-card {
+  display: flex; flex-direction: column;
+  background: transparent;
+  border-radius: 6px;
+  overflow: visible;
+  cursor: pointer;
+}
+.am-tpl-card .am-tpl-thumb-frame {
+  background: transparent;
+  border-radius: 8px;
+  padding: 0;
+  transition: box-shadow .2s var(--ease), transform .2s var(--ease);
+  border: 2px solid transparent;
+}
+.am-tpl-card:hover .am-tpl-thumb-frame { box-shadow: 0 10px 28px rgba(0,0,0,0.10); }
+.am-tpl-card.active .am-tpl-thumb-frame { border-color: var(--bs-cyan); }
+/* Figma-style master/instance: the master is rendered ONCE at its native pixel
+   canvas (data-edit-w × data-edit-h). Every instance wraps the master in a
+   .praia-frame (aspect-ratio matches native, takes whatever width the page
+   gives it) and the .praia-mirror clone gets transform: scale(frameW/nativeW)
+   so the children's pixel-coord positions stay pixel-perfect — what you edit
+   in the master is exactly what every instance shows, just zoomed. */
+.praia-frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+/* Stroke only inside the DS template editor context (cell previews + edit
+   canvas). Guide-page instances render without a border so the template
+   blends with the page like any other content block. */
+.ds-tpl-cell .praia-frame {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--r-sm);
+}
+.praia-mirror {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+/* Inside the mirror, the master fills the mirror's exact native pixel box.
+   This overrides the default `.am-tpl-thumb { width: 100%; aspect-ratio: 16/10 }`
+   so the visible area matches the master's stored editW × editH (a cropped
+   template with editH = 600 doesn't get stretched to 16/10). */
+.praia-mirror > .am-tpl-thumb {
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: auto !important;
+}
+/* Auto-layout text instances: thumb + mirror hug their content height so the
+   block grows/shrinks with the editable text (frame height is then set live by
+   applyMirrorScale = contentH × scale). */
+.praia-frame[data-praia-autoheight="1"] > .praia-mirror,
+.praia-frame[data-praia-autoheight="1"] > .praia-mirror > .am-tpl-thumb {
+  height: auto !important;
+}
+.am-tpl-thumb {
+  width: 100%;
+  aspect-ratio: 16/10;
+  background: var(--bs-navy);
+  display: grid;
+  overflow: hidden;
+  position: relative;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.am-tpl-label {
+  padding: 12px 4px 4px;
+  font-family: var(--font);
+  font-weight: var(--type-sb-weight);
+  font-size: var(--type-sb-size);
+  color: var(--text);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.am-tpl-label small {
+  font-weight: var(--type-s-weight);
+  font-size: var(--type-s-size);
+  color: var(--text-3);
+}
+.tpl-block {
+  background: url('assets/Moto.png') center/cover no-repeat, #d9d9d9;
+  border-radius: 0;
+}
+.tpl-block.cyan { background: linear-gradient(135deg, var(--bs-cyan) 0%, var(--bs-navy) 100%); }
+.tpl-block.light { background: #f0f0f0; }
+.tpl-text {
+  display: flex; flex-direction: column; gap: 6px;
+  justify-content: center;
+  padding: 18px 22px;
+  background: var(--bs-white);
+}
+.tpl-text span {
+  height: 5px; border-radius: 3px;
+  background: var(--placeholder);
+}
+.tpl-text span:nth-child(odd) { width: 80%; }
+.tpl-text span:nth-child(even) { width: 60%; }
+.tpl-text.headline span:first-child { width: 35%; height: 7px; background: var(--placeholder-strong); }
+/* row-span helpers for varied heights */
+.tpl-h-sm { grid-row: span 18; }
+.tpl-h-md { grid-row: span 24; }
+.tpl-h-lg { grid-row: span 32; }
+.tpl-h-xl { grid-row: span 40; }
+.am-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  font-size: var(--type-sb-size);
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.am-card:hover { background: var(--hover); border-color: var(--border-strong); color: var(--text); }
+.am-card.active { background: var(--surface-2); border-color: var(--bs-blue); color: var(--text); }
+.am-card-icon {
+  width: 36px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+.am-card.active .am-card-icon { color: var(--text-2); }
+.am-card-icon svg { width: 22px; height: 22px; stroke-width: 1.5; }
+.am-foot {
+  border-top: 1px solid var(--border);
+  padding: 14px 28px;
+  display: flex; align-items: center; justify-content: flex-end;
+  background: var(--bg);
+  gap: 10px;
+  margin-top: auto;
+}
+.am-foot-hint { font-size: var(--type-ui-sm-size); color: var(--text-3); margin-right: auto; }
+.am-cancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font-size: var(--type-sb-size);
+  font-weight: var(--type-sb-weight);
+  cursor: pointer;
+  padding: 9px 18px;
+  border-radius: var(--r-md);
+  transition: background .15s, color .15s, border-color .15s;
+}
+.am-cancel:hover { color: var(--text); border-color: var(--text-3); background: var(--hover); }
+.am-ds {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font-size: var(--type-sb-size);
+  font-weight: var(--type-sb-weight);
+  cursor: pointer;
+  padding: 9px 16px;
+  border-radius: var(--r-md);
+  transition: background .15s, color .15s, border-color .15s;
+}
+.am-ds svg { width: 14px; height: 14px; }
+.am-ds:hover { color: var(--text); border-color: var(--text-3); background: var(--hover); }
+.am-add {
+  background: var(--bs-cyan);
+  border: 1px solid var(--bs-cyan);
+  color: var(--bs-navy);
+  font-size: var(--type-sb-size);
+  font-weight: var(--type-s-weight, 500);
+  cursor: pointer;
+  padding: 9px 22px;
+  border-radius: var(--r-md);
+  transition: background .15s, filter .15s;
+  /* Texto sempre centralizado — cobre tanto o modo bloco (text-align) quanto
+     o modo flex (com ícone, via inline-flex) usado nos templates. */
+  text-align: center;
+  justify-content: center;
+}
+.am-add:hover { filter: brightness(1.08); }
+.am-add:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Canvas selection */
+.canvas-selected { outline: 1.5px solid var(--bs-blue); outline-offset: 4px; border-radius: 2px; }
+/* Botões pílula mantêm o próprio raio ao serem selecionados (a seleção é só o outline). */
+.canvas-selected.bs-cta, .bs-cta.canvas-selected { border-radius: var(--r-full, 999px); }
+.canvas-selected.am-add, .am-add.canvas-selected { border-radius: var(--r-md); }
+.canvas-selected[contenteditable="true"] { outline-offset: 2px; cursor: text; caret-color: var(--bs-blue); }
+.canvas-selected[contenteditable="true"]:focus { outline-color: var(--bs-blue); }
+body.preview-mode .canvas-selected { outline: 0; }
+:is([data-world="guide"], [data-world="home"]) .guide-page :where(h1, h2, h3, h4, h5, h6, p, a, span, li, .card, .swatch, .type-row, .color-grid, .type-grid, .specimen, .meta, .swatch-chip, .swatch-info, .tile-title, .tile-desc, .tpl-img, .world-eyebrow, [class*="tk-"]),
+.world-head :where(.world-eyebrow, .world-title, .world-sub),
+[data-world="home"] :where(.home-hero h2, .home-hero p, .home-hero-side .label, .home-hero-side .stat, .home-hero-side .desc, .tile-eyebrow, .tile-num, .tile-title, .tile-desc) { cursor: pointer; }
+:is([data-world="guide"], [data-world="home"]) .guide-page .tpl-img { position: relative; overflow: hidden; }
+:is([data-world="guide"], [data-world="home"]) .guide-page .tpl-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.18);
+  opacity: 0;
+  transition: opacity .15s var(--ease);
+  border-radius: inherit;
+  pointer-events: none;
+}
+:is([data-world="guide"], [data-world="home"]) .guide-page .tpl-img:hover::after { opacity: 1; }
+body.preview-mode .guide-page .tpl-img::after { display: none; }
+body.preview-mode :is([data-world="guide"], [data-world="home"]) .guide-page * { cursor: default; }
+.guide-side-tabs {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-strong);
+}
+.guide-side-tab {
+  font-family: var(--font);
+  font-weight: var(--type-ui-sm-weight);
+  font-size: var(--type-ui-sm-size);
+  color: var(--text);
+  padding: 5px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  cursor: pointer;
+  transition: background .15s var(--ease), color .15s var(--ease);
+}
+.guide-side-tab:hover { background: var(--hover); }
+.guide-side-tab.active { color: var(--text); background: var(--surface-2); border-color: var(--border-strong); }
+
+/* Tab switching — show only the matching pane */
+.guide-side[data-tab="pages"] .guide-side-newpage,
+.guide-side[data-tab="pages"] .guide-side-group,
+.guide-side[data-tab="pages"] .guide-side-list { display: ''; }
+.guide-side:not([data-tab="pages"]) .guide-side-newpage,
+.guide-side:not([data-tab="pages"]) .guide-side-group,
+.guide-side:not([data-tab="pages"]) .guide-side-list { display: none; }
+.guide-side:not([data-tab="contents"]) .guide-side-contents { display: none; }
+.guide-side[data-tab="contents"] .guide-side-contents { display: flex; flex-direction: column; gap: 2px; }
+

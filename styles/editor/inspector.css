@@ -1,0 +1,339 @@
+/* Extraído de index.html (linhas 872-1209) — Fase 2 do refactor. Tokens: ver ds-tokens.css */
+/* Right inspector sidebar (Styles / Components / Files) */
+.guide-right {
+  position: fixed;
+  top: var(--topnav-h);
+  right: 0;
+  width: 240px;
+  height: calc(100vh - var(--topnav-h));
+  padding: 0;
+  border-left: 1px solid var(--border);
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  z-index: var(--z-base);
+}
+.gr-tabs {
+  display: flex; gap: 18px;
+  padding: 16px 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+.gr-tab {
+  font-family: var(--font);
+  font-weight: var(--type-ui-weight);
+  font-size: var(--type-ui-size);
+  color: var(--text-3);
+  padding: 0 2px 12px;
+  position: relative;
+  cursor: pointer;
+  transition: color .15s var(--ease);
+}
+.gr-tab:hover { color: var(--text-2); }
+.gr-tab.active { color: var(--text); }
+.gr-tab.active::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px 2px 0 0;
+}
+.gr-search {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.gr-search input {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  font-size: var(--type-sb-size);
+  font-family: inherit;
+}
+.gr-search input::placeholder { color: var(--text-3); }
+.gr-search svg { width: 14px; height: 14px; color: var(--text-3); stroke-width: 1.6; }
+.gr-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 36px 16px 24px;
+}
+/* Hide ALL inspector close buttons — close happens by deselecting in canvas */
+.gre-close { display: none !important; }
+/* Align ALL inspector pane heads with the Pages tag position in the left sidebar */
+.gr-text-insp, .gr-layout-insp, .gr-color-insp, .gr-video-insp, .gr-photo-insp,
+.gr-spacing-insp, .gr-comp-insp, .gr-edit, .gr-edit-color {
+  padding-top: 20px;
+}
+.gre-head { padding-bottom: 14px; }
+.gr-foot {
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+  display: none;
+}
+.guide-right[data-active="files"] .gr-foot { display: block; }
+.gr-pane { display: none; }
+.gr-pane.active { display: block; }
+.gr-group {
+  font-family: var(--font);
+  font-weight: var(--type-sb-weight);
+  font-size: var(--type-sb-size);
+  color: var(--text);
+  padding: 14px 6px 8px;
+}
+.gr-group:first-child { padding-top: 0; }
+.gr-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 8px;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  font-size: var(--type-sb-size);
+  cursor: pointer;
+  transition: background .15s var(--ease), color .15s var(--ease);
+  position: relative;
+}
+.gr-item:hover { color: var(--text); background: var(--hover); }
+.gr-item.active { color: var(--text); background: var(--surface-2); font-weight: 600; }
+.gr-item-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-2);
+  visibility: hidden;
+}
+.gr-item:hover .gr-item-actions,
+.gr-item.active .gr-item-actions { visibility: visible; }
+.gr-item .gr-weight { display: none; }
+.gr-item-actions button {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  padding: 2px;
+  display: flex;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background .15s var(--ease), color .15s var(--ease);
+}
+.gr-item-actions button:hover { background: var(--hover); color: var(--text); }
+.gr-item-actions svg { width: 14px; height: 14px; stroke-width: 1.6; }
+.gr-item .gr-aa {
+  font-family: var(--font);
+  font-weight: var(--type-sb-weight);
+  font-size: var(--type-sb-size);
+  color: var(--text-3);
+  min-width: 18px;
+}
+.gr-item .gr-swatch {
+  width: 16px; height: 16px;
+  border-radius: var(--r-full);
+  border: 1.5px solid var(--text-3);
+  flex-shrink: 0;
+}
+.gr-item .gr-swatch.filled { background: var(--text); border-color: var(--text); }
+.gr-item svg.gr-ico { width: 14px; height: 14px; stroke-width: 1.5; color: var(--text-3); flex-shrink: 0; }
+.gr-select-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 6px 12px;
+  color: var(--text);
+  font-size: var(--type-sb-size);
+}
+.gr-select-row svg { width: 12px; height: 12px; color: var(--text-3); }
+.gr-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--r-full);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: var(--type-sb-size);
+  font-weight: var(--type-sb-weight);
+  cursor: pointer;
+  transition: background .15s var(--ease), border-color .15s var(--ease);
+}
+.gr-btn:hover { background: var(--hover); border-color: var(--border-strong); }
+.gr-btn svg { width: 14px; height: 14px; stroke-width: 1.6; }
+.gr-btn.ghost { color: var(--text-3); }
+.gr-btn.ghost:hover { color: var(--text); }
+.gr-btn.primary { background: var(--text); border-color: var(--text); color: var(--bg); }
+.gr-btn.primary:hover { background: var(--text-2); border-color: var(--text-2); }
+
+/* Type editor panel */
+.gr-edit { display: none; flex: 1; flex-direction: column; }
+.guide-right.editing .gr-tabs,
+.guide-right.editing .gr-search,
+.guide-right.editing .gr-body,
+.guide-right.editing .gr-foot { display: none; }
+.guide-right.editing .gr-edit { display: flex; }
+.gr-edit-color { display: none; flex: 1; flex-direction: column; }
+.guide-right.editing-color .gr-edit-color { display: flex; }
+.guide-right.editing-color .gr-tabs,
+.guide-right.editing-color .gr-search,
+.guide-right.editing-color .gr-body,
+.guide-right.editing-color .gr-foot { display: none; }
+.grec-preview {
+  width: 100%; aspect-ratio: 2 / 1;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--bs-cyan);
+}
+.grec-hex-row {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 8px;
+  align-items: center;
+}
+.grec-hex-picker {
+  width: 36px; height: 36px;
+  padding: 0; border: 1px solid var(--border); border-radius: var(--r-sm);
+  background: transparent; cursor: pointer;
+}
+.grec-hex-picker::-webkit-color-swatch-wrapper { padding: 0; }
+.grec-hex-picker::-webkit-color-swatch { border: 0; border-radius: 4px; }
+.grec-hex-input { text-transform: uppercase; font-family: var(--font); }
+.gre-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.gre-head h3 {
+  font-family: var(--font);
+  font-weight: var(--type-ui-weight);
+  font-size: var(--type-ui-size);
+  color: var(--text);
+}
+.gre-close {
+  background: transparent; border: 0;
+  color: var(--text-2);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  border-radius: 4px;
+  transition: background .15s, color .15s;
+}
+.gre-close:hover { background: var(--hover); color: var(--text); }
+.gre-close svg { width: 16px; height: 16px; stroke-width: 1.6; }
+.gre-body { flex: 1; overflow-y: auto; padding: 16px; }
+.gre-section { margin-bottom: 18px; }
+.gre-section + .gre-section { padding-top: 18px; border-top: 1px solid var(--border); }
+.gre-label {
+  font-family: var(--font);
+  font-weight: var(--type-sb-weight);
+  font-size: var(--type-sb-size);
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.gre-preview {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  height: 120px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.gre-preview-aa {
+  font-family: var(--token-family, var(--font-display));
+  font-weight: var(--token-weight, 700);
+  font-size: var(--type-super-size);
+  line-height: var(--type-super-line);
+  letter-spacing: var(--type-super-tracking);
+}
+.gre-name-input,
+.gre-num-input,
+.gre-select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font-family: inherit;
+  font-size: var(--type-sb-size);
+  padding: 7px 10px;
+  outline: 0;
+}
+.gre-name-input { width: 100%; }
+.gre-num-input { width: 100%; min-width: 0; text-align: left; padding: 9px 26px 9px 10px; -moz-appearance: textfield; }
+.gre-num-step-wrap { position: relative; display: block; }
+.gre-pct-mark { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); color: var(--text-3); font-size: var(--type-s-size); pointer-events: none; }
+.gre-num-steps {
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 2px;
+}
+.gre-step {
+  width: 14px; height: 11px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; border: 0; color: var(--text-3); cursor: pointer;
+  border-radius: 2px; padding: 0;
+}
+.gre-step:hover { color: var(--text); background: var(--hover); }
+.gre-step svg { width: 7px; height: 5px; display: block; }
+.gre-num-input::-webkit-outer-spin-button,
+.gre-num-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.gre-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+}
+.gre-row-label { color: var(--text-3); font-size: var(--type-sb-size); }
+.gre-select {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: transparent;
+  border: 0;
+  padding: 4px 6px;
+  color: var(--text);
+  font-weight: 500;
+  cursor: pointer;
+}
+.gre-select svg { width: 10px; height: 10px; color: var(--text-3); }
+/* Global color picker pattern — label + circle swatch + name + caret.
+   Reuses .gre-row + .gre-select layout so it lines up with type pickers. */
+.gre-color-swatch {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--bg);
+  flex-shrink: 0;
+}
+.gre-grid-row {
+  display: grid;
+  grid-template-columns: 22px 1fr 22px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+.gre-ico-label { color: var(--text-3); font-size: var(--type-ui-sm-size); display: flex; align-items: center; justify-content: center; gap: 2px; }
+.gre-case-toggle {
+  display: flex; align-items: center; gap: 6px;
+}
+.gre-case-toggle button {
+  background: transparent;
+  border: 0;
+  color: var(--text-3);
+  font-family: var(--font);
+  font-weight: var(--type-ui-sm-weight);
+  font-size: var(--type-ui-sm-size);
+  padding: 4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.gre-case-toggle button.active,
+.gre-case-toggle button:hover { color: var(--text); background: var(--hover); }
+/* Shared sticky-bottom action stack — Save (white pill) on top, Cancel
+   (dark pill) below. Used across all DS inspectors. */
+.gre-actions,
+.gri-actions,
+body.ds-mode .gr-comp-btns:not([data-state]) {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 16px;
+  margin: 0 -16px -16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  order: 99;
+}
+

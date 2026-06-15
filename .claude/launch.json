@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "workspace",
-      "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@blustar/workspace", "dev"],
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "5173"],
       "port": 5173
     }
   ]
