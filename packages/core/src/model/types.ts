@@ -12,6 +12,8 @@
  *   - Layer  = elemento do canvas (componente/grupo/texto/imagem/forma/...).
  */
 
+import type { Breakpoint } from '@blustar/tokens';
+
 /** Identificador opaco de entidade. */
 export type Id = string;
 
@@ -110,13 +112,35 @@ export interface Interaction {
   guides?: { x: number[]; y: number[] };
 }
 
+/**
+ * Override de grid de um container, por breakpoint. Espelha GridBreakpointConfig
+ * dos tokens; todos os campos são opcionais — ausentes caem no default do token
+ * (ver resolveGrid). `type` tem só "stretch" por ora.
+ */
+export interface GridOverride {
+  columns?: number;
+  type?: 'stretch';
+  /** Margem lateral (px) → padding lateral do container. */
+  margin?: number;
+  /** Espaço entre colunas (px) → columnGap. */
+  gutter?: number;
+}
+
 export interface LayerBox {
   width?: string;
   height?: string;
   padding?: Spacing;
   gap?: { row?: string; col?: string };
-  /** Colunas de grid (data-cols no SPEC). */
+  /**
+   * LEGADO — colunas de grid (data-cols no SPEC). Cobre só `columns`; mantido
+   * para compat (ex. Vitrine no seed). Override novo é `grid` (por breakpoint).
+   */
   cols?: number;
+  /**
+   * Override de grid por breakpoint. Ausente (ou bp ausente) → default do token
+   * (gridByBreakpoint). Resolução em resolveGrid.
+   */
+  grid?: Partial<Record<Breakpoint, GridOverride>>;
 }
 
 export interface LayerStyle {

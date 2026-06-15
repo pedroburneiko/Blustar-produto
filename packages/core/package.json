@@ -23,6 +23,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@blustar/tokens": "workspace:*",
     "immer": "^10.1.1",
     "zundo": "^2.1.0",
     "zustand": "^4.5.5"

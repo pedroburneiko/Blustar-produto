@@ -14,10 +14,12 @@ import { create, useStore } from 'zustand';
 import { temporal } from 'zundo';
 import { immer } from 'zustand/middleware/immer';
 
+import type { Breakpoint } from '@blustar/tokens';
 import { createDocument, createId, createLayer, createPage } from '../model/factories.js';
 import type {
   BrandDocument,
   FontProps,
+  GridOverride,
   Id,
   Interaction,
   Layer,
@@ -75,6 +77,11 @@ export interface UiState {
   maskEdit: MaskEditState | null;
   /** Estado do autosave (para a topbar). */
   saveStatus: SaveStatus;
+  /**
+   * Largura (px) da content-box do artboard — referência p/ o breakpoint ativo
+   * do grid. Efêmero, FORA do histórico. `null` até a 1ª medição.
+   */
+  artboardWidth: number | null;
 }
 
 export interface EditorState {
@@ -104,6 +111,8 @@ export interface EditorState {
   updateLayerStyle: (id: Id, patch: Partial<LayerStyle>) => void;
   /** Merge raso em layer.box (cria se ausente). */
   updateLayerBox: (id: Id, patch: Partial<LayerBox>) => void;
+  /** Funde o override de grid de um breakpoint (coalescido: rajada = 1 entrada). */
+  setLayerGrid: (id: Id, bp: Breakpoint, patch: Partial<GridOverride>) => void;
   /** Merge raso na fonte de uma layer de texto/botão (cria se ausente). */
   updateLayerFont: (id: Id, patch: Partial<FontProps>) => void;
   /** Commit de posição (1 entrada de histórico — chamar no fim do gesto). */
@@ -159,6 +168,8 @@ export interface EditorState {
   endMaskEdit: () => void;
   /** Atualiza o status do autosave. */
   setSaveStatus: (status: SaveStatus) => void;
+  /** Define a largura medida do artboard (efêmero, fora do undo). */
+  setArtboardWidth: (width: number | null) => void;
 }
 
 function initialState(doc?: BrandDocument): Pick<EditorState, 'document' | 'selection' | 'ui'> {
@@ -171,6 +182,7 @@ function initialState(doc?: BrandDocument): Pick<EditorState, 'document' | 'sele
       interaction: null,
       maskEdit: null,
       saveStatus: 'idle',
+      artboardWidth: null,
     },
   };
 }
@@ -403,6 +415,19 @@ export const useEditorStore = create<EditorState>()(
           layer.box = { ...layer.box, ...patch };
         }),
 
+      setLayerGrid: (id, bp, patch) => {
+        // Modo texto: a rajada de digitação no NumberField vira UMA entrada.
+        historyController.setMode('text');
+        set((state) => {
+          const layer = state.document.entities.layers[id];
+          if (!layer) return;
+          const box = layer.box ?? (layer.box = {});
+          const grid = box.grid ?? (box.grid = {});
+          grid[bp] = { ...grid[bp], ...patch };
+        });
+        historyController.setMode('immediate');
+      },
+
       updateLayerFont: (id, patch) =>
         set((state) => {
           const layer = state.document.entities.layers[id];
@@ -630,6 +655,11 @@ export const useEditorStore = create<EditorState>()(
       setSaveStatus: (status) =>
         set((state) => {
           state.ui.saveStatus = status;
+        }),
+
+      setArtboardWidth: (width) =>
+        set((state) => {
+          state.ui.artboardWidth = width;
         }),
     })),
     {

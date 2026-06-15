@@ -47,6 +47,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@blustar/tokens':
+        specifier: workspace:*
+        version: link:../tokens
       immer:
         specifier: ^10.1.1
         version: 10.2.0

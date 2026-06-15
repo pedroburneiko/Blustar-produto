@@ -7,6 +7,7 @@ import {
   resetEditor,
   createDocument,
   createLayer,
+  resolveGrid,
   setIdFactory,
   resetIdFactory,
 } from "../index.js";
@@ -139,6 +140,49 @@ describe("histórico — efêmero fora do undo", () => {
     S().setSaveStatus("saving");
     S().setSaveStatus("saved");
     expect(past()).toBe(base);
+  });
+
+  it("setArtboardWidth não cria entrada", () => {
+    const base = past();
+    S().setArtboardWidth(820);
+    S().setArtboardWidth(1200);
+    expect(past()).toBe(base);
+    expect(S().ui.artboardWidth).toBe(1200);
+  });
+});
+
+describe("grid responsivo — resolveGrid + setLayerGrid", () => {
+  it("resolveGrid: default do token quando não há override", () => {
+    expect(resolveGrid(undefined, "mobile")).toMatchObject({ columns: 4, margin: 16, gutter: 16 });
+    expect(resolveGrid({}, "desktop")).toMatchObject({ columns: 12, margin: 60, gutter: 30 });
+  });
+
+  it("resolveGrid: override do documento vence o token (nullish, respeita 0)", () => {
+    const box = { grid: { tablet: { columns: 6, margin: 0 } } };
+    const r = resolveGrid(box, "tablet");
+    expect(r.columns).toBe(6); // override
+    expect(r.margin).toBe(0); // override 0 respeitado (??, não ||)
+    expect(r.gutter).toBe(24); // sem override → default tablet
+  });
+
+  it("resolveGrid: box.cols legado cobre só columns; margin/gutter caem no token", () => {
+    const r = resolveGrid({ cols: 3 }, "desktop");
+    expect(r.columns).toBe(3); // legado
+    expect(r.margin).toBe(60); // token
+    expect(r.gutter).toBe(30); // token
+  });
+
+  it("setLayerGrid: rajada coalesce em 1 entrada e é undoable", () => {
+    const id = addAbsolute();
+    const base = past();
+    S().setLayerGrid(id, "mobile", { columns: 2 });
+    S().setLayerGrid(id, "mobile", { columns: 3 });
+    expect(past()).toBe(base); // debounce pendente (modo texto)
+    vi.advanceTimersByTime(600);
+    expect(past()).toBe(base + 1);
+    expect(S().document.entities.layers[id].box!.grid!.mobile!.columns).toBe(3);
+    undo();
+    expect(S().document.entities.layers[id].box?.grid?.mobile).toBeUndefined();
   });
 });
 
