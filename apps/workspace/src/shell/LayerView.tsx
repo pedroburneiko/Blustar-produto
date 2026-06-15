@@ -1,5 +1,5 @@
 import { memo, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
-import { Button } from "@blustar/ui";
+import { Button, Badge } from "@blustar/ui";
 import { useEditorStore } from "@blustar/core";
 import type { ImageLayer, Layer, LayerBox, LayerRect, LayerStyle } from "@blustar/core";
 import { ResizeHandles } from "./ResizeHandles";
@@ -258,13 +258,16 @@ function LayerViewImpl({ layerId }: LayerViewProps) {
     useEditorStore.getState().endInteraction(); // 1 gesto = 1 entrada de histórico
   }
 
+  const isComponent = layer.type === "component";
   const outline = maskEditing
     ? "1px solid transparent" // o overlay desenha o contorno tracejado do recorte
     : selected
       ? "2px solid var(--bs-focus-ring)"
       : hover
         ? "1px dashed var(--bs-brand)"
-        : "1px solid transparent";
+        : isComponent
+          ? "1px dashed var(--bs-brand)" // instância de componente: contorno persistente
+          : "1px solid transparent";
 
   // Layer absoluta (M4): posiciona via rect (ou preview ao vivo). Senão, flow (M2).
   const rect = livePreview ?? layer.rect;
@@ -310,6 +313,17 @@ function LayerViewImpl({ layerId }: LayerViewProps) {
       onPointerUp={layer.rect && !maskEditing ? onPointerUp : undefined}
     >
       <LayerContent layer={layer} />
+      {isComponent && !maskEditing && (
+        <div style={{ position: "absolute", top: -18, left: 0, zIndex: 10, pointerEvents: "none" }}>
+          <Badge
+            variant={selected || hover ? "brand" : "neutral"}
+            leftIcon="◇"
+            aria-label={`Instância de ${layer.templateName}`}
+          >
+            {layer.templateName}
+          </Badge>
+        </div>
+      )}
       {maskEditing && layer.type === "image" && <MaskEditOverlay layer={layer} />}
       {selected && layer.rect && !maskEditing && <ResizeHandles layerId={layer.id} />}
     </div>
