@@ -185,7 +185,7 @@
 .am-add:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Canvas selection */
-.canvas-selected { outline: 1.5px solid var(--bs-blue); outline-offset: 4px; border-radius: 2px; }
+.canvas-selected { outline: var(--focus-ring); outline-offset: 4px; border-radius: 2px; }
 /* Botões pílula mantêm o próprio raio ao serem selecionados (a seleção é só o outline). */
 .canvas-selected.bs-cta, .bs-cta.canvas-selected { border-radius: var(--r-full, 999px); }
 .canvas-selected.am-add, .am-add.canvas-selected { border-radius: var(--r-md); }
