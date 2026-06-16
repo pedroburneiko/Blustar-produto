@@ -1,0 +1,9 @@
+# Whitelist: ignora tudo na raiz e libera só o app (falha fechado).
+# Auditado contra index.html — cobre todos os recursos carregados em runtime.
+/*
+!index.html
+!ds-tokens.css
+!styles/
+!js/
+!assets/
+!fonts/
