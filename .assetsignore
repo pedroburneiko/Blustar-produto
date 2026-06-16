@@ -1,9 +1,14 @@
-# Whitelist: ignora tudo na raiz e libera só o app (falha fechado).
-# Auditado contra index.html — cobre todos os recursos carregados em runtime.
-/*
-!index.html
-!ds-tokens.css
-!styles/
-!js/
-!assets/
-!fonts/
+.git/
+.github/
+.wrangler/
+node_modules/
+server/
+design-system/
+_UI Captures/
+*.md
+package.json
+package-lock.json
+wrangler.toml
+biome.json
+.gitignore
+.DS_Store
